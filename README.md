@@ -99,17 +99,20 @@ It interrupts. It follows up. It notices when you go quiet — the same pressure
 
 ![Interview options](docs/screenshots/interview-modes.png)
 
-**Code it, query it, design it — for real.**
+**💻 Code it · 🗄️ query it · 🎨 design it — for real.**
 
-| 💻 Coding IDE | 🗄️ SQL Editor | 🎨 System Design Canvas |
-|:---:|:---:|:---:|
-| ![Coding IDE](docs/screenshots/dsa-ide.png) | ![SQL editor](docs/screenshots/sql-editor.png) | ![System design canvas](docs/screenshots/system-design-canvas.png) |
+<p align="center">
+  <img src="docs/screenshots/dsa-ide.png" width="32%"/>
+  <img src="docs/screenshots/sql-editor.png" width="32%"/>
+  <img src="docs/screenshots/system-design-canvas.png" width="32%"/>
+</p>
 
 **Learn from it, and watch yourself improve.**
 
-| 🧑‍🏫 AI Tutor | 📊 Progress & Reports |
-|:---:|:---:|
-| ![AI Tutor](docs/screenshots/ai-tutor.png) | ![Reports](docs/screenshots/reports.png) |
+<p align="center">
+  <img src="docs/screenshots/ai-tutor.png" width="48%"/>
+  <img src="docs/screenshots/reports.png" width="48%"/>
+</p>
 
 ---
 

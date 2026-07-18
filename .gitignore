@@ -1,0 +1,54 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build outputs
+dist/
+.next/
+out/
+build/
+*.tsbuildinfo
+
+# Turbo
+.turbo
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Design mockups (local only)
+stitch/
+
+# Debug / Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+
+# Testing
+coverage/
+
+# Uploads
+apps/api/uploads/
+
+# Question datasets/content (local only)
+Questions/
+
+# Temporary local scripts/reports
+tmp-*
+.codex-temp/
+
+# [DEV-TEXT-TESTING] per-interview screening logs (revert when TTS/voice is live)
+screening-logs/

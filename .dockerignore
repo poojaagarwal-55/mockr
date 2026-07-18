@@ -1,0 +1,72 @@
+# Node modules (will be installed during build)
+node_modules
+npm-debug.log
+yarn-error.log
+
+# Build outputs
+dist
+build
+.next
+out
+
+# Development
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Git
+.git
+.gitignore
+
+# Documentation
+*.md
+!README.md
+
+# Tests
+*.test.ts
+*.test.js
+*.spec.ts
+*.spec.js
+__tests__
+coverage
+
+# Turbo
+.turbo
+
+# Questions and data
+Questions
+sys_design
+ide-demo
+stitch
+/services/latex-compiler
+
+# Temporary files
+tmp-*
+test-*
+check-*
+debug-*
+fix-*
+simulate-*
+capture-*
+clear-*
+invalidate-*
+*.log
+*.tmp
+
+# SQL files
+*.sql
+
+# Other large files
+Practers_Legal_Documents.docx
+*.csv
+datasetdecisiontree.csv

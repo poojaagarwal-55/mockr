@@ -1,0 +1,218 @@
+{
+    "slug": "web-crawler",
+    "title": "Web Crawler",
+    "difficulty": "Medium",
+    "problemStatement": "Design a web crawler that can crawl the entire web and build a search index.\n\n**Functional Requirements:**\n- Start from a set of seed URLs and discover new URLs by parsing web pages\n- Download and store the content of web pages\n- Extract and follow links to discover new pages\n- Respect robots.txt and crawl rate limits per domain\n- Avoid crawling duplicate pages\n- Prioritize important/fresh pages\n\n**Non-Functional Requirements:**\n- Crawl billions of pages\n- Be polite — don't overwhelm any single website\n- Handle various content types and encodings\n- Fault-tolerant — resume after failures\n\n**Scale:**\n- Crawl 1 billion pages per month\n- Store petabytes of web content",
+    "rubricLite": {
+        "requiredComponents": [
+            "URL Frontier (priority queue of URLs to crawl)",
+            "DNS Resolver with caching",
+            "HTML Fetcher (multi-threaded downloader)",
+            "Content Parser (extract text + links)",
+            "URL Deduplication (Bloom filter or hash set)",
+            "Content Storage (distributed file system)",
+            "Politeness controller (per-domain rate limiting)"
+        ],
+        "keyTradeoffs": [
+            "BFS vs DFS crawling strategy",
+            "Bloom filter (probabilistic, space-efficient) vs exact URL dedup",
+            "Crawl depth vs breadth — how deep to go on each domain",
+            "Freshness vs coverage — recrawl known pages vs discover new ones"
+        ],
+        "antiPatterns": [
+            "Not respecting robots.txt (legal/ethical issues)",
+            "No politeness delay between requests to same domain",
+            "Storing all URLs in memory (won't scale to billions)",
+            "Not handling spider traps (infinite URL generation)"
+        ],
+        "followUpTriggers": [
+            {
+                "condition": "Candidate doesn't mention politeness",
+                "question": "If your crawler sends 1000 requests per second to the same website, what would happen?"
+            },
+            {
+                "condition": "Candidate doesn't discuss deduplication",
+                "question": "How do you avoid re-crawling pages you've already visited? Can you do this efficiently for billions of URLs?"
+            },
+            {
+                "condition": "Candidate doesn't mention prioritization",
+                "question": "Should you crawl every page with equal priority? How would you decide which pages to crawl first?"
+            }
+        ]
+    },
+    "rubricFull": {
+        "sampleAnswer": "Multiple crawler workers pull URLs from a distributed URL frontier (priority queue in Redis/Kafka). The frontier is segmented by domain for politeness enforcement. Each worker: resolve DNS (cached), fetch page (respecting robots.txt), parse content, extract links, check against a Bloom filter for deduplication, and add new URLs to the frontier. Store raw pages in HDFS/S3. A separate indexing pipeline processes stored pages. Use consistent hashing to assign domain ownership to crawler instances. Priority based on PageRank, freshness, and domain authority.",
+        "scoringDimensions": [
+            {
+                "name": "Architecture",
+                "weight": 25,
+                "criteria": "Distributed crawler design with proper separation of concerns"
+            },
+            {
+                "name": "URL Management",
+                "weight": 25,
+                "criteria": "Frontier design, deduplication, and prioritization strategy"
+            },
+            {
+                "name": "Politeness",
+                "weight": 20,
+                "criteria": "Rate limiting per domain, robots.txt compliance"
+            },
+            {
+                "name": "Scalability",
+                "weight": 20,
+                "criteria": "Horizontal scaling, handling billions of URLs"
+            },
+            {
+                "name": "Fault Tolerance",
+                "weight": 10,
+                "criteria": "Handling failures, checkpointing, resume capability"
+            }
+        ]
+    },
+    "hints": [
+        "Think about the URL frontier as more than just a queue — it needs to support priorities and per-domain rate limiting.",
+        "Storing billions of URLs for deduplication is expensive. A Bloom filter can tell you if a URL has probably been seen using very little memory.",
+        "How do you prevent your crawler from getting stuck in a spider trap (e.g., a calendar page with infinite future dates)?"
+    ],
+    "followUpQuestions": [
+        "How would you detect and handle duplicate content (same content at different URLs)?",
+        "How would you decide when to recrawl a page (freshness)?",
+        "How would you extend this to handle JavaScript-rendered pages (SPAs)?"
+    ],
+    "createdAt": {
+        "$date": "2026-04-08T13:20:19.293Z"
+    },
+    "updatedAt": {
+        "$date": "2026-04-08T13:20:19.293Z"
+    },
+    "__v": 0,
+    "architectureDiagram": {
+        "nodes": [
+            {
+                "id": "seeds",
+                "label": "Seed URLs",
+                "type": "client"
+            },
+            {
+                "id": "frontier",
+                "label": "URL Frontier\n(Priority Queue)\npartitioned by domain",
+                "type": "queue"
+            },
+            {
+                "id": "politeness",
+                "label": "Politeness Controller\n(per-domain delay queue\n+ robots.txt cache)",
+                "type": "service"
+            },
+            {
+                "id": "dns",
+                "label": "DNS Resolver\n(local cache: domain → IP\nTTL-aware)",
+                "type": "service"
+            },
+            {
+                "id": "fetcher",
+                "label": "Fetcher Workers\n(multi-threaded HTTP clients)\n× N machines",
+                "type": "service"
+            },
+            {
+                "id": "parser",
+                "label": "Content Parser\n(extract text + outlinks\ncharset detection)",
+                "type": "service"
+            },
+            {
+                "id": "dedup_url",
+                "label": "URL Dedup\n(Bloom Filter)\n~1GB for 1B URLs at 1% FPR",
+                "type": "cache"
+            },
+            {
+                "id": "dedup_content",
+                "label": "Content Dedup\n(SimHash fingerprint store)",
+                "type": "cache"
+            },
+            {
+                "id": "storage",
+                "label": "Raw Page Store\n(S3 / HDFS)\ncompressed WARC files",
+                "type": "database"
+            },
+            {
+                "id": "indexer",
+                "label": "Indexing Pipeline\n(Spark / MapReduce)",
+                "type": "service"
+            },
+            {
+                "id": "priority",
+                "label": "Priority Scorer\n(PageRank + freshness\n+ domain authority)",
+                "type": "service"
+            }
+        ],
+        "edges": [
+            {
+                "from": "seeds",
+                "to": "frontier",
+                "label": "bootstrap"
+            },
+            {
+                "from": "frontier",
+                "to": "politeness",
+                "label": "dequeue URL"
+            },
+            {
+                "from": "politeness",
+                "to": "dns",
+                "label": "resolve domain"
+            },
+            {
+                "from": "politeness",
+                "to": "fetcher",
+                "label": "release URL after crawl-delay"
+            },
+            {
+                "from": "fetcher",
+                "to": "storage",
+                "label": "store raw HTML"
+            },
+            {
+                "from": "fetcher",
+                "to": "parser",
+                "label": "pass response body"
+            },
+            {
+                "from": "parser",
+                "to": "dedup_url",
+                "label": "check each extracted link"
+            },
+            {
+                "from": "dedup_url",
+                "to": "frontier",
+                "label": "enqueue unseen URLs"
+            },
+            {
+                "from": "parser",
+                "to": "dedup_content",
+                "label": "check page fingerprint"
+            },
+            {
+                "from": "parser",
+                "to": "priority",
+                "label": "score new URLs"
+            },
+            {
+                "from": "priority",
+                "to": "frontier",
+                "label": "set priority score"
+            },
+            {
+                "from": "storage",
+                "to": "indexer",
+                "label": "async batch processing"
+            }
+        ],
+        "notes": [
+            "Bloom filter sizing: 1B URLs × 10 bits/element = 10Gb ≈ 1.25GB RAM at ~1% false positive rate (safe — FP just skips a URL)",
+            "Frontier is partitioned by domain using consistent hashing so each crawler worker 'owns' a set of domains — enforces politeness naturally",
+            "Spider trap defense: URL depth limit (e.g. max 5 hops from seed), URL length cap, and query parameter normalization",
+            "robots.txt cached per domain with TTL; fetched once on first hit per domain, honored strictly",
+            "Freshness recrawl: high-authority pages recrawled every 24h, low-authority monthly; change frequency estimated from past diffs"
+        ]
+    }
+}

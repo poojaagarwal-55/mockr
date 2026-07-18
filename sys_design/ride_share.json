@@ -1,0 +1,238 @@
+{
+    "slug": "ride-sharing",
+    "title": "Ride-Sharing Service",
+    "difficulty": "Hard",
+    "problemStatement": "Design a ride-sharing service like Uber or Lyft.\n\n**Functional Requirements:**\n- Riders can request rides by specifying pickup and drop-off locations\n- Match riders with nearby available drivers\n- Real-time location tracking for both riders and drivers\n- Fare estimation before ride confirmation\n- Payment processing after ride completion\n- Rating system for riders and drivers\n\n**Non-Functional Requirements:**\n- Match rider to driver within 30 seconds\n- Real-time location updates every 3–5 seconds\n- Support for surge pricing during high demand\n- Handle millions of concurrent rides\n\n**Scale:**\n- 50M riders, 5M drivers\n- 15M rides per day\n- Need to match riders within a few-kilometer radius in real-time",
+    "rubricLite": {
+        "requiredComponents": [
+            "Location Service (real-time driver position tracking)",
+            "Matching/Dispatch Service (find nearest available drivers)",
+            "Geospatial Index (QuadTree, GeoHash, or S2 cells for proximity queries)",
+            "Trip Service (ride lifecycle management)",
+            "Pricing/Fare Service (dynamic pricing engine)",
+            "Payment Service",
+            "Notification Service (push notifications for ride updates)"
+        ],
+        "keyTradeoffs": [
+            "QuadTree vs GeoHash vs S2 cells for spatial indexing",
+            "Push vs pull model for driver location updates",
+            "Surge pricing algorithms (market-based vs rule-based)",
+            "In-memory spatial index (fast) vs database geospatial queries (persistent)"
+        ],
+        "antiPatterns": [
+            "Computing distance between rider and all drivers (O(n) per request)",
+            "Using SQL LIKE queries for location matching",
+            "Not handling the 'thundering herd' problem (all drivers notified for one ride)",
+            "Tight coupling between matching and payment services"
+        ],
+        "followUpTriggers": [
+            {
+                "condition": "Candidate doesn't mention spatial indexing",
+                "question": "You have 5 million drivers. How do you efficiently find the 10 nearest ones to a rider without checking all 5 million?"
+            },
+            {
+                "condition": "Candidate doesn't discuss driver location updates",
+                "question": "Drivers are constantly moving. How do you keep their locations up-to-date in your system?"
+            },
+            {
+                "condition": "Candidate doesn't mention surge pricing",
+                "question": "During New Year's Eve, demand spikes 10x. How do you handle pricing and still ensure riders can get rides?"
+            }
+        ]
+    },
+    "rubricFull": {
+        "sampleAnswer": "Drivers send GPS updates every 4 seconds via WebSocket to a Location Service that updates an in-memory geospatial index (GeoHash-based grid). When a rider requests a ride, the Dispatch Service queries the index for available drivers within expanding radius, ranks by ETA (using a map/routing API), and sends ride offers to the top-3 drivers. First to accept gets matched. Trip Service manages ride lifecycle (REQUESTED→MATCHED→EN_ROUTE→IN_RIDE→COMPLETED). Fare calculated using distance + time + surge multiplier. Use Kafka for event streaming between services. Payment processed asynchronously after ride completion.",
+        "scoringDimensions": [
+            {
+                "name": "Location Tracking",
+                "weight": 20,
+                "criteria": "Efficient real-time driver location tracking and spatial indexing"
+            },
+            {
+                "name": "Matching Algorithm",
+                "weight": 25,
+                "criteria": "Fast proximity search with proper ranking and ETA estimation"
+            },
+            {
+                "name": "Ride Lifecycle",
+                "weight": 20,
+                "criteria": "Clear state machine for ride flows and edge cases"
+            },
+            {
+                "name": "Pricing",
+                "weight": 15,
+                "criteria": "Dynamic pricing with surge model and fare estimation"
+            },
+            {
+                "name": "Scalability",
+                "weight": 20,
+                "criteria": "Handling millions of concurrent location updates and ride requests"
+            }
+        ]
+    },
+    "hints": [
+        "Think about spatial data structures that let you query 'find all points within X km of this location' efficiently.",
+        "Driver locations change every few seconds. Where do you store that data, and how do you keep it current?",
+        "The matching problem is time-sensitive — you want to minimize rider wait time. How do you rank nearby drivers?"
+    ],
+    "followUpQuestions": [
+        "How would you implement ride pooling (shared rides with multiple passengers)?",
+        "How would you handle a scenario where the driver's app crashes mid-ride?",
+        "How would you design the surge pricing algorithm?"
+    ],
+    "createdAt": {
+        "$date": "2026-04-08T13:20:19.358Z"
+    },
+    "updatedAt": {
+        "$date": "2026-04-08T13:20:19.358Z"
+    },
+    "__v": 0,
+    "architectureDiagram": {
+        "nodes": [
+            {
+                "id": "driver_app",
+                "label": "Driver App",
+                "type": "client"
+            },
+            {
+                "id": "rider_app",
+                "label": "Rider App",
+                "type": "client"
+            },
+            {
+                "id": "location_service",
+                "label": "Location Service\n(WebSocket endpoint)",
+                "type": "service"
+            },
+            {
+                "id": "geo_index",
+                "label": "In-Memory GeoHash Index\n(Redis GEOADD)\ndriverId → lat/lng",
+                "type": "cache"
+            },
+            {
+                "id": "dispatch",
+                "label": "Dispatch Service\n(matching engine)",
+                "type": "service"
+            },
+            {
+                "id": "routing_api",
+                "label": "Routing API\n(Google Maps / OSRM)\nETA calculation",
+                "type": "service"
+            },
+            {
+                "id": "trip_service",
+                "label": "Trip Service\n(state machine)\nREQUESTED→MATCHED\n→EN_ROUTE→IN_RIDE→DONE",
+                "type": "service"
+            },
+            {
+                "id": "trip_db",
+                "label": "Trip DB\n(PostgreSQL)\nrides, drivers, riders",
+                "type": "database"
+            },
+            {
+                "id": "pricing",
+                "label": "Pricing Service\n(base fare + time\n+ distance + surge)",
+                "type": "service"
+            },
+            {
+                "id": "surge",
+                "label": "Surge Engine\n(demand/supply ratio\nper GeoHash cell)",
+                "type": "service"
+            },
+            {
+                "id": "payment",
+                "label": "Payment Service\n(Stripe / Braintree)",
+                "type": "service"
+            },
+            {
+                "id": "notif",
+                "label": "Notification Service\n(push to driver + rider)",
+                "type": "service"
+            },
+            {
+                "id": "kafka",
+                "label": "Kafka\n(location, trip, payment events)",
+                "type": "queue"
+            }
+        ],
+        "edges": [
+            {
+                "from": "driver_app",
+                "to": "location_service",
+                "label": "GPS update every 4s (WebSocket)"
+            },
+            {
+                "from": "location_service",
+                "to": "geo_index",
+                "label": "GEOADD driverId lat lng"
+            },
+            {
+                "from": "rider_app",
+                "to": "dispatch",
+                "label": "POST /requestRide (pickup, dropoff)"
+            },
+            {
+                "from": "dispatch",
+                "to": "geo_index",
+                "label": "GEORADIUS pickup 2km → top 10 drivers"
+            },
+            {
+                "from": "dispatch",
+                "to": "routing_api",
+                "label": "estimate ETA per candidate driver"
+            },
+            {
+                "from": "dispatch",
+                "to": "notif",
+                "label": "send offer to top-3 drivers"
+            },
+            {
+                "from": "driver_app",
+                "to": "dispatch",
+                "label": "accept / reject offer"
+            },
+            {
+                "from": "dispatch",
+                "to": "trip_service",
+                "label": "create trip on accept"
+            },
+            {
+                "from": "trip_service",
+                "to": "trip_db",
+                "label": "persist trip + state transitions"
+            },
+            {
+                "from": "trip_service",
+                "to": "kafka",
+                "label": "emit trip events"
+            },
+            {
+                "from": "trip_service",
+                "to": "pricing",
+                "label": "calculateFare on completion"
+            },
+            {
+                "from": "pricing",
+                "to": "surge",
+                "label": "get surge multiplier for area"
+            },
+            {
+                "from": "trip_service",
+                "to": "payment",
+                "label": "charge rider async"
+            },
+            {
+                "from": "notif",
+                "to": "rider_app",
+                "label": "driver matched / arriving / completed"
+            }
+        ],
+        "notes": [
+            "GeoHash precision level 6 (~1.2km cells) used for surge zone aggregation; level 8 (~38m) for driver lookup",
+            "Dispatch uses expanding radius search: try 1km → 2km → 5km with 5s timeout at each step",
+            "Surge multiplier = f(demand_requests / available_drivers) in cell; computed every 60s and cached",
+            "Trip state machine ensures idempotent transitions — driver app crash mid-ride resumes from last persisted state",
+            "Driver location updates: 5M drivers × 1 update/4s = 1.25M writes/s — handled by Location Service fleet behind a load balancer writing to Redis cluster"
+        ]
+    }
+}

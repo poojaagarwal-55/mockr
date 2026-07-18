@@ -1,0 +1,212 @@
+{
+    "slug": "chat-system",
+    "title": "Real-Time Chat System",
+    "difficulty": "Hard",
+    "problemStatement": "Design a real-time chat application similar to WhatsApp or Facebook Messenger.\n\n**Functional Requirements:**\n- One-on-one messaging between users\n- Group chats (up to 500 members)\n- Online/offline status indicators\n- Message read receipts\n- Support for text, images, and file sharing\n\n**Non-Functional Requirements:**\n- Real-time message delivery (< 100ms for online users)\n- Messages should be persisted and never lost\n- Support for millions of concurrent users\n- End-to-end encryption for messages\n\n**Scale:**\n- 500M daily active users\n- Average user sends 40 messages per day\n- 20B messages per day",
+    "rubricLite": {
+        "requiredComponents": [
+            "WebSocket servers for real-time bidirectional communication",
+            "Message queue (Kafka) for reliable message delivery",
+            "Chat database (Cassandra/HBase for write-heavy message storage)",
+            "User presence service (Redis for online/offline tracking)",
+            "Media storage service (S3 + CDN for images/files)",
+            "Push notification service for offline users"
+        ],
+        "keyTradeoffs": [
+            "WebSocket vs long polling vs SSE for real-time communication",
+            "Message storage: SQL vs NoSQL vs time-series DB",
+            "Fan-out on write vs fan-out on read for group messages",
+            "Storing messages on device vs server-side storage"
+        ],
+        "antiPatterns": [
+            "Using HTTP polling instead of WebSockets for real-time chat",
+            "Storing all messages in a single relational table",
+            "Not handling offline message delivery",
+            "No message ordering guarantees"
+        ],
+        "followUpTriggers": [
+            {
+                "condition": "Candidate doesn't mention WebSockets",
+                "question": "How would you push messages to the recipient in real-time without them constantly polling your server?"
+            },
+            {
+                "condition": "Candidate doesn't discuss offline users",
+                "question": "What happens when a user is offline when a message is sent to them?"
+            },
+            {
+                "condition": "Candidate doesn't mention message ordering",
+                "question": "How do you ensure messages appear in the correct order, especially in group chats?"
+            }
+        ]
+    },
+    "rubricFull": {
+        "sampleAnswer": "Use WebSocket connections through a gateway service for real-time messaging. Each user maintains a persistent connection. Messages are published to Kafka for durability, then routed to the recipient's WebSocket server. Store messages in Cassandra partitioned by (chat_id, timestamp) for efficient retrieval. Use Redis to track which server each user is connected to. For offline users, queue messages and send push notifications via APNs/FCM. Group messages use fan-out on write for small groups and fan-out on read for large groups.",
+        "scoringDimensions": [
+            {
+                "name": "Real-Time Architecture",
+                "weight": 25,
+                "criteria": "WebSocket-based design with proper connection management and routing"
+            },
+            {
+                "name": "Message Delivery",
+                "weight": 25,
+                "criteria": "Guaranteed delivery with offline support, ordering, and deduplication"
+            },
+            {
+                "name": "Data Model",
+                "weight": 20,
+                "criteria": "Efficient storage schema for messages, optimized for both write and read patterns"
+            },
+            {
+                "name": "Scalability",
+                "weight": 20,
+                "criteria": "Horizontal scaling of WebSocket servers, database partitioning strategy"
+            },
+            {
+                "name": "Additional Features",
+                "weight": 10,
+                "criteria": "Read receipts, typing indicators, presence, media sharing"
+            }
+        ]
+    },
+    "hints": [
+        "Think about the connection protocol — HTTP is request-response, but chat is bidirectional. What protocol supports that?",
+        "Consider how you would route a message when the sender and recipient are connected to different servers.",
+        "How would you partition your message storage? Think about common access patterns: loading a conversation's recent messages."
+    ],
+    "followUpQuestions": [
+        "How would you implement end-to-end encryption?",
+        "How would you handle message search across all conversations?",
+        "What changes would you need for video/voice calling support?"
+    ],
+    "createdAt": {
+        "$date": "2026-04-08T13:20:18.765Z"
+    },
+    "updatedAt": {
+        "$date": "2026-04-08T13:20:18.765Z"
+    },
+    "__v": 0,
+    "architectureDiagram": {
+        "nodes": [
+            {
+                "id": "sender",
+                "label": "Sender Client",
+                "type": "client"
+            },
+            {
+                "id": "receiver",
+                "label": "Receiver Client",
+                "type": "client"
+            },
+            {
+                "id": "ws_gateway",
+                "label": "WebSocket Gateway\n(Load Balanced)",
+                "type": "service"
+            },
+            {
+                "id": "ws_server_a",
+                "label": "WebSocket Server A\n(Sender connected)",
+                "type": "service"
+            },
+            {
+                "id": "ws_server_b",
+                "label": "WebSocket Server B\n(Receiver connected)",
+                "type": "service"
+            },
+            {
+                "id": "presence",
+                "label": "Presence Service\n(Redis: userId → serverId)",
+                "type": "cache"
+            },
+            {
+                "id": "kafka",
+                "label": "Kafka\n(Messages Topic)",
+                "type": "queue"
+            },
+            {
+                "id": "msg_service",
+                "label": "Message Service\n(persist + route)",
+                "type": "service"
+            },
+            {
+                "id": "cassandra",
+                "label": "Cassandra\nPK: (chat_id, bucket)\nCK: message_id DESC",
+                "type": "database"
+            },
+            {
+                "id": "s3",
+                "label": "S3 + CDN\n(Media Files)",
+                "type": "database"
+            },
+            {
+                "id": "push",
+                "label": "Push Notification\nService (APNs/FCM)",
+                "type": "service"
+            }
+        ],
+        "edges": [
+            {
+                "from": "sender",
+                "to": "ws_gateway",
+                "label": "persistent WS connection"
+            },
+            {
+                "from": "ws_gateway",
+                "to": "ws_server_a",
+                "label": "routed connection"
+            },
+            {
+                "from": "ws_server_a",
+                "to": "kafka",
+                "label": "publish message event"
+            },
+            {
+                "from": "kafka",
+                "to": "msg_service",
+                "label": "consume"
+            },
+            {
+                "from": "msg_service",
+                "to": "cassandra",
+                "label": "persist message"
+            },
+            {
+                "from": "msg_service",
+                "to": "presence",
+                "label": "lookup receiver's server"
+            },
+            {
+                "from": "msg_service",
+                "to": "ws_server_b",
+                "label": "route to receiver's server"
+            },
+            {
+                "from": "ws_server_b",
+                "to": "receiver",
+                "label": "push message via WS"
+            },
+            {
+                "from": "msg_service",
+                "to": "push",
+                "label": "if receiver offline"
+            },
+            {
+                "from": "push",
+                "to": "receiver",
+                "label": "APNs/FCM notification"
+            },
+            {
+                "from": "sender",
+                "to": "s3",
+                "label": "upload media (pre-signed URL)"
+            }
+        ],
+        "notes": [
+            "Cassandra partition key is (chat_id, time_bucket) — keeps hot partitions bounded and queries fast",
+            "Presence Redis key: 'presence:{userId}' → '{wsServerId}' with TTL; client sends heartbeat every 30s to refresh",
+            "Group chats < 100 members: fan-out on write (push to each member's server). > 100: fan-out on read (members pull on open)",
+            "Message deduplication: client assigns a UUID per message; server uses INSERT IF NOT EXISTS in Cassandra",
+            "Read receipts flow back through the same WebSocket path in reverse as a separate event type"
+        ]
+    }
+}

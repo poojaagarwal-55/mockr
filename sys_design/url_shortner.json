@@ -1,0 +1,210 @@
+{
+    "slug": "url-shortener",
+    "title": "URL Shortener Design",
+    "difficulty": "Medium",
+    "problemStatement": "Design a URL shortening service similar to TinyURL or Bit.ly.\n\n**Functional Requirements:**\n- Given a long URL, generate a unique short URL\n- When users access the short URL, redirect them to the original long URL\n- Users can optionally set custom short links\n- Links should expire after a configurable time period\n\n**Non-Functional Requirements:**\n- The system should be highly available\n- URL redirection should happen in real-time with minimal latency\n- Shortened links should not be predictable\n\n**Scale:**\n- 100M new URLs per month\n- 10:1 read to write ratio (1B redirections per month)",
+    "rubricLite": {
+        "requiredComponents": [
+            "API Gateway / Load Balancer",
+            "Application Server",
+            "Database (NoSQL preferred for key-value lookups)",
+            "Cache layer (Redis/Memcached for hot URLs)",
+            "Base62/Base58 encoding or hash-based ID generation"
+        ],
+        "keyTradeoffs": [
+            "SQL vs NoSQL for storage — NoSQL is better for simple key-value lookups at scale",
+            "Hash-based vs counter-based short code generation",
+            "Cache eviction strategy — LRU for hot URLs",
+            "Handling hash collisions if using MD5/SHA truncation"
+        ],
+        "antiPatterns": [
+            "Using auto-increment IDs directly (predictable, security risk)",
+            "No caching layer (every redirect hits DB)",
+            "Single database without replication (availability risk)",
+            "Not handling expired URLs cleanup"
+        ],
+        "followUpTriggers": [
+            {
+                "condition": "Candidate doesn't mention caching",
+                "question": "If a viral tweet contains one of your short URLs and it gets millions of clicks in an hour, how would your system handle that?"
+            },
+            {
+                "condition": "Candidate uses sequential IDs",
+                "question": "If I can guess your short URLs by incrementing the ID, what security implications does that have?"
+            },
+            {
+                "condition": "Candidate doesn't discuss scale",
+                "question": "How would your system handle 100 million new URLs being created every month?"
+            }
+        ]
+    },
+    "rubricFull": {
+        "sampleAnswer": "A URL shortener needs an API layer behind a load balancer, an encoding service that converts numeric IDs to Base62 strings, a NoSQL database (like DynamoDB or Cassandra) for O(1) key-value lookups, and a Redis cache for frequently accessed URLs. Use a distributed ID generator (Twitter Snowflake or Zookeeper-based counter ranges) to avoid collisions. The read path checks cache first, falls back to DB. For analytics, stream click events to Kafka for async processing.",
+        "scoringDimensions": [
+            {
+                "name": "API Design",
+                "weight": 15,
+                "criteria": "Clean REST API with proper endpoints for create, redirect, and delete operations"
+            },
+            {
+                "name": "Encoding Strategy",
+                "weight": 20,
+                "criteria": "Sound approach for generating unique, non-predictable short codes (Base62, hashing)"
+            },
+            {
+                "name": "Data Storage",
+                "weight": 20,
+                "criteria": "Appropriate database choice with proper schema for high read throughput"
+            },
+            {
+                "name": "Caching",
+                "weight": 15,
+                "criteria": "Cache layer for hot URLs with proper eviction strategy"
+            },
+            {
+                "name": "Scalability",
+                "weight": 20,
+                "criteria": "Horizontal scaling plan, database sharding/partitioning strategy"
+            },
+            {
+                "name": "Edge Cases",
+                "weight": 10,
+                "criteria": "Handles collisions, expiration, custom aliases, and abuse prevention"
+            }
+        ]
+    },
+    "hints": [
+        "Think about the read-to-write ratio — this system is read-heavy. What does that imply for your architecture?",
+        "Consider using Base62 encoding (a-z, A-Z, 0-9) — how many characters do you need for 100M URLs?",
+        "What happens when two users submit the same long URL? Should they get the same short URL?"
+    ],
+    "followUpQuestions": [
+        "How would you implement analytics (click tracking, geographic data)?",
+        "How would you handle link expiration at scale?",
+        "How would you prevent abuse (spam URLs, phishing)?"
+    ],
+    "createdAt": {
+        "$date": "2026-04-08T13:20:18.616Z"
+    },
+    "updatedAt": {
+        "$date": "2026-04-08T13:20:18.616Z"
+    },
+    "__v": 0,
+    "architectureDiagram": {
+        "nodes": [
+            {
+                "id": "client",
+                "label": "Client / Browser",
+                "type": "client"
+            },
+            {
+                "id": "lb",
+                "label": "Load Balancer",
+                "type": "service"
+            },
+            {
+                "id": "app",
+                "label": "App Server\n(Encoding Service)",
+                "type": "service"
+            },
+            {
+                "id": "id_gen",
+                "label": "Distributed ID Generator\n(Snowflake / Zookeeper)",
+                "type": "service"
+            },
+            {
+                "id": "cache",
+                "label": "Redis Cache\n(LRU Eviction)",
+                "type": "cache"
+            },
+            {
+                "id": "db",
+                "label": "NoSQL DB\n(DynamoDB / Cassandra)\nshortCode → longURL",
+                "type": "database"
+            },
+            {
+                "id": "cleanup",
+                "label": "Expiry Cleanup\nWorker (Cron)",
+                "type": "service"
+            },
+            {
+                "id": "kafka",
+                "label": "Kafka\n(Click Events)",
+                "type": "queue"
+            },
+            {
+                "id": "analytics",
+                "label": "Analytics Service",
+                "type": "service"
+            }
+        ],
+        "edges": [
+            {
+                "from": "client",
+                "to": "lb",
+                "label": "POST /shorten\nGET /{shortCode}"
+            },
+            {
+                "from": "lb",
+                "to": "app",
+                "label": "routes request"
+            },
+            {
+                "from": "app",
+                "to": "id_gen",
+                "label": "generate unique ID (write path)"
+            },
+            {
+                "from": "app",
+                "to": "cache",
+                "label": "lookup shortCode (read path first)"
+            },
+            {
+                "from": "cache",
+                "to": "db",
+                "label": "cache miss → fallback"
+            },
+            {
+                "from": "app",
+                "to": "db",
+                "label": "write shortCode on create"
+            },
+            {
+                "from": "app",
+                "to": "kafka",
+                "label": "emit click event async"
+            },
+            {
+                "from": "kafka",
+                "to": "analytics",
+                "label": "consume & aggregate"
+            },
+            {
+                "from": "cleanup",
+                "to": "db",
+                "label": "delete expired records"
+            }
+        ],
+        "readPath": [
+            "client",
+            "lb",
+            "app",
+            "cache",
+            "db"
+        ],
+        "writePath": [
+            "client",
+            "lb",
+            "app",
+            "id_gen",
+            "db",
+            "cache"
+        ],
+        "notes": [
+            "7 Base62 characters give 62^7 ≈ 3.5 trillion unique codes — enough headroom for 100M/month for decades",
+            "Cache hit ratio target > 80% since 80% of traffic hits 20% of URLs (Pareto principle)",
+            "Snowflake IDs are 64-bit, time-sortable, and generated without coordination — ideal for distributed writes",
+            "DB schema: { shortCode (PK), longURL, userId, createdAt, expiresAt, customAlias? }"
+        ]
+    }
+}

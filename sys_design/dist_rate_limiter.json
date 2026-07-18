@@ -1,0 +1,180 @@
+{
+    "slug": "rate-limiter",
+    "title": "Distributed Rate Limiter",
+    "difficulty": "Easy",
+    "problemStatement": "Design a distributed rate limiter that can be used to throttle API requests.\n\n**Functional Requirements:**\n- Limit the number of requests a user/client can make in a given time window\n- Support different rate limits for different API endpoints\n- Return appropriate HTTP 429 responses when limit is exceeded\n- Support both per-user and global rate limits\n\n**Non-Functional Requirements:**\n- Very low latency (should not add significant overhead to requests)\n- Highly available — if the rate limiter goes down, allow requests through\n- Accurate counting even in a distributed environment\n\n**Scale:**\n- 10M requests per second across all services\n- Thousands of API servers behind the rate limiter",
+    "rubricLite": {
+        "requiredComponents": [
+            "Redis cluster for distributed counters",
+            "Rate limiting algorithm (Token Bucket / Sliding Window)",
+            "API Gateway or middleware integration",
+            "Configuration service for rate limit rules"
+        ],
+        "keyTradeoffs": [
+            "Token Bucket vs Leaky Bucket vs Fixed Window vs Sliding Window Log vs Sliding Window Counter",
+            "Centralized (Redis) vs local rate limiting with periodic sync",
+            "Hard rate limiting vs soft (with some tolerance for distributed lag)",
+            "Fail-open vs fail-closed when Redis is unavailable"
+        ],
+        "antiPatterns": [
+            "Using a relational database for rate limit counters",
+            "Fixed window counters that allow burst at window boundaries",
+            "Not handling clock drift across distributed servers",
+            "Fail-closed design that blocks all traffic when rate limiter is down"
+        ],
+        "followUpTriggers": [
+            {
+                "condition": "Candidate uses fixed window",
+                "question": "What happens if a user sends all their requests at the boundary between two windows?"
+            },
+            {
+                "condition": "Candidate doesn't mention distributed challenges",
+                "question": "If you have 100 API servers each checking rates independently, how do you ensure accurate global counts?"
+            },
+            {
+                "condition": "Candidate doesn't discuss failure modes",
+                "question": "What happens to your API traffic if Redis goes down?"
+            }
+        ]
+    },
+    "rubricFull": {
+        "sampleAnswer": "Implement a sliding window rate limiter using Redis with sorted sets. Each request adds a timestamped entry, and we count entries within the window using ZRANGEBYSCORE. For performance, use a hybrid approach: local in-memory counters synced to Redis periodically. Place the rate limiter as middleware in the API gateway. Use a token bucket algorithm for smoothing. Fail-open if Redis is unavailable. Store rate limit rules in a config service that can be updated without redeployment.",
+        "scoringDimensions": [
+            {
+                "name": "Algorithm Choice",
+                "weight": 30,
+                "criteria": "Understanding of different rate limiting algorithms and appropriate selection"
+            },
+            {
+                "name": "Distributed Design",
+                "weight": 25,
+                "criteria": "Handling distributed counting accurately with Redis or similar"
+            },
+            {
+                "name": "Integration",
+                "weight": 15,
+                "criteria": "Where the rate limiter sits in the architecture (gateway, middleware, sidecar)"
+            },
+            {
+                "name": "Failure Handling",
+                "weight": 20,
+                "criteria": "Graceful degradation, fail-open behavior, monitoring"
+            },
+            {
+                "name": "Configuration",
+                "weight": 10,
+                "criteria": "Dynamic rule updates, per-endpoint/per-user customization"
+            }
+        ]
+    },
+    "hints": [
+        "Consider the trade-offs between different algorithms: Token Bucket allows bursts, Sliding Window is more precise.",
+        "Redis has atomic operations like INCR and EXPIRE that are useful here — think about how to use them together.",
+        "What should happen at the boundary of time windows? That's where fixed window counters have a well-known problem."
+    ],
+    "followUpQuestions": [
+        "How would you implement tiered rate limits (free vs premium users)?",
+        "How would you rate limit by IP vs by authenticated user vs globally?",
+        "How would you handle rate limiting in a multi-region setup?"
+    ],
+    "createdAt": {
+        "$date": "2026-04-08T13:20:18.827Z"
+    },
+    "updatedAt": {
+        "$date": "2026-04-08T13:20:18.827Z"
+    },
+    "__v": 0,
+    "architectureDiagram": {
+        "nodes": [
+            {
+                "id": "client",
+                "label": "Client",
+                "type": "client"
+            },
+            {
+                "id": "gateway",
+                "label": "API Gateway\n(rate limiter middleware\nruns here before routing)",
+                "type": "service"
+            },
+            {
+                "id": "local_counter",
+                "label": "Local In-Memory Counter\n(per API server)\nsynced every 100ms",
+                "type": "cache"
+            },
+            {
+                "id": "redis",
+                "label": "Redis Cluster\n(sliding window sorted sets)\nZADD / ZCOUNT atomic ops",
+                "type": "cache"
+            },
+            {
+                "id": "config",
+                "label": "Config Service\n(rate limit rules)\n{ endpoint, userId, limit, windowMs }",
+                "type": "service"
+            },
+            {
+                "id": "api_server",
+                "label": "API Servers\n(downstream services)",
+                "type": "service"
+            },
+            {
+                "id": "dlq",
+                "label": "Alerting / Metrics\n(429 rate, top offenders)",
+                "type": "service"
+            }
+        ],
+        "edges": [
+            {
+                "from": "client",
+                "to": "gateway",
+                "label": "HTTP request"
+            },
+            {
+                "from": "gateway",
+                "to": "config",
+                "label": "fetch rule for (userId, endpoint)"
+            },
+            {
+                "from": "gateway",
+                "to": "local_counter",
+                "label": "check local approx count first\n(fast path, avoids Redis round-trip)"
+            },
+            {
+                "from": "local_counter",
+                "to": "redis",
+                "label": "sync delta every 100ms"
+            },
+            {
+                "from": "gateway",
+                "to": "redis",
+                "label": "ZADD + ZCOUNT for exact count\n(slow path on local threshold breach)"
+            },
+            {
+                "from": "gateway",
+                "to": "api_server",
+                "label": "forward if allowed (200)"
+            },
+            {
+                "from": "gateway",
+                "to": "client",
+                "label": "HTTP 429 + Retry-After header if denied"
+            },
+            {
+                "from": "gateway",
+                "to": "dlq",
+                "label": "emit 429 metric"
+            },
+            {
+                "from": "redis",
+                "to": "gateway",
+                "label": "fail-open if Redis timeout > 5ms"
+            }
+        ],
+        "notes": [
+            "Sliding window with sorted set: ZADD ratelimit:{userId}:{endpoint} {now_ms} {request_uuid}; ZREMRANGEBYSCORE 0 {now_ms - windowMs}; count = ZCARD — all in a single Lua script for atomicity",
+            "Hybrid approach: local counter handles ~80% of traffic without Redis; only syncs to Redis when local count approaches the limit threshold",
+            "Fail-open policy: if Redis is unreachable, allow the request through and log — availability > strict accuracy during outage",
+            "Fixed window double-spend attack: user can make 2× the limit by sending all requests at the end of window N and the start of window N+1 — sliding window eliminates this",
+            "Response headers to always include: X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset (epoch seconds of window reset)"
+        ]
+    }
+}

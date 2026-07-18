@@ -1,0 +1,237 @@
+{
+    "slug": "notification-system",
+    "title": "Push Notification System",
+    "difficulty": "Medium",
+    "problemStatement": "Design a scalable notification system that supports multiple channels.\n\n**Functional Requirements:**\n- Send notifications via push (iOS/Android), SMS, and email\n- Support instant, scheduled, and batched notifications\n- Users can set notification preferences (opt-in/out per channel)\n- Template-based notification content\n- Notification history and read/unread tracking\n\n**Non-Functional Requirements:**\n- At-least-once delivery guarantee\n- Handle millions of notifications per day\n- Low latency for real-time notifications (< 5 seconds)\n- Graceful degradation when downstream providers are slow\n\n**Scale:**\n- 10M users\n- 100M notifications per day across all channels",
+    "rubricLite": {
+        "requiredComponents": [
+            "Notification Service (orchestration layer)",
+            "Message Queue (Kafka/RabbitMQ for async processing)",
+            "Channel-specific workers (Push, SMS, Email)",
+            "User preference store",
+            "Template engine",
+            "Notification database for history/tracking"
+        ],
+        "keyTradeoffs": [
+            "Push vs pull for notification delivery",
+            "At-least-once vs exactly-once delivery semantics",
+            "Inline processing vs async queue-based processing",
+            "Single queue vs per-channel queues vs priority queues"
+        ],
+        "antiPatterns": [
+            "Synchronous notification sending blocking the main request",
+            "No retry mechanism for failed deliveries",
+            "Sending notifications without checking user preferences",
+            "No deduplication leading to duplicate notifications"
+        ],
+        "followUpTriggers": [
+            {
+                "condition": "Candidate processes synchronously",
+                "question": "If you need to send a notification to 1 million users for a flash sale, how would your synchronous approach handle that?"
+            },
+            {
+                "condition": "Candidate doesn't mention preferences",
+                "question": "What if a user has disabled email notifications but your system still sends them? How do you prevent that?"
+            },
+            {
+                "condition": "Candidate doesn't discuss failures",
+                "question": "What happens when the email provider is down? Do you lose those notifications?"
+            }
+        ]
+    },
+    "rubricFull": {
+        "sampleAnswer": "The notification service receives requests via API, validates against user preferences, applies templates, and publishes to Kafka topic(s) partitioned by channel type. Per-channel worker pools consume from Kafka and deliver via provider SDKs (APNs, FCM, Twilio, SendGrid). Failed deliveries are retried with exponential backoff using a dead-letter queue. Store notification history in Cassandra. Use Redis for rate limiting per user. Support priority levels with separate Kafka partitions.",
+        "scoringDimensions": [
+            {
+                "name": "Architecture",
+                "weight": 25,
+                "criteria": "Event-driven async architecture with proper separation of concerns"
+            },
+            {
+                "name": "Reliability",
+                "weight": 25,
+                "criteria": "Retry mechanisms, dead-letter queues, at-least-once delivery"
+            },
+            {
+                "name": "Multi-Channel",
+                "weight": 20,
+                "criteria": "Clean abstraction for different notification channels"
+            },
+            {
+                "name": "User Preferences",
+                "weight": 15,
+                "criteria": "Preference management, opt-in/opt-out, quiet hours"
+            },
+            {
+                "name": "Scalability",
+                "weight": 15,
+                "criteria": "Queue-based processing, horizontal scaling of workers"
+            }
+        ]
+    },
+    "hints": [
+        "Think about this as an event-driven system — the caller shouldn't wait for the notification to actually be delivered.",
+        "Different channels have very different latency profiles: push is instant, email can be batched, SMS has rate limits from providers.",
+        "What happens when you need to notify 1M users about a sale? You can't do that synchronously."
+    ],
+    "followUpQuestions": [
+        "How would you implement notification aggregation (e.g., '3 people liked your post' instead of 3 separate notifications)?",
+        "How would you handle priority notifications (security alerts) vs low-priority ones (marketing)?",
+        "How would you implement scheduled notifications (e.g., reminder 1 hour before event)?"
+    ],
+    "createdAt": {
+        "$date": "2026-04-08T13:20:18.886Z"
+    },
+    "updatedAt": {
+        "$date": "2026-04-08T13:20:18.886Z"
+    },
+    "__v": 0,
+    "architectureDiagram": {
+        "nodes": [
+            {
+                "id": "caller",
+                "label": "Caller Service\n(e.g. Order Service)",
+                "type": "client"
+            },
+            {
+                "id": "notif_api",
+                "label": "Notification API\n(validate + enrich)",
+                "type": "service"
+            },
+            {
+                "id": "pref_store",
+                "label": "User Preference Store\n(MySQL/Redis)",
+                "type": "database"
+            },
+            {
+                "id": "template",
+                "label": "Template Engine\n(Handlebars / Jinja)",
+                "type": "service"
+            },
+            {
+                "id": "kafka",
+                "label": "Kafka\ntopic: push | sms | email\n(priority partitions)",
+                "type": "queue"
+            },
+            {
+                "id": "push_worker",
+                "label": "Push Worker Pool\n(APNs + FCM)",
+                "type": "service"
+            },
+            {
+                "id": "sms_worker",
+                "label": "SMS Worker Pool\n(Twilio / Vonage)",
+                "type": "service"
+            },
+            {
+                "id": "email_worker",
+                "label": "Email Worker Pool\n(SendGrid / SES)",
+                "type": "service"
+            },
+            {
+                "id": "dlq",
+                "label": "Dead-Letter Queue\n(failed after retries)",
+                "type": "queue"
+            },
+            {
+                "id": "history_db",
+                "label": "Notification History\n(Cassandra)\nread/unread tracking",
+                "type": "database"
+            },
+            {
+                "id": "rate_limiter",
+                "label": "Rate Limiter\n(Redis: per-user cap)",
+                "type": "cache"
+            },
+            {
+                "id": "scheduler",
+                "label": "Scheduler\n(Delayed/Batched jobs)",
+                "type": "service"
+            }
+        ],
+        "edges": [
+            {
+                "from": "caller",
+                "to": "notif_api",
+                "label": "POST /notify (async, returns 202)"
+            },
+            {
+                "from": "notif_api",
+                "to": "pref_store",
+                "label": "check opt-in + quiet hours"
+            },
+            {
+                "from": "notif_api",
+                "to": "rate_limiter",
+                "label": "enforce per-user cap"
+            },
+            {
+                "from": "notif_api",
+                "to": "template",
+                "label": "render content"
+            },
+            {
+                "from": "notif_api",
+                "to": "kafka",
+                "label": "publish to channel topic"
+            },
+            {
+                "from": "scheduler",
+                "to": "kafka",
+                "label": "publish at scheduled time"
+            },
+            {
+                "from": "kafka",
+                "to": "push_worker",
+                "label": "consume push topic"
+            },
+            {
+                "from": "kafka",
+                "to": "sms_worker",
+                "label": "consume sms topic"
+            },
+            {
+                "from": "kafka",
+                "to": "email_worker",
+                "label": "consume email topic"
+            },
+            {
+                "from": "push_worker",
+                "to": "dlq",
+                "label": "exponential backoff → DLQ"
+            },
+            {
+                "from": "sms_worker",
+                "to": "dlq",
+                "label": "exponential backoff → DLQ"
+            },
+            {
+                "from": "email_worker",
+                "to": "dlq",
+                "label": "exponential backoff → DLQ"
+            },
+            {
+                "from": "push_worker",
+                "to": "history_db",
+                "label": "record delivery status"
+            },
+            {
+                "from": "sms_worker",
+                "to": "history_db",
+                "label": "record delivery status"
+            },
+            {
+                "from": "email_worker",
+                "to": "history_db",
+                "label": "record delivery status"
+            }
+        ],
+        "notes": [
+            "API returns HTTP 202 immediately — delivery is fully asynchronous; caller is never blocked",
+            "Kafka partitioning strategy: partition by userId ensures ordering per user; separate high-priority topic for security alerts",
+            "Retry policy: 3 attempts with exponential backoff (1s, 4s, 16s) before moving to DLQ for manual triage",
+            "Preference check fields: { channelEnabled, quietHoursStart, quietHoursEnd, timezone, frequency_cap_per_day }",
+            "Deduplication key: hash(userId + templateId + entityId) stored in Redis with TTL equal to dedup window"
+        ]
+    }
+}

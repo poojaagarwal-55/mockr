@@ -1,0 +1,217 @@
+{
+    "slug": "content-delivery-network",
+    "title": "Content Delivery Network (CDN)",
+    "difficulty": "Medium",
+    "problemStatement": "Design a Content Delivery Network (CDN) that serves static and dynamic content with low latency globally.\n\n**Functional Requirements:**\n- Cache and serve static content (images, CSS, JS, videos) from edge servers\n- Origin pull: fetch from origin server on cache miss\n- Cache invalidation / purging\n- Support for custom domains and SSL certificates\n- Analytics: hit rate, bandwidth, latency per edge location\n\n**Non-Functional Requirements:**\n- Sub-100ms response time for cached content globally\n- 99.99% availability\n- Support for terabytes of cached content per edge node\n- Handle traffic spikes (e.g., viral content)\n\n**Scale:**\n- 200+ edge locations worldwide\n- 10M requests per second globally\n- Petabytes of content served daily",
+    "rubricLite": {
+        "requiredComponents": [
+            "Edge servers / Points of Presence (PoPs) globally distributed",
+            "DNS-based or Anycast routing to nearest edge",
+            "Origin servers (customer's web servers)",
+            "Cache management layer (LRU/LFU eviction)",
+            "Health monitoring and failover",
+            "SSL/TLS termination at edge"
+        ],
+        "keyTradeoffs": [
+            "Push vs pull caching (pre-populate vs cache on first request)",
+            "DNS-based vs Anycast vs HTTP redirect routing",
+            "Cache consistency vs performance (TTL-based vs purge-based invalidation)",
+            "Edge compute vs origin compute for dynamic content"
+        ],
+        "antiPatterns": [
+            "No cache hierarchy (every miss goes directly to origin)",
+            "Long TTLs with no invalidation mechanism (serving stale content)",
+            "Single origin server (bottleneck and SPOF)",
+            "Not handling cache stampede (thundering herd on cache miss)"
+        ],
+        "followUpTriggers": [
+            {
+                "condition": "Candidate doesn't mention routing",
+                "question": "How does a user's request get routed to the nearest edge server?"
+            },
+            {
+                "condition": "Candidate doesn't discuss cache invalidation",
+                "question": "A customer deploys a new version of their website. How do you ensure all edge servers serve the new content?"
+            },
+            {
+                "condition": "Candidate doesn't mention cache hierarchy",
+                "question": "If an edge server has a cache miss, should it go directly to the origin? What if 100 edge servers have the same miss simultaneously?"
+            }
+        ]
+    },
+    "rubricFull": {
+        "sampleAnswer": "Users are routed to the nearest PoP via Anycast or GeoDNS. Each edge server checks its local cache first. On miss, it checks a regional/shield cache (mid-tier) before going to origin — this tiered approach prevents origin overload. Cache keys include URL + relevant headers (Accept-Encoding, etc.). Use consistent hashing within each PoP to distribute cached content across servers. Invalidation via purge API that cascades through the hierarchy. SSL termination at edge with certificate management via Let's Encrypt or customer-uploaded certs. Monitor with real-time analytics on hit rates, latency percentiles, and error rates.",
+        "scoringDimensions": [
+            {
+                "name": "Routing",
+                "weight": 20,
+                "criteria": "DNS/Anycast-based routing to nearest edge location"
+            },
+            {
+                "name": "Caching Architecture",
+                "weight": 30,
+                "criteria": "Multi-tier cache hierarchy, eviction policies, cache key design"
+            },
+            {
+                "name": "Cache Invalidation",
+                "weight": 20,
+                "criteria": "TTL-based and purge-based invalidation, consistency guarantees"
+            },
+            {
+                "name": "Scalability",
+                "weight": 20,
+                "criteria": "Handling traffic spikes, distributed architecture"
+            },
+            {
+                "name": "Operations",
+                "weight": 10,
+                "criteria": "Health checks, failover, monitoring, SSL management"
+            }
+        ]
+    },
+    "hints": [
+        "Think about how a user's HTTP request gets routed to a server that's geographically close to them. DNS plays a key role here.",
+        "Consider a multi-tier cache: edge → regional shield → origin. This prevents the 'cache stampede' problem.",
+        "How do you invalidate cached content? There's a famous quote: 'There are only two hard things in CS: cache invalidation and naming things.'"
+    ],
+    "followUpQuestions": [
+        "How would you handle video streaming (large files, seek support, adaptive bitrate)?",
+        "How would you implement edge computing for dynamic content personalization?",
+        "How would you protect against DDoS attacks at the edge?"
+    ],
+    "createdAt": {
+        "$date": "2026-04-08T13:20:19.420Z"
+    },
+    "updatedAt": {
+        "$date": "2026-04-08T13:20:19.420Z"
+    },
+    "__v": 0,
+    "architectureDiagram": {
+        "nodes": [
+            {
+                "id": "user",
+                "label": "End User\n(browser / app)",
+                "type": "client"
+            },
+            {
+                "id": "geodns",
+                "label": "GeoDNS / Anycast\n(route to nearest PoP)",
+                "type": "service"
+            },
+            {
+                "id": "edge_pop",
+                "label": "Edge PoP\n(200+ locations)\nSSL termination\nLRU cache (SSD)",
+                "type": "service"
+            },
+            {
+                "id": "shield",
+                "label": "Regional Shield Cache\n(mid-tier, per continent)\ncollapses origin requests",
+                "type": "cache"
+            },
+            {
+                "id": "origin_lb",
+                "label": "Origin Load Balancer",
+                "type": "service"
+            },
+            {
+                "id": "origin",
+                "label": "Customer Origin Servers\n(redundant)",
+                "type": "server"
+            },
+            {
+                "id": "purge_api",
+                "label": "Purge / Invalidation API\n(cascade: edge → shield)",
+                "type": "service"
+            },
+            {
+                "id": "cert_mgr",
+                "label": "Certificate Manager\n(Let's Encrypt / custom certs)",
+                "type": "service"
+            },
+            {
+                "id": "analytics",
+                "label": "Analytics Pipeline\n(hit rate, latency p99,\nbandwidth per PoP)",
+                "type": "service"
+            },
+            {
+                "id": "health",
+                "label": "Health Monitor\n(anycast failover\nif PoP goes down)",
+                "type": "service"
+            }
+        ],
+        "edges": [
+            {
+                "from": "user",
+                "to": "geodns",
+                "label": "DNS lookup → nearest PoP IP"
+            },
+            {
+                "from": "user",
+                "to": "edge_pop",
+                "label": "HTTPS request (TLS terminated here)"
+            },
+            {
+                "from": "edge_pop",
+                "to": "edge_pop",
+                "label": "cache HIT → respond <10ms"
+            },
+            {
+                "from": "edge_pop",
+                "to": "shield",
+                "label": "cache MISS → check regional shield"
+            },
+            {
+                "from": "shield",
+                "to": "origin_lb",
+                "label": "shield MISS → fetch from origin (1 request, not N)"
+            },
+            {
+                "from": "origin_lb",
+                "to": "origin",
+                "label": "forward to origin"
+            },
+            {
+                "from": "origin",
+                "to": "shield",
+                "label": "response cached at shield"
+            },
+            {
+                "from": "shield",
+                "to": "edge_pop",
+                "label": "response cached at edge"
+            },
+            {
+                "from": "purge_api",
+                "to": "edge_pop",
+                "label": "invalidate by URL / tag / prefix"
+            },
+            {
+                "from": "purge_api",
+                "to": "shield",
+                "label": "cascade invalidation"
+            },
+            {
+                "from": "cert_mgr",
+                "to": "edge_pop",
+                "label": "provision/rotate TLS certs"
+            },
+            {
+                "from": "edge_pop",
+                "to": "analytics",
+                "label": "stream access logs"
+            },
+            {
+                "from": "health",
+                "to": "geodns",
+                "label": "update routing if PoP unhealthy"
+            }
+        ],
+        "notes": [
+            "Cache key = normalize(URL) + Vary headers (e.g. Accept-Encoding, Accept-Language) — must strip tracking query params to maximize HIT rate",
+            "Shield layer is the key insight: prevents cache stampede where 200 edge nodes simultaneously miss and flood the origin",
+            "Cache stampede at edge level: use request coalescing (only 1 in-flight origin request per cache key; others wait for result)",
+            "TTL strategy: static assets (JS/CSS with hash) → 1 year; HTML → 60s; API responses → no-cache",
+            "Anycast failover: if a PoP becomes unhealthy, BGP withdraws its route advertisement; traffic automatically reroutes to next-closest PoP within seconds"
+        ]
+    }
+}

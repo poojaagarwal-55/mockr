@@ -1,0 +1,227 @@
+{
+    "slug": "key-value-store",
+    "title": "Distributed Key-Value Store",
+    "difficulty": "Hard",
+    "problemStatement": "Design a distributed key-value store similar to Amazon DynamoDB or Apache Cassandra.\n\n**Functional Requirements:**\n- Put(key, value) — store a key-value pair\n- Get(key) — retrieve the value for a given key\n- Delete(key) — remove a key-value pair\n- Support for configurable consistency levels (strong, eventual)\n- Automatic data partitioning across nodes\n\n**Non-Functional Requirements:**\n- Highly available (no single point of failure)\n- Horizontally scalable by adding more nodes\n- Durable — data survives node failures\n- Low latency (<10ms for reads and writes)\n\n**Scale:**\n- Petabytes of data across thousands of nodes\n- Millions of operations per second",
+    "rubricLite": {
+        "requiredComponents": [
+            "Consistent hashing ring for data partitioning",
+            "Replication across multiple nodes (configurable replication factor)",
+            "Gossip protocol for cluster membership",
+            "Write-ahead log (WAL) for durability",
+            "SSTable/LSM tree for storage engine",
+            "Conflict resolution (vector clocks / last-write-wins)"
+        ],
+        "keyTradeoffs": [
+            "CAP theorem: consistency vs availability during network partitions",
+            "Strong consistency (quorum reads/writes) vs eventual consistency",
+            "LSM tree (write-optimized) vs B-tree (read-optimized) storage",
+            "Replication factor vs storage cost vs durability"
+        ],
+        "antiPatterns": [
+            "Using a single master node (single point of failure)",
+            "Not handling node failures and data rebalancing",
+            "Ignoring the CAP theorem tradeoffs",
+            "No compaction strategy for LSM trees (unbounded disk usage)"
+        ],
+        "followUpTriggers": [
+            {
+                "condition": "Candidate doesn't mention partitioning",
+                "question": "How do you decide which node stores which keys? What happens when you add a new node?"
+            },
+            {
+                "condition": "Candidate uses single master",
+                "question": "What happens when your master node goes down? How do writes continue?"
+            },
+            {
+                "condition": "Candidate doesn't discuss consistency",
+                "question": "If you write to node A and immediately read from node B, will you get the latest value? How do you handle that?"
+            }
+        ]
+    },
+    "rubricFull": {
+        "sampleAnswer": "Use consistent hashing with virtual nodes for even distribution. Each key is replicated to N successor nodes on the ring. Use quorum-based reads/writes (W + R > N for strong consistency). Storage engine uses an LSM tree: writes go to an in-memory memtable (backed by WAL), which flushes to immutable SSTables on disk. Background compaction merges SSTables. Node membership via gossip protocol. Handle conflicts with vector clocks. Use Merkle trees for anti-entropy (detecting/repairing inconsistencies between replicas).",
+        "scoringDimensions": [
+            {
+                "name": "Partitioning",
+                "weight": 25,
+                "criteria": "Consistent hashing with virtual nodes, handling rebalancing"
+            },
+            {
+                "name": "Replication",
+                "weight": 25,
+                "criteria": "Multi-node replication with configurable consistency"
+            },
+            {
+                "name": "Storage Engine",
+                "weight": 20,
+                "criteria": "LSM tree or similar write-optimized storage with compaction"
+            },
+            {
+                "name": "Failure Handling",
+                "weight": 20,
+                "criteria": "Node failure detection, data repair, hinted handoff"
+            },
+            {
+                "name": "Consistency Model",
+                "weight": 10,
+                "criteria": "Understanding of CAP theorem, quorum mechanics, conflict resolution"
+            }
+        ]
+    },
+    "hints": [
+        "Think about how to distribute data across nodes. Simple modular hashing has a problem when nodes are added/removed — what's a better approach?",
+        "For durability, consider a two-level storage: fast writes to memory + log, then periodic flush to disk (LSM tree approach).",
+        "The CAP theorem says you can't have all three. Which two does your design prioritize, and what's the tradeoff?"
+    ],
+    "followUpQuestions": [
+        "How would you handle a network partition between data centers?",
+        "How would you implement range queries efficiently?",
+        "How would you handle hot keys (keys with extremely high access rates)?"
+    ],
+    "createdAt": {
+        "$date": "2026-04-08T13:20:19.159Z"
+    },
+    "updatedAt": {
+        "$date": "2026-04-08T13:20:19.159Z"
+    },
+    "__v": 0,
+    "architectureDiagram": {
+        "nodes": [
+            {
+                "id": "client",
+                "label": "Client",
+                "type": "client"
+            },
+            {
+                "id": "coordinator",
+                "label": "Coordinator Node\n(any node can be coordinator)",
+                "type": "service"
+            },
+            {
+                "id": "ring",
+                "label": "Consistent Hash Ring\n(virtual nodes × 150 per physical node)",
+                "type": "service"
+            },
+            {
+                "id": "node_a",
+                "label": "Node A\n(primary for key range)",
+                "type": "service"
+            },
+            {
+                "id": "node_b",
+                "label": "Node B\n(replica 1)",
+                "type": "service"
+            },
+            {
+                "id": "node_c",
+                "label": "Node C\n(replica 2)",
+                "type": "service"
+            },
+            {
+                "id": "wal",
+                "label": "WAL\n(Write-Ahead Log)\nappend-only on disk",
+                "type": "database"
+            },
+            {
+                "id": "memtable",
+                "label": "MemTable\n(in-memory sorted map)",
+                "type": "cache"
+            },
+            {
+                "id": "sstable",
+                "label": "SSTables\n(immutable on disk)\n+ Bloom filter per file",
+                "type": "database"
+            },
+            {
+                "id": "gossip",
+                "label": "Gossip Protocol\n(cluster membership\n+ failure detection)",
+                "type": "service"
+            },
+            {
+                "id": "merkle",
+                "label": "Merkle Tree\n(anti-entropy repair)",
+                "type": "service"
+            }
+        ],
+        "edges": [
+            {
+                "from": "client",
+                "to": "coordinator",
+                "label": "Put/Get/Delete(key)"
+            },
+            {
+                "from": "coordinator",
+                "to": "ring",
+                "label": "hash(key) → target nodes"
+            },
+            {
+                "from": "coordinator",
+                "to": "node_a",
+                "label": "write to N replicas\n(quorum W = N/2+1)"
+            },
+            {
+                "from": "coordinator",
+                "to": "node_b",
+                "label": "replicate"
+            },
+            {
+                "from": "coordinator",
+                "to": "node_c",
+                "label": "replicate"
+            },
+            {
+                "from": "node_a",
+                "to": "wal",
+                "label": "append before write"
+            },
+            {
+                "from": "node_a",
+                "to": "memtable",
+                "label": "write to memory"
+            },
+            {
+                "from": "memtable",
+                "to": "sstable",
+                "label": "flush when full"
+            },
+            {
+                "from": "sstable",
+                "to": "sstable",
+                "label": "background compaction\n(merge + GC tombstones)"
+            },
+            {
+                "from": "gossip",
+                "to": "node_a",
+                "label": "heartbeat exchange"
+            },
+            {
+                "from": "gossip",
+                "to": "node_b",
+                "label": "heartbeat exchange"
+            },
+            {
+                "from": "gossip",
+                "to": "node_c",
+                "label": "heartbeat exchange"
+            },
+            {
+                "from": "node_a",
+                "to": "merkle",
+                "label": "periodic anti-entropy sync"
+            },
+            {
+                "from": "node_b",
+                "to": "merkle",
+                "label": "periodic anti-entropy sync"
+            }
+        ],
+        "notes": [
+            "Quorum: N=3 replicas. W=2 (write quorum), R=2 (read quorum). W+R > N guarantees strong consistency",
+            "Hinted handoff: if target node is down, coordinator stores write hint and replays it when node recovers",
+            "Vector clocks resolve conflicts: each write increments [nodeId, counter]; on conflict, last-write-wins or merge",
+            "Read repair: on quorum read, if replicas diverge, coordinator writes latest version back to stale replicas",
+            "LSM read path: MemTable → L0 SSTables → L1 → … → Lk, using Bloom filters to skip irrelevant files"
+        ]
+    }
+}

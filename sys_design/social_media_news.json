@@ -1,0 +1,227 @@
+{
+    "slug": "news-feed",
+    "title": "Social Media News Feed",
+    "difficulty": "Hard",
+    "problemStatement": "Design the news feed system for a social media platform like Twitter or Instagram.\n\n**Functional Requirements:**\n- Users can create posts (text, images, videos)\n- Users see a feed of posts from people they follow\n- Feed is ranked by relevance (not just chronological)\n- Support for likes, comments, and shares\n- Real-time feed updates when new posts are created\n\n**Non-Functional Requirements:**\n- Feed generation should be fast (< 200ms)\n- Support for celebrities with millions of followers\n- Eventually consistent (new posts appear within seconds)\n\n**Scale:**\n- 500M users, average 200 follows each\n- 1M new posts per day\n- Feed is the most accessed feature (~10B feed loads/day)",
+    "rubricLite": {
+        "requiredComponents": [
+            "Post Service (CRUD for posts)",
+            "Fan-out Service (distributing posts to follower feeds)",
+            "Feed Cache (Redis sorted sets per user)",
+            "Ranking/ML Service for feed ordering",
+            "Media storage (S3 + CDN)",
+            "Social Graph service (follow relationships)"
+        ],
+        "keyTradeoffs": [
+            "Fan-out on write (push) vs fan-out on read (pull) vs hybrid approach",
+            "Chronological vs algorithmic feed ranking",
+            "Caching entire feed vs caching components",
+            "Pre-computing feeds vs computing on demand"
+        ],
+        "antiPatterns": [
+            "Fan-out on write for celebrity users (millions of fan-out operations per post)",
+            "Querying the social graph + all posts on every feed load (fan-out on read without caching)",
+            "Storing feeds in a relational database with JOINs",
+            "Not handling the cold-start problem (new user with empty feed cache)"
+        ],
+        "followUpTriggers": [
+            {
+                "condition": "Candidate uses only fan-out on write",
+                "question": "What happens when a user with 50 million followers posts? How many writes does that trigger?"
+            },
+            {
+                "condition": "Candidate uses only fan-out on read",
+                "question": "If you compute the feed on every request by merging posts from 200 followed users, what's the latency impact?"
+            },
+            {
+                "condition": "Candidate doesn't mention ranking",
+                "question": "Should the feed be purely chronological? How do platforms like Instagram decide what to show first?"
+            }
+        ]
+    },
+    "rubricFull": {
+        "sampleAnswer": "Use a hybrid fan-out approach: fan-out on write for regular users (pre-compute and store feeds in Redis sorted sets), fan-out on read for celebrities (merge their posts at read time). When a user posts, a fan-out worker pushes the post ID to each follower's feed cache. At read time, fetch the cached feed, merge in celebrity posts, apply ML ranking, and return. Store posts in a distributed DB (Cassandra), social graph in a graph DB or adjacency list table, and feed caches in Redis. Use a CDN for media.",
+        "scoringDimensions": [
+            {
+                "name": "Fan-out Strategy",
+                "weight": 30,
+                "criteria": "Hybrid approach handling both regular users and celebrities efficiently"
+            },
+            {
+                "name": "Data Model",
+                "weight": 20,
+                "criteria": "Efficient storage for posts, social graph, and feed caches"
+            },
+            {
+                "name": "Feed Ranking",
+                "weight": 15,
+                "criteria": "Consideration of relevance ranking beyond chronological order"
+            },
+            {
+                "name": "Caching",
+                "weight": 20,
+                "criteria": "Multi-layer caching strategy for feeds and posts"
+            },
+            {
+                "name": "Real-Time Updates",
+                "weight": 15,
+                "criteria": "How new posts propagate to followers' feeds"
+            }
+        ]
+    },
+    "hints": [
+        "The key decision is WHEN to build the feed: when a post is created (push) or when a user opens their feed (pull)?",
+        "Not all users are equal — a celebrity with 50M followers is very different from a user with 200 followers. Can you handle them differently?",
+        "Think about what data structure would let you efficiently maintain a sorted, bounded list of post IDs per user."
+    ],
+    "followUpQuestions": [
+        "How would you handle trending/viral posts that should appear in many feeds?",
+        "How would you implement 'Suggested Posts' from accounts the user doesn't follow?",
+        "How would you handle feed pagination and ensuring no missed posts?"
+    ],
+    "createdAt": {
+        "$date": "2026-04-08T13:20:18.947Z"
+    },
+    "updatedAt": {
+        "$date": "2026-04-08T13:20:18.947Z"
+    },
+    "__v": 0,
+    "architectureDiagram": {
+        "nodes": [
+            {
+                "id": "client",
+                "label": "Client App",
+                "type": "client"
+            },
+            {
+                "id": "post_service",
+                "label": "Post Service\n(create/delete posts)",
+                "type": "service"
+            },
+            {
+                "id": "post_db",
+                "label": "Post DB\n(Cassandra)\nPK: (userId, postId)",
+                "type": "database"
+            },
+            {
+                "id": "media",
+                "label": "S3 + CDN\n(images/videos)",
+                "type": "database"
+            },
+            {
+                "id": "fanout",
+                "label": "Fan-out Service\n(Kafka consumer)",
+                "type": "service"
+            },
+            {
+                "id": "graph",
+                "label": "Social Graph Service\n(followers list)",
+                "type": "service"
+            },
+            {
+                "id": "graph_db",
+                "label": "Graph DB / Adjacency Table\n(userId → [followerIds])",
+                "type": "database"
+            },
+            {
+                "id": "feed_cache",
+                "label": "Feed Cache\n(Redis Sorted Set per user)\nscore = timestamp",
+                "type": "cache"
+            },
+            {
+                "id": "feed_service",
+                "label": "Feed Service\n(read + merge + rank)",
+                "type": "service"
+            },
+            {
+                "id": "ranking",
+                "label": "Ranking / ML Service\n(engagement signals)",
+                "type": "service"
+            },
+            {
+                "id": "kafka",
+                "label": "Kafka\n(post-created events)",
+                "type": "queue"
+            }
+        ],
+        "edges": [
+            {
+                "from": "client",
+                "to": "post_service",
+                "label": "POST /posts"
+            },
+            {
+                "from": "post_service",
+                "to": "post_db",
+                "label": "persist post"
+            },
+            {
+                "from": "post_service",
+                "to": "media",
+                "label": "store media"
+            },
+            {
+                "from": "post_service",
+                "to": "kafka",
+                "label": "emit post-created event"
+            },
+            {
+                "from": "kafka",
+                "to": "fanout",
+                "label": "consume event"
+            },
+            {
+                "from": "fanout",
+                "to": "graph",
+                "label": "fetch followers of author"
+            },
+            {
+                "from": "graph",
+                "to": "graph_db",
+                "label": "query"
+            },
+            {
+                "from": "fanout",
+                "to": "feed_cache",
+                "label": "ZADD postId for regular followers\n(skip celebrities — fan-out on read)"
+            },
+            {
+                "from": "client",
+                "to": "feed_service",
+                "label": "GET /feed"
+            },
+            {
+                "from": "feed_service",
+                "to": "feed_cache",
+                "label": "ZREVRANGE userId feed"
+            },
+            {
+                "from": "feed_service",
+                "to": "graph",
+                "label": "fetch celebrity followees"
+            },
+            {
+                "from": "feed_service",
+                "to": "post_db",
+                "label": "fetch celebrity posts (fan-out on read)"
+            },
+            {
+                "from": "feed_service",
+                "to": "ranking",
+                "label": "rerank merged post list"
+            },
+            {
+                "from": "feed_service",
+                "to": "client",
+                "label": "return ranked feed"
+            }
+        ],
+        "notes": [
+            "Celebrity threshold (e.g. followers > 1M): skip fan-out on write; their posts are merged at read time to avoid millions of Redis writes per post",
+            "Redis sorted set: ZADD feed:{userId} {timestamp} {postId} — trim to last 800 entries to bound memory",
+            "Cold start (new user / empty cache): fall back to fan-out on read for initial feed hydration",
+            "Ranking signals: recency, likes velocity, comment count, author affinity score, content type preference",
+            "Feed pagination: use cursor = last seen postId + timestamp, never offset-based (unstable on insertion)"
+        ]
+    }
+}

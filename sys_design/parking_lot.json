@@ -1,0 +1,206 @@
+{
+    "slug": "parking-lot",
+    "title": "Parking Lot System",
+    "difficulty": "Easy",
+    "problemStatement": "Design an automated parking lot management system.\n\n**Functional Requirements:**\n- Multiple floors with different spot sizes (Small, Medium, Large)\n- Vehicle entry: assign the nearest available spot matching the vehicle size\n- Vehicle exit: calculate fee based on duration and spot type\n- Display available spots per floor and type on entry screens\n- Support for monthly/reserved parking passes\n\n**Non-Functional Requirements:**\n- Real-time spot availability updates\n- Handle concurrent entry/exit at multiple gates\n- System should work even if central server goes down (gates have local fallback)\n\n**Scale:**\n- 5,000 spot parking structure\n- 20 entry/exit gates\n- Peak throughput: 100 vehicles entering/exiting per minute",
+    "rubricLite": {
+        "requiredComponents": [
+            "Vehicle and Spot class hierarchy (OOP)",
+            "ParkingLot manager with floor/zone management",
+            "Ticket/Payment service",
+            "Display board service for availability",
+            "Gate controller with sensors"
+        ],
+        "keyTradeoffs": [
+            "Nearest spot assignment vs random available spot (latency vs walking distance)",
+            "In-memory spot tracking vs database-backed",
+            "Centralized vs distributed gate controllers",
+            "Fixed pricing vs dynamic pricing based on occupancy"
+        ],
+        "antiPatterns": [
+            "Not handling concurrent access (two gates assign the same spot)",
+            "Linear scan to find available spots",
+            "No separation between spot types/sizes",
+            "Not handling edge cases like overstay or lost tickets"
+        ],
+        "followUpTriggers": [
+            {
+                "condition": "Candidate doesn't handle concurrency",
+                "question": "What if two cars arrive at two different gates simultaneously and both get assigned the same spot?"
+            },
+            {
+                "condition": "Candidate doesn't discuss pricing",
+                "question": "How would you calculate the parking fee? What about different rates for different hours?"
+            },
+            {
+                "condition": "Candidate uses simple array for spots",
+                "question": "How would you quickly find the nearest available spot on a specific floor without scanning all spots?"
+            }
+        ]
+    },
+    "rubricFull": {
+        "sampleAnswer": "Model with Vehicle (Car, Truck, Motorcycle) and ParkingSpot (Small, Medium, Large) hierarchies. ParkingLot contains Floors, each with a ParkingSpotManager using a min-heap per spot type for nearest-spot assignment. Use optimistic locking or Redis distributed locks for concurrent gate access. Ticket tracks entry time, spot, and vehicle. PaymentService calculates fee using a strategy pattern for different rate cards. DisplayBoard subscribes to spot changes via an event bus for real-time updates.",
+        "scoringDimensions": [
+            {
+                "name": "OOP Design",
+                "weight": 30,
+                "criteria": "Clean class hierarchy, SOLID principles, proper use of inheritance/composition"
+            },
+            {
+                "name": "Concurrency",
+                "weight": 25,
+                "criteria": "Thread-safe spot assignment across multiple gates"
+            },
+            {
+                "name": "Spot Assignment",
+                "weight": 20,
+                "criteria": "Efficient algorithm for finding optimal available spot"
+            },
+            {
+                "name": "Payment Logic",
+                "weight": 15,
+                "criteria": "Flexible fee calculation supporting different rate structures"
+            },
+            {
+                "name": "Edge Cases",
+                "weight": 10,
+                "criteria": "Handles full lot, oversized vehicles, reserved spots, system failures"
+            }
+        ]
+    },
+    "hints": [
+        "Start with the core classes: what objects exist in a parking lot? Think about vehicles, spots, tickets, and the lot itself.",
+        "For finding the nearest available spot efficiently, think about what data structure gives you the minimum element quickly.",
+        "How do you prevent two gates from assigning the same spot? Think about locking mechanisms."
+    ],
+    "followUpQuestions": [
+        "How would you add support for electric vehicle charging spots?",
+        "How would you implement a mobile app that lets users find their parked car?",
+        "How would you handle dynamic pricing during peak hours?"
+    ],
+    "createdAt": {
+        "$date": "2026-04-08T13:20:19.095Z"
+    },
+    "updatedAt": {
+        "$date": "2026-04-08T13:20:19.095Z"
+    },
+    "__v": 0,
+    "architectureDiagram": {
+        "nodes": [
+            {
+                "id": "vehicle",
+                "label": "Vehicle (abstract)\n├─ Car\n├─ Truck\n└─ Motorcycle",
+                "type": "class"
+            },
+            {
+                "id": "gate",
+                "label": "GateController\n(Entry / Exit)\n× 20 gates",
+                "type": "service"
+            },
+            {
+                "id": "parking_lot",
+                "label": "ParkingLot\n(singleton manager)",
+                "type": "service"
+            },
+            {
+                "id": "floor",
+                "label": "Floor\n(1..N)\nhas SpotManager per type",
+                "type": "service"
+            },
+            {
+                "id": "spot_mgr",
+                "label": "ParkingSpotManager\nMinHeap<spotId> × 3\n(Small / Medium / Large)",
+                "type": "service"
+            },
+            {
+                "id": "spot",
+                "label": "ParkingSpot (abstract)\n├─ SmallSpot\n├─ MediumSpot\n└─ LargeSpot",
+                "type": "class"
+            },
+            {
+                "id": "ticket",
+                "label": "Ticket\n{ ticketId, spotId,\n  vehicleId, entryTime }",
+                "type": "class"
+            },
+            {
+                "id": "payment",
+                "label": "PaymentService\n(Strategy Pattern)\n├─ HourlyRate\n├─ DailyRate\n└─ MonthlyPass",
+                "type": "service"
+            },
+            {
+                "id": "display",
+                "label": "DisplayBoard\n(availability per floor+type)",
+                "type": "service"
+            },
+            {
+                "id": "lock",
+                "label": "Distributed Lock\n(Redis SETNX)\nper spotId",
+                "type": "cache"
+            },
+            {
+                "id": "event_bus",
+                "label": "Event Bus\n(spot-assigned / spot-freed)",
+                "type": "queue"
+            }
+        ],
+        "edges": [
+            {
+                "from": "gate",
+                "to": "parking_lot",
+                "label": "requestSpot(vehicleType)"
+            },
+            {
+                "from": "parking_lot",
+                "to": "floor",
+                "label": "find floor with available spot"
+            },
+            {
+                "from": "floor",
+                "to": "spot_mgr",
+                "label": "heapPop() → nearest spotId"
+            },
+            {
+                "from": "spot_mgr",
+                "to": "lock",
+                "label": "acquire distributed lock before assign"
+            },
+            {
+                "from": "spot_mgr",
+                "to": "spot",
+                "label": "mark spot OCCUPIED"
+            },
+            {
+                "from": "gate",
+                "to": "ticket",
+                "label": "issue ticket on entry"
+            },
+            {
+                "from": "gate",
+                "to": "payment",
+                "label": "calculateFee(ticket) on exit"
+            },
+            {
+                "from": "spot",
+                "to": "event_bus",
+                "label": "emit spot-assigned / spot-freed"
+            },
+            {
+                "from": "event_bus",
+                "to": "display",
+                "label": "update availability count"
+            },
+            {
+                "from": "event_bus",
+                "to": "spot_mgr",
+                "label": "heapPush(spotId) on freed"
+            }
+        ],
+        "notes": [
+            "MinHeap per spot type gives O(log n) nearest-spot assignment vs O(n) linear scan",
+            "Concurrency: gate acquires Redis lock on spotId with TTL=5s before marking occupied — prevents double-assignment",
+            "Vehicle-to-spot mapping: Motorcycle → Small/Medium/Large; Car → Medium/Large; Truck → Large only",
+            "Fee strategy: base hourly rate × hours, with 24h cap converting to daily rate, plus overtime multiplier after reserved hours",
+            "Lost ticket policy: charge maximum daily rate; gate supervisor override with manager PIN"
+        ]
+    }
+}

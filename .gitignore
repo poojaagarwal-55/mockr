@@ -44,7 +44,7 @@ coverage/
 apps/api/uploads/
 
 # Question datasets/content (local only)
-Questions/
+/Questions/
 
 # Temporary local scripts/reports
 tmp-*

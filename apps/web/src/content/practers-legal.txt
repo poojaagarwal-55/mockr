@@ -1,0 +1,324 @@
+TERMS AND CONDITIONS
+practers.com
+Effective Date: April 14, 2025   |   Last Updated: April 14, 2025
+
+1. Acceptance of Terms
+Welcome to Mockr ("Platform", "we", "us", or "our"), accessible at https://www.practers.com. By accessing, browsing, registering for, or using the Platform in any way, you ("User", "you") agree to be legally bound by these Terms and Conditions ("Terms"). If you do not agree to these Terms in their entirety, you must immediately stop using the Platform.
+These Terms apply to all users globally, including visitors, registered users, and paying subscribers. We reserve the right to revise these Terms at any time. Continued use of the Platform after any revision constitutes your unconditional acceptance of the updated Terms.
+2. Eligibility
+To use Mockr, you must: (a) be at least 16 years of age or the applicable age of digital consent in your jurisdiction, whichever is higher; (b) have the full legal capacity to enter into a binding contract; and (c) not be prohibited from using the Platform under any applicable law. By using the Platform, you represent and warrant that all eligibility requirements are met. If you are using the Platform on behalf of an organization, you further represent that you have authority to bind that organization to these Terms.
+3. Description of Services
+Mockr is an AI-powered online interview preparation platform. The Platform provides users with tools and resources to prepare for technical and non-technical job interviews, including but not limited to:
+	•	AI-driven mock interview sessions with automated performance evaluation and feedback
+	•	Coding practice environment with an integrated editor and automated test execution
+	•	Resume upload, analysis, and AI-assisted editing and building tools
+	•	Interview transcripts, progress tracking, and personalized performance reports
+	•	Learning resources, question banks, and preparation materials
+We reserve the right to add, modify, suspend, or discontinue any feature or aspect of the Services at any time, with or without notice, and without liability to you or any third party.
+4. User Accounts
+4.1 Account Creation
+Access to most Platform features requires you to register for an account. You agree to provide accurate, current, and complete information during registration and to keep such information updated at all times. Providing false or misleading information is grounds for immediate account termination.
+4.2 Account Security
+You are solely responsible for maintaining the confidentiality of your account credentials. You agree to: (a) never share your login credentials with any third party; (b) use a strong and unique password; (c) log out of shared or public devices after use; and (d) notify us immediately at support@practers.com upon discovering any unauthorized access to or use of your account. We are not liable for any loss or damage arising from your failure to protect your account.
+
+4.3 One Account Per User
+Each user may hold only one active account. Creating multiple accounts to bypass restrictions, bans, subscription limits, or any Platform policies is strictly prohibited and may result in the permanent termination of all associated accounts.
+4.4 Account Suspension and Termination by Us
+We reserve the right to suspend, restrict, or permanently terminate your account at our sole discretion, with or without prior notice, for reasons including but not limited to: violation of these Terms, fraudulent or abusive conduct, misuse of the Platform, or any behavior we deem harmful to the Platform, its users, or third parties. Where reasonably practicable, we will inform you of the reason for termination.
+4.5 Account Deletion by You
+You may request deletion of your account at any time by contacting us at support@practers.com. Upon deletion, your access to the Platform will cease immediately. Certain data may be retained as required by law or for legitimate business purposes as described in our Privacy Policy.
+5. User Content and Submissions
+5.1 Definition of User Content
+"User Content" means any content, data, or material you submit, upload, enter, or generate on or through the Platform, including but not limited to: interview responses, answers to practice questions, code submissions, resume documents, and any other input provided during your use of the Services.
+5.2 Your Ownership
+You retain all ownership rights in your User Content. By submitting User Content, you grant Mockr a worldwide, non-exclusive, royalty-free, sublicensable, and transferable license to use, reproduce, store, process, adapt, and display your User Content solely to the extent necessary to: (a) provide and deliver the Services to you; (b) generate AI-powered evaluations, feedback, and reports; and (c) improve our Services using anonymized or aggregated data. This license terminates when you delete your content or close your account, subject to legal retention obligations.
+5.3 Accuracy and Legality of Submissions
+You represent and warrant that: (a) you own or have all necessary rights to the content you submit; (b) your submissions do not infringe any third-party intellectual property, privacy, or other rights; (c) your submissions do not contain unlawful, harmful, defamatory, or obscene material; and (d) your submissions do not contain malicious code or attempts to exploit Platform systems.
+5.4 Content Moderation and Removal
+We reserve the right, but are not obligated, to review, monitor, edit, or remove any User Content at our sole discretion, without notice, if we reasonably believe it violates these Terms, applicable law, or poses a risk to the Platform or other users.
+5.5 Feedback
+If you submit ideas, suggestions, or feedback about the Platform, you grant us a perpetual, irrevocable, worldwide, royalty-free license to use, modify, and incorporate such feedback into our products and services without any obligation or compensation to you.
+6. Payments, Subscriptions, and Refunds
+6.1 Paid Plans
+Mockr may offer free and paid subscription tiers. Paid plans unlock additional features and are billed on a recurring basis (monthly or annually) in advance, as selected at the time of purchase. By subscribing, you authorize us to charge your chosen payment method on each billing date until you cancel.
+6.2 Payment Processing
+All payments are processed by third-party payment service providers. We do not store your full payment card number, CVV, or banking credentials on our servers. Your payment information is governed by your payment provider's terms and privacy policy.
+6.3 Taxes
+All fees are exclusive of applicable taxes including Goods and Services Tax (GST), Value Added Tax (VAT), sales tax, or withholding tax. You are responsible for all applicable taxes in your jurisdiction. We reserve the right to collect and remit taxes where required by law, which may be added to your invoice.
+6.4 Free Trials
+Where we offer a free trial, your payment method may be automatically charged at the applicable subscription rate at the end of the trial period unless you cancel before the trial expires. Trial terms will be clearly communicated at sign-up.
+6.5 Cancellation
+You may cancel your subscription at any time through your account settings or by contacting us at support@practers.com. Cancellation takes effect at the end of the current billing period. You will continue to have access to paid features until the end of the paid period.
+6.6 Refunds
+All subscription fees are non-refundable except where required by applicable consumer protection law. If you believe you are entitled to a refund under applicable law (including the Indian Consumer Protection Act 2019 or EU consumer rights directives), please contact us at support@practers.com within 14 days of the charge with details of your request. We will assess each request on a case-by-case basis.
+6.7 Price Changes
+We reserve the right to change our pricing at any time. Existing subscribers will receive at least 30 days' advance written notice before any price change takes effect on their account.
+6.8 Failed Payments
+If a payment fails, we may retry the charge, restrict access to paid features, or downgrade your account to the free tier. We will attempt to notify you of failed payments. Persistent non-payment may result in account suspension.
+7. Intellectual Property
+7.1 Mockr Ownership
+All content, features, functionality, and technology comprising the Platform — including but not limited to AI systems, evaluation methodologies, question banks, algorithms, software, source code, designs, text, graphics, logos, trademarks, and service marks — are the exclusive property of Mockr or its licensors and are protected by applicable intellectual property laws worldwide.
+7.2 Restrictions on Use
+Except as expressly permitted by these Terms, you may not: (a) copy, reproduce, distribute, or publicly display any part of the Platform; (b) create derivative works based on Platform content; (c) reverse engineer, decompile, or attempt to extract source code; (d) use our trademarks, logos, or branding without our prior written consent; or (e) frame, mirror, or embed the Platform within any other website or application.
+7.3 Limited License to Users
+Subject to your compliance with these Terms, we grant you a limited, non-exclusive, non-transferable, revocable license to access and use the Platform for your personal, non-commercial interview preparation purposes only. This license does not include any right to resell, sublicense, or commercially exploit the Platform or its content.
+8. AI-Generated Content and Disclaimer
+The Platform uses artificial intelligence to generate interview feedback, performance evaluations, resume assessments, and related outputs. You expressly acknowledge and agree that:
+	•	All AI-generated content is provided for informational and educational purposes only and does not constitute professional career, legal, HR, or employment advice
+	•	AI evaluations are automated assessments and may not accurately reflect actual employer hiring standards, real-world interview performance, or employability
+	•	We make no representation or warranty that following AI-generated recommendations will result in job offers, successful interviews, or resume shortlisting
+	•	You should exercise your own independent judgment when acting upon any AI-generated output
+	•	We are not liable for any decisions made, actions taken, or outcomes arising from reliance on AI-generated content
+9. Coding and Technical Assessment Features
+The Platform includes features that allow users to write, submit, and execute code as part of interview preparation exercises. You agree that:
+	•	You will use the coding environment solely for lawful interview preparation purposes
+	•	You will not submit code designed to attack, exploit, probe, or harm the Platform's infrastructure or any external systems or networks
+	•	You will not attempt to circumvent resource limits, time limits, or access controls within the coding environment
+	•	Code execution results are generated automatically and may not always be perfectly accurate; we are not liable for incorrect or unexpected execution outcomes
+	•	We reserve the right to suspend access to coding features for misuse
+10. Prohibited Conduct
+You agree not to use the Platform, directly or indirectly, to:
+	•	Violate any applicable local, national, or international law or regulation
+	•	Gain unauthorized access to any part of the Platform, its servers, databases, or connected systems
+	•	Bypass, circumvent, or tamper with any security measure, authentication mechanism, or access control
+	•	Scrape, crawl, harvest, or collect data from the Platform using bots, automated tools, or scripts without our prior written permission
+	•	Impersonate any person or entity or misrepresent your identity, affiliation, or credentials
+	•	Upload or transmit viruses, malware, ransomware, or any other malicious or harmful code
+	•	Use the Platform to train, develop, or improve competing AI products or services without our prior written consent
+	•	Resell, sublicense, or commercially exploit the Platform or its outputs without our prior written consent
+	•	Post, transmit, or distribute unsolicited commercial messages (spam) or engage in phishing
+	•	Harass, abuse, threaten, or harm any other user, employee, or representative of Mockr
+	•	Interfere with or disrupt the operation, integrity, or performance of the Platform or its infrastructure
+	•	Engage in any conduct that, in our reasonable judgment, restricts or inhibits any other user from using or enjoying the Platform
+	•	Attempt to probe, scan, or test the vulnerability of the Platform or conduct any penetration testing without our prior written authorization
+11. Third-Party Services and Links
+The Platform may integrate with or contain links to third-party websites, services, or tools. We do not own, control, or endorse these third-party services and are not responsible for their content, availability, or practices. Your use of any third-party service is governed entirely by that service's own terms and policies. We recommend you review the terms and privacy policies of any third-party services you access through or in connection with the Platform.
+12. DMCA and Intellectual Property Claims
+We respect the intellectual property rights of others. If you believe any content on the Platform infringes your copyright or other intellectual property rights, please send a written notice to support@practers.com containing: (a) a description of the copyrighted work or intellectual property you claim has been infringed; (b) the specific URL or location of the allegedly infringing content on the Platform; (c) your full name, address, telephone number, and email address; (d) a statement that you have a good-faith belief that the use is not authorized by the rights owner, its agent, or the law; and (e) a declaration, under penalty of perjury, that the information in your notice is accurate and that you are the rights owner or authorized to act on their behalf. We will investigate and respond to valid notices in accordance with applicable law.
+13. Force Majeure
+We shall not be liable for any failure or delay in performing our obligations under these Terms where such failure or delay results from circumstances beyond our reasonable control, including but not limited to: acts of God, floods, earthquakes, epidemics or pandemics, war, terrorism, riots, civil unrest, governmental actions or embargoes, internet or telecommunications infrastructure failures, power outages, cyberattacks or distributed denial-of-service attacks, labor disputes or strikes, or failure of third-party service providers. Our obligations will be suspended for the duration of such events, and we will endeavor to resume normal operations as soon as reasonably practicable.
+14. Beta Features and Experimental Services
+We may offer beta, pilot, experimental, or early-access features from time to time. These features are provided on an "AS IS" basis without any representations, warranties, or guarantees of any kind, and may be changed, suspended, or discontinued at any time without notice. Your use of beta features is entirely at your own risk, and we are not liable for any data loss, inaccuracies, errors, or damages arising from their use.
+15. Disclaimers
+TO THE FULLEST EXTENT PERMITTED BY APPLICABLE LAW, THE PLATFORM AND ALL SERVICES ARE PROVIDED ON AN "AS IS" AND "AS AVAILABLE" BASIS. WE EXPRESSLY DISCLAIM ALL WARRANTIES, EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE, ACCURACY, AND NON-INFRINGEMENT. WE DO NOT WARRANT THAT: (A) THE PLATFORM WILL BE UNINTERRUPTED, TIMELY, SECURE, OR ERROR-FREE; (B) ANY ERRORS OR DEFECTS WILL BE CORRECTED; (C) THE PLATFORM IS FREE FROM VIRUSES OR OTHER HARMFUL COMPONENTS; OR (D) THE RESULTS OBTAINED FROM USE OF THE PLATFORM WILL MEET YOUR REQUIREMENTS OR EXPECTATIONS.
+16. Limitation of Liability
+TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, PRACTERS, ITS OWNERS, OFFICERS, EMPLOYEES, CONTRACTORS, AGENTS, AND AFFILIATES SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, EXEMPLARY, OR PUNITIVE DAMAGES — INCLUDING LOSS OF PROFITS, REVENUE, DATA, GOODWILL, BUSINESS OPPORTUNITIES, OR SERVICE AVAILABILITY — ARISING OUT OF OR IN CONNECTION WITH YOUR USE OF OR INABILITY TO USE THE PLATFORM, EVEN IF WE HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+OUR TOTAL AGGREGATE LIABILITY TO YOU FOR ANY AND ALL CLAIMS ARISING OUT OF OR RELATING TO THESE TERMS OR THE PLATFORM SHALL NOT EXCEED THE GREATER OF: (A) THE TOTAL AMOUNT YOU PAID TO PRACTERS IN THE TWELVE (12) MONTHS IMMEDIATELY PRECEDING THE CLAIM; OR (B) USD $50 (OR EQUIVALENT IN YOUR LOCAL CURRENCY).
+Some jurisdictions do not permit the exclusion or limitation of certain warranties or liability. In such jurisdictions, our liability is limited to the maximum extent permitted by applicable law.
+17. Indemnification
+You agree to indemnify, defend, and hold harmless Mockr and its owners, officers, employees, contractors, agents, successors, and assigns from and against any and all claims, demands, liabilities, damages, losses, costs, and expenses (including reasonable legal fees and court costs) arising out of or in connection with: (a) your access to or use of the Platform; (b) your User Content; (c) your violation of these Terms; (d) your violation of any applicable law or regulation; or (e) your infringement of any rights of a third party. This indemnification obligation survives termination of your account and these Terms.
+18. Governing Law and Dispute Resolution
+18.1 Governing Law
+These Terms are governed by and shall be construed in accordance with the laws of India, without regard to its conflict of laws principles.
+18.2 Informal Resolution
+Before initiating any formal dispute proceedings, you agree to contact us at support@practers.com and attempt in good faith to resolve the dispute informally for a period of at least 30 days from the date of your written notice to us.
+18.3 Binding Arbitration
+If informal resolution is unsuccessful, any dispute, controversy, or claim arising out of or relating to these Terms, the Platform, or the breach, termination, or validity thereof shall be referred to and finally resolved by binding arbitration in India under the Arbitration and Conciliation Act, 1996 (as amended). The arbitration shall be conducted in the English language by a sole arbitrator mutually agreed upon by the parties. The arbitral award shall be final, binding, and enforceable in any court of competent jurisdiction.
+18.4 Class Action Waiver
+To the fullest extent permitted by applicable law, you waive any right to bring or participate in any class action, collective action, or representative proceeding against Mockr, whether in arbitration or otherwise.
+
+
+18.5 Jurisdiction for Non-Arbitrable Matters
+For any matters not subject to arbitration, or for the enforcement of an arbitral award, you consent to the exclusive jurisdiction of the competent courts located in India.
+18.6 Time Limitation on Claims
+Any claim or cause of action arising out of or related to use of the Platform or these Terms must be filed within one (1) year after such claim or cause of action arose, or it will be permanently barred. This limitation applies regardless of any statute of limitations to the contrary.
+19. Severability and Waiver
+If any provision of these Terms is found by a court or arbitrator of competent jurisdiction to be invalid, illegal, or unenforceable, such provision shall be modified to the minimum extent necessary to make it enforceable, or severed if modification is not possible, and the remaining provisions shall continue in full force and effect. Our failure to enforce any right or provision of these Terms on any occasion shall not constitute a waiver of that right or provision on any subsequent occasion.
+20. Assignment
+You may not assign or transfer your rights or obligations under these Terms without our prior written consent. We may freely assign or transfer our rights and obligations under these Terms without restriction, including in connection with a merger, acquisition, corporate restructuring, or sale of assets. These Terms are binding upon and inure to the benefit of the parties and their permitted successors and assigns.
+21. Entire Agreement
+These Terms, together with our Privacy Policy and any additional terms notified to you in respect of specific features or services, constitute the entire agreement between you and Mockr with respect to your use of the Platform. They supersede all prior and contemporaneous negotiations, representations, warranties, agreements, and understandings between the parties relating to the subject matter hereof.
+22. Contact Us
+For any questions, concerns, or notices regarding these Terms and Conditions, please contact us:
+Owner / Operator: [OWNER NAME]
+Support Email: support@practers.com
+Website: https://www.practers.com
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ PRIVACY POLICY
+practers.com
+Effective Date: April 14, 2025   |   Last Updated: April 14, 2025
+
+1. Introduction
+This Privacy Policy describes how Mockr ("we", "us", "our"), accessible at https://www.practers.com, collects, uses, stores, shares, and protects the personal information of users ("you") when you use our Platform and Services.
+This Policy is intended to comply with applicable global privacy and data protection laws, including: India's Digital Personal Data Protection Act 2023 (DPDP Act), the EU General Data Protection Regulation (GDPR), the UK GDPR, the California Consumer Privacy Act (CCPA) as amended by the California Privacy Rights Act (CPRA), and other applicable regional privacy laws.
+By using the Platform, you acknowledge that you have read and understood this Privacy Policy and consent to the data practices described herein. If you do not agree, please discontinue use of the Platform immediately.
+2. Data Controller / Data Fiduciary
+The entity responsible for processing your personal data (the "Data Controller" under GDPR and "Data Fiduciary" under India's DPDP Act) is: [OWNER NAME]. For all privacy-related queries, please contact us at support@practers.com.
+3. Information We Collect
+3.1 Account and Identity Information
+	•	Full name and email address, collected when you register for an account
+	•	Password (stored in encrypted and hashed form — never in plaintext)
+	•	Profile information such as career level, target roles, or years of experience (if voluntarily provided)
+3.2 Interview and Practice Session Data
+	•	Your typed or spoken responses during AI-driven mock interview sessions
+	•	Full session transcripts and interaction logs
+	•	Performance evaluations, scores, and AI-generated feedback reports generated from your sessions
+	•	Time-on-task, session completion status, question attempts, and skips
+3.3 Coding and Technical Assessment Data
+	•	Code written and submitted during coding practice exercises
+	•	Test case results and automated assessment outputs
+	•	Attempt history, time taken per question, and question-level performance analytics
+3.4 Resume and Document Data
+	•	Uploaded resume documents and the textual content parsed from them
+	•	Resume data entered or built using our in-platform resume creation tools
+	•	ATS analysis results, AI-generated suggestions, and editing and revision history
+3.5 Payment and Billing Information
+Payment transactions are processed by third-party payment service providers. We receive only a transaction confirmation reference and subscription status. We do not store your full payment card number, CVV, or bank account details on our servers.
+3.6 Usage and Technical Data
+	•	IP address and approximate geographic location (at country or city level)
+	•	Browser type and version, device type, operating system, and screen resolution
+	•	Pages visited, features used, click patterns, session duration, and navigation flow
+	•	Referral source (how you arrived at the Platform)
+	•	Error logs, crash reports, and Platform performance metrics
+3.7 Communications Data
+	•	Email address for transactional communications such as account confirmation, password reset, and payment receipts
+	•	Email address and communication history for support inquiries, feedback, or bug reports submitted to us
+	•	Email address for newsletters and promotional communications, only where you have provided explicit opt-in consent
+3.8 Cookies and Tracking Data
+Please refer to Section 9 (Cookies and Tracking Technologies) for full details on what tracking data we collect and how you can manage it.
+4. How We Use Your Information
+We use your personal data for the following purposes:
+	•	To create, authenticate, and manage your user account and profile
+	•	To deliver AI-powered mock interview sessions and generate performance transcripts, evaluations, and feedback reports
+	•	To power the coding practice environment, execute submitted code, and return assessment results
+	•	To analyze uploaded resumes and produce ATS compatibility scores and improvement suggestions
+	•	To provide resume building and editing functionality and enable document download
+	•	To personalize your preparation experience, recommend content, and track your progress over time
+	•	To process payments, manage subscriptions, and send billing communications
+	•	To send transactional emails including account-related notifications, password resets, and payment receipts
+	•	To send marketing communications, newsletters, and promotional content, strictly where you have provided explicit consent and subject to your right to opt out at any time
+	•	To improve our AI models, evaluation accuracy, question quality, and Platform features using aggregated or anonymized data
+	•	To monitor for, detect, investigate, and prevent fraudulent transactions, unauthorized access, abuse, and security incidents
+	•	To enforce our Terms and Conditions and other applicable policies
+	•	To comply with applicable legal obligations, respond to lawful requests from authorities, and protect our legal rights
+	•	To communicate service-related announcements, updates, and important notices
+5. Legal Basis for Processing
+5.1 GDPR and UK GDPR (Users in the EEA and UK)
+We rely on the following legal bases under the GDPR and UK GDPR:
+	•	Performance of a contract: To create and manage your account and to deliver the Services you have requested
+	•	Legitimate interests: To improve our Platform and AI systems, ensure security, detect fraud, and communicate service updates, provided such interests are not overridden by your rights and interests
+	•	Consent: For marketing communications, non-essential cookies, and any other processing explicitly requiring consent. You may withdraw consent at any time without affecting the lawfulness of prior processing.
+	•	Legal obligation: To comply with applicable laws, regulations, and lawful orders
+5.2 India's DPDP Act 2023
+We process your personal data as a Data Fiduciary under India's Digital Personal Data Protection Act 2023 based on: (a) your freely given, informed, and specific consent at the point of collection; (b) the necessity of processing to perform the Services you have requested; and (c) other legitimate uses permitted under the DPDP Act and its associated rules.
+5.3 California (CCPA / CPRA)
+We do not sell your personal information within the meaning of the CCPA/CPRA. California residents have additional rights detailed in Section 12 of this Policy.
+6. Data Sharing and Disclosure
+We do not sell, rent, or trade your personal data to third parties for their own commercial purposes. We share your personal data only in the following limited and controlled circumstances:
+6.1 Service Providers and Data Processors
+We engage trusted third-party service providers who process personal data on our behalf and strictly under our instructions, pursuant to data processing agreements that require them to: protect your data, use it only for the purposes we specify, and comply with applicable data protection laws. Categories of service providers include:
+	•	Authentication and infrastructure providers
+	•	Cloud hosting, storage, and content delivery providers
+	•	Payment processing service providers
+	•	Email delivery and communication service providers
+	•	Analytics and performance monitoring providers
+6.2 Legal and Regulatory Compliance
+We may disclose your personal data to law enforcement agencies, courts, regulators, or other governmental or public authorities where we are legally required to do so, or where we believe in good faith that disclosure is necessary to: (a) comply with a legal obligation; (b) protect and defend our legal rights or property; (c) prevent or investigate possible wrongdoing; or (d) protect the safety of our users, staff, or the public.
+6.3 Business Transfers
+In the event of a merger, acquisition, joint venture, sale of all or substantially all of our assets, bankruptcy, or other similar business transaction, your personal data may be transferred as part of that transaction. You will be notified via a prominent notice on the Platform or by email prior to any such transfer, and we will ensure the successor entity is bound by privacy obligations at least as protective as those in this Policy.
+6.4 Aggregated and Anonymized Data
+We may share aggregated, anonymized, or de-identified data that cannot reasonably be used to identify you with partners, investors, or for public reporting purposes. Such data is not considered personal data and is not subject to the restrictions in this Policy.
+6.5 With Your Consent
+We may share your data with third parties in other circumstances where you have given your explicit consent to do so.
+7. Data Retention
+We retain your personal data only for as long as necessary to fulfil the purposes for which it was collected, comply with legal obligations, resolve disputes, and enforce our agreements. Our general retention principles are:
+	•	Account and profile data: Retained while your account is active and for a reasonable period thereafter to handle post-deletion inquiries, then deleted or anonymized
+	•	Interview session data, transcripts, and evaluation reports: Retained for up to 2 years from creation, or deleted upon your request, subject to legal retention requirements
+	•	Coding assessment submissions and results: Retained for up to 2 years
+	•	Resume documents and associated analysis: Retained while stored in your account; deleted upon your request or account deletion
+	•	Payment and billing records: Retained for a minimum of 7 years as required by financial, tax, and accounting regulations
+	•	Technical logs and usage data: Retained for up to 12 months
+	•	Communications and support records: Retained for up to 3 years
+	•	Aggregated or anonymized data: May be retained indefinitely as it no longer constitutes personal data
+Upon expiry of the applicable retention period, we will securely delete, destroy, or irreversibly anonymize your personal data.
+8. Data Security
+We implement appropriate and proportionate technical and organizational security measures to protect your personal data against unauthorized access, accidental loss, alteration, disclosure, or destruction. Our security measures include, but are not limited to:
+	•	Encrypted data transmission over all network communications using HTTPS/TLS
+	•	Encrypted and hashed storage of passwords — passwords are never stored or transmitted in plaintext
+	•	Role-based access controls that restrict internal access to personal data on a need-to-know basis
+	•	Regular security assessments, vulnerability testing, and infrastructure monitoring
+	•	Segregated and sandboxed code execution environments to prevent malicious code from affecting Platform systems
+While we employ commercially reasonable security practices, no method of data transmission or storage is completely secure. We cannot guarantee absolute security of your data. In the event of a personal data breach that is likely to result in a risk to your rights and freedoms, we will notify you and the relevant supervisory authority in accordance with applicable legal requirements (including the 72-hour notification requirement under GDPR, and applicable timelines under the DPDP Act).
+9. Cookies and Tracking Technologies
+We use cookies and similar tracking technologies (such as web beacons and local storage) to operate, secure, and improve the Platform. The categories of cookies we use are:
+	•	Strictly necessary cookies: Essential for core Platform functionality, security, and session authentication. These cannot be disabled without significantly impairing your ability to use the Platform.
+	•	Analytics and performance cookies: Collect anonymized or aggregated information about how users interact with the Platform, which pages are visited most, and how errors occur. This data is used solely to improve our Services.
+	•	Preference and functionality cookies: Remember your settings, preferences, and customizations to provide a more personalized experience.
+	•	Marketing and targeting cookies: Used only where you have given explicit consent to receive relevant marketing content. You may withdraw consent at any time.
+You may manage or disable cookies at any time through your browser settings. Where required by law, we will present you with a cookie consent banner before setting non-essential cookies. Please note that disabling strictly necessary cookies may affect your ability to use the Platform.
+10. Your Privacy Rights
+Depending on your location and the applicable data protection law, you may have the following rights in relation to your personal data. You may exercise these rights at any time by contacting us at support@practers.com:
+	•	Right to Access: Obtain confirmation of whether we process your personal data and receive a copy of the personal data we hold about you
+	•	Right to Rectification / Correction: Request that we correct any inaccurate, incomplete, or outdated personal data
+	•	Right to Erasure ("Right to be Forgotten"): Request deletion of your personal data, subject to our legal obligations to retain certain data
+	•	Right to Data Portability: Receive your personal data in a structured, commonly used, machine-readable format and, where technically feasible, request that it be transferred to another controller
+	•	Right to Restrict Processing: Request that we restrict the processing of your data in certain defined circumstances (e.g., while a rectification request is pending)
+	•	Right to Object: Object to processing based on legitimate interests or for direct marketing purposes, including profiling related to direct marketing
+	•	Right to Withdraw Consent: Withdraw your consent at any time for any processing activity based on consent, without affecting the lawfulness of processing carried out prior to withdrawal
+	•	Right Not to be Subject to Automated Decision-Making: Request human review of any automated decision that produces a legal or similarly significant effect on you
+	•	Right to Opt-Out of Marketing: Unsubscribe from marketing communications at any time via the unsubscribe link in any email or by contacting us
+We will verify your identity before processing your request and will respond within 30 days (or such other period as required by applicable law). We may extend this period by an additional 30 days where requests are complex or numerous, in which case we will inform you. We will not discriminate against you for exercising your privacy rights.
+11. Rights of Indian Users (DPDP Act 2023)
+In addition to the general rights in Section 10, users in India have the following rights under the Digital Personal Data Protection Act 2023:
+	•	Right to information about personal data being processed
+	•	Right to correction and erasure of personal data
+	•	Right to grievance redressal: You may contact our Grievance Officer at support@practers.com and we will acknowledge your complaint within 48 hours and resolve it within 30 days
+	•	Right to nominate: You may nominate another individual to exercise your rights on your behalf in the event of your death or incapacity
+We are committed to fulfilling our obligations as a Data Fiduciary under the DPDP Act, including appointing a Consent Manager and implementing a grievance redressal mechanism as and when required by law.
+12. Rights of California Users (CCPA / CPRA)
+California residents have the following additional rights under the California Consumer Privacy Act (CCPA) and California Privacy Rights Act (CPRA):
+	•	Right to Know: The categories of personal information we have collected, the sources, purposes of collection, and categories of third parties with whom we share it
+	•	Right to Access: Specific pieces of personal information we have collected about you
+	•	Right to Delete: Request deletion of personal information we have collected, subject to certain exceptions
+	•	Right to Correct: Request correction of inaccurate personal information
+	•	Right to Opt-Out of Sale or Sharing: We do not sell or share your personal information for cross-context behavioral advertising
+	•	Right to Limit Use of Sensitive Personal Information: Where applicable under CPRA
+	•	Right to Non-Discrimination: We will not discriminate against you for exercising any of your CCPA/CPRA rights
+To submit a CCPA/CPRA request, please contact us at support@practers.com with the subject line "California Privacy Request". We will verify your identity and respond within 45 calendar days, with a possible extension of up to an additional 45 days where necessary.
+13. Children's Privacy
+The Platform is not directed to, and we do not knowingly collect personal data from, children under the age of 16 (or the applicable age of digital consent in your jurisdiction). If you are under 16, please do not register for an account or submit any personal data to us.
+If we become aware that we have inadvertently collected personal data from a child under 16 without verified parental or guardian consent, we will take prompt steps to delete that data. If you are a parent or legal guardian and believe your child has provided personal data to us without your consent, please contact us immediately at support@practers.com.
+14. International Data Transfers
+Mockr is a globally accessible platform. Your personal data may be stored and processed in countries other than your own, including India and countries where our service providers operate. These countries may have different data protection frameworks than your home country.
+Where we transfer personal data out of the European Economic Area (EEA), the United Kingdom, or other jurisdictions with data transfer restrictions, we rely on appropriate legal mechanisms to ensure your data remains adequately protected. These mechanisms include: (a) Standard Contractual Clauses (SCCs) approved by the European Commission or UK authorities; (b) adequacy decisions issued by relevant authorities; or (c) other legally recognized transfer mechanisms. For transfers from India, we comply with the requirements of the DPDP Act 2023 and associated rules as they come into effect.
+15. Automated Decision-Making and Profiling
+The Platform uses automated processing and AI to produce interview evaluations, performance scores, ATS analysis, and personalized feedback. These automated outputs are integral to the Services we provide. You acknowledge that:
+	•	AI-generated evaluations are used to provide the Platform's core Services and are not used to make legally significant or similarly significant binding decisions about you without human involvement
+	•	You have the right to request human review of any automated evaluation or output that you believe significantly affects you, by contacting us at support@practers.com
+	•	You should not rely solely on automated outputs for critical decisions and should exercise your own independent judgment
+16. Third-Party Links and Integrations
+The Platform may contain links to, or integrations with, third-party websites, services, or applications. Clicking on such links or using such integrations may result in those third parties collecting data about you. We do not control and are not responsible for the privacy practices, content, or data processing activities of any third-party service. We encourage you to read the privacy policies of any third-party services you interact with.
+17. Do Not Track Signals
+Some web browsers transmit "Do Not Track" (DNT) signals to websites. Our Platform does not currently alter its data collection practices in response to DNT signals. We will update this Policy if our practices in this regard change.
+18. Data Breach Notification
+In the event of a personal data breach, we will:
+	•	Investigate the breach promptly and take appropriate containment and remediation measures
+	•	Notify the relevant supervisory authority within 72 hours of becoming aware of the breach, where required by GDPR or applicable law
+	•	Notify affected users without undue delay where the breach is likely to result in a high risk to their rights and freedoms, providing information about the nature of the breach, likely consequences, and measures taken or proposed
+	•	Comply with notification requirements under India's DPDP Act 2023 and other applicable laws as and when they take effect
+19. Changes to This Privacy Policy
+We may update this Privacy Policy from time to time to reflect changes in our data practices, legal requirements, or business operations. When we make material changes, we will: (a) post the updated Policy on the Platform with a revised effective date; and (b) where required or appropriate, notify you by email or through a prominent notice on the Platform. Your continued use of the Platform after the effective date of any changes constitutes your acceptance of the updated Policy. We encourage you to review this Policy periodically.
+20. Contact, Grievances, and Supervisory Authorities
+For all privacy-related questions, requests, complaints, or notices, please contact us:
+Owner / Operator: [OWNER NAME]
+Support / Privacy Email: support@practers.com
+Website: https://www.practers.com
+
+EEA / UK Users: If you are not satisfied with our response, you have the right to lodge a complaint with your local data protection supervisory authority. For example: the Information Commissioner's Office (ICO) in the UK, or your national Data Protection Authority in the EU.
+Indian Users: Once operational, you may approach the Data Protection Board of India (established under the DPDP Act 2023) with complaints that are not resolved to your satisfaction through our grievance mechanism.
+California Users: You may contact the California Privacy Protection Agency (CPPA) for CCPA/CPRA-related complaints.
+
+© 2025 Mockr (https://www.practers.com). All rights reserved.

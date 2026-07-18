@@ -1,0 +1,36 @@
+{
+  "name": "@interviewforge/p2p",
+  "version": "0.1.0",
+  "private": true,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "type-check": "tsc --noEmit",
+    "test": "jest --config ../../jest.config.cjs --selectProjects p2p",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@fastify/cors": "^10.0.0",
+    "@interviewforge/db": "*",
+    "@interviewforge/shared": "*",
+    "@prisma/client": "^6.4.0",
+    "@socket.io/redis-adapter": "^8.3.0",
+    "@supabase/supabase-js": "^2.49.0",
+    "dotenv": "^16.4.0",
+    "fastify": "^5.2.0",
+    "fastify-plugin": "^5.0.0",
+    "ioredis": "^5.8.1",
+    "mongoose": "^9.3.3",
+    "socket.io": "^4.8.3",
+    "uuid": "^13.0.0",
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0"
+  }
+}

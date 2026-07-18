@@ -1,0 +1,158 @@
+\documentclass[11pt, a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=0.7in]{geometry}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{hyperref}
+
+% Define custom colors
+\definecolor{primary}{RGB}{33, 33, 33}
+\definecolor{secondary}{RGB}{102, 102, 102}
+\definecolor{accent}{RGB}{0, 90, 156} % Deep professional blue
+
+% Formatting sections
+\titleformat{\section}{\Large\bfseries\color{accent}}{}{0em}{}[\vspace{-2pt}\color{accent}\titlerule\vspace{6pt}]
+\titlespacing{\section}{0pt}{12pt}{8pt}
+
+% Custom command for the timeline entries
+\newcommand{\timelineEntry}[4]{
+    \noindent
+    \begin{minipage}[t]{0.18\textwidth}
+        \vspace{0pt} % Aligns the tops of the minipages
+        \textcolor{secondary}{\small\textbf{#1}}\par
+        \vspace{2pt}
+        \textcolor{secondary}{\footnotesize #2}
+    \end{minipage}%
+    \hfill
+    \begin{minipage}[t]{0.79\textwidth}
+        \vspace{0pt}
+        \textbf{\large\color{primary}#3}\par
+        \vspace{2pt}
+        \textit{\color{secondary}#4}\par
+    \end{minipage}
+}
+
+% Custom command for education/simple entries
+\newcommand{\timelineSimple}[4]{
+    \noindent
+    \begin{minipage}[t]{0.18\textwidth}
+        \vspace{0pt}
+        \textcolor{secondary}{\small\textbf{#1}}\par
+        \vspace{2pt}
+        \textcolor{secondary}{\footnotesize #2}
+    \end{minipage}%
+    \hfill
+    \begin{minipage}[t]{0.79\textwidth}
+        \vspace{0pt}
+        \textbf{\large\color{primary}#3}\par
+        \vspace{2pt}
+        \textit{\color{secondary}#4}
+    \end{minipage}
+    \par\vspace{10pt}
+}
+
+\begin{document}
+\pagestyle{empty}
+
+% HEADER
+\begin{center}
+    {\Huge \bfseries \color{primary} {{{personalInfo.name}}} }\\[6pt]
+    \textcolor{secondary}{\large }\\[6pt]
+    \small
+    {{#if personalInfo.email}}\href{mailto:{{{personalInfo.email}}} }{\color{accent}{{{personalInfo.email}}} } $\vert$ {{/if}}
+    {{#if personalInfo.phone}}{{{personalInfo.phone}}} $\vert$ {{/if}}
+    {{#if personalInfo.linkedin}}\href{ {{{personalInfo.linkedin}}} }{\color{accent}LinkedIn} $\vert$ {{/if}}
+    {{#if personalInfo.github}}\href{ {{{personalInfo.github}}} }{\color{accent}GitHub}{{/if}}
+\end{center}
+
+\vspace{12pt}
+
+% SUMMARY
+{{#if personalInfo.summary}}
+\section*{Professional Summary}
+\noindent
+\textcolor{primary}{ {{{personalInfo.summary}}} }
+{{/if}}
+
+% EXPERIENCE
+{{#if experience}}
+\section*{Professional Experience}
+
+{{#each experience}}
+\timelineEntry{ {{{duration}}} }{ {{{location}}} }
+{ {{{role}}} }{ {{{company}}} }
+{{#if bullets}}
+\vspace{-6pt}
+\hfill
+\begin{minipage}[t]{0.79\textwidth}
+\begin{itemize}[leftmargin=1.2em, noitemsep, topsep=0pt]
+{{#each bullets}}
+    \item {{{this}}}
+{{/each}}
+\end{itemize}
+\end{minipage}
+{{/if}}
+\par\vspace{10pt}
+
+{{/each}}
+{{/if}}
+
+% PROJECTS
+{{#if projects}}
+\section*{Key Projects}
+
+{{#each projects}}
+\timelineEntry{ {{{duration}}} }{ {{{technologies}}} }
+{ {{{name}}} }{ {{{role}}} }
+{{#if bullets}}
+\vspace{-6pt}
+\hfill
+\begin{minipage}[t]{0.79\textwidth}
+\begin{itemize}[leftmargin=1.2em, noitemsep, topsep=0pt]
+{{#each bullets}}
+    \item {{{this}}}
+{{/each}}
+\end{itemize}
+\end{minipage}
+{{/if}}
+\par\vspace{10pt}
+
+{{/each}}
+{{/if}}
+
+% EDUCATION
+{{#if education}}
+\section*{Education}
+
+{{#each education}}
+\timelineSimple{ {{{duration}}} }{ {{{location}}} }
+{ {{{degree}}} }{ {{{institution}}} }
+{{#if gpa}}
+\noindent\hspace{0.21\textwidth}\small{\textit{Marks/GPA: {{{gpa}}} }}\par\vspace{4pt}
+{{/if}}
+
+{{/each}}
+{{/if}}
+
+% SKILLS
+{{#if skills}}
+\section*{Technical Skills}
+{{#each skills}}
+\noindent
+\begin{minipage}[t]{0.18\textwidth}
+    \vspace{0pt}
+    \textcolor{secondary}{\small\textbf{ {{{category}}} }}
+\end{minipage}%
+\hfill
+\begin{minipage}[t]{0.79\textwidth}
+    \vspace{0pt}
+    {{{items}}}
+\end{minipage}
+\par\vspace{8pt}
+
+{{/each}}
+{{/if}}
+
+\end{document}

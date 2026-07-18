@@ -1,0 +1,101 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[default]{lato}
+\usepackage{geometry}
+\geometry{a4paper, left=15mm, right=15mm, top=20mm, bottom=20mm}
+\usepackage{fontawesome5}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{tabularx} % Added for perfect skills alignment
+
+\definecolor{darkgray}{HTML}{333333}
+\definecolor{lightgray}{HTML}{999999}
+\definecolor{theme}{HTML}{C90000}
+
+\titleformat{\section}
+  {\normalfont\Large\bfseries\color{theme}}
+  {}{0em}{}
+  [\vspace{-0.2em}\rule{\textwidth}{0.5pt}]
+
+\newcommand{\resumeSubheading}[4]{
+  \vspace{0.5em}\noindent
+  \textbf{#1} \hfill \textcolor{darkgray}{#2} \\
+  \textcolor{darkgray}{\textit{#3}} \hfill \textcolor{lightgray}{\textit{#4}} \par\vspace{0.3em}
+}
+
+\begin{document}
+\pagestyle{empty}
+
+{\Huge\bfseries\color{darkgray} {{{personalInfo.name}}} }\\[0.5em]
+\textcolor{lightgray}{\Large }\\[1em]
+{{#if personalInfo.email}}\faEnvelope\ \texttt{ {{{personalInfo.email}}} } \hspace{1em}{{/if}}
+{{#if personalInfo.phone}}\faPhone\ \texttt{ {{{personalInfo.phone}}} } \hspace{1em}{{/if}}
+{{#if personalInfo.github}}\faGithub\ \texttt{ {{{personalInfo.github}}} } \hspace{1em}{{/if}}
+{{#if personalInfo.linkedin}}\faLinkedin\ \texttt{ {{{personalInfo.linkedin}}} }{{/if}}
+
+{{#if personalInfo.summary}}
+\section*{SUMMARY}
+\vspace{0.5em}\noindent
+\textcolor{darkgray}{ {{{personalInfo.summary}}} }\par\vspace{1em}
+{{/if}}
+
+{{#if education}}
+\section*{EDUCATION}
+{{#each education}}
+\resumeSubheading
+  { {{{institution}}} }{ {{{location}}} }
+  { {{{degree}}} }{ {{{duration}}} }
+{{#if gpa}}
+\noindent\textcolor{darkgray}{\small Marks/GPA: \textit{ {{{gpa}}} }}\par\vspace{0.3em}
+{{/if}}
+{{/each}}
+{{/if}}
+
+{{#if experience}}
+\section*{PROFESSIONAL EXPERIENCE}
+{{#each experience}}
+\resumeSubheading
+  { {{{company}}} }{ {{{location}}} }
+  { {{{role}}} }{ {{{duration}}} }
+{{#if bullets}}
+  \begin{itemize}[leftmargin=*, noitemsep]
+{{#each bullets}}
+      \item {{{this}}}
+{{/each}}
+  \end{itemize}
+{{/if}}
+
+{{/each}}
+{{/if}}
+
+{{#if projects}}
+\section*{SELECTED PROJECTS}
+{{#each projects}}
+\resumeSubheading
+  { {{{name}}} }{ {{{technologies}}} }
+  { {{{role}}} }{ {{{duration}}} }
+{{#if bullets}}
+  \begin{itemize}[leftmargin=*, noitemsep]
+{{#each bullets}}
+      \item {{{this}}}
+{{/each}}
+  \end{itemize}
+{{/if}}
+
+{{/each}}
+{{/if}}
+
+{{#if skills}}
+\section*{SKILLS \& EXPERTISE}
+\vspace{0.5em}\noindent
+% Tabularx ensures perfect alignment of the colons, and the 'X' column automatically wraps long lists.
+\begin{tabularx}{\textwidth}{@{} >{\bfseries\color{darkgray}}l X @{}}
+{{#each skills}}
+  {{{category}}}: & {{{items}}} \\
+{{/each}}
+\end{tabularx}
+{{/if}}
+
+\end{document}

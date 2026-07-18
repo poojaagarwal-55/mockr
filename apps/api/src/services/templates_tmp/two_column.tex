@@ -1,0 +1,98 @@
+\documentclass[10pt, a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=0.6in]{geometry}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{paracol}
+
+\definecolor{primary}{RGB}{44, 62, 80}
+\definecolor{accent}{RGB}{41, 128, 185}
+
+\titleformat{\section}{\Large\bfseries\color{primary}}{}{0em}{}[\color{accent}\titlerule]
+\titlespacing{\section}{0pt}{10pt}{5pt}
+\setlength{\parindent}{0pt}
+\setlist[itemize]{leftmargin=*, noitemsep, topsep=0pt}
+
+\begin{document}
+
+\begin{center}
+    {\Huge \bfseries \color{primary} {{{personalInfo.name}}} }\\[4pt]
+    \textcolor{accent}{}\\[4pt]
+    {{#if personalInfo.email}}\href{mailto:{{{personalInfo.email}}} }{ {{{personalInfo.email}}} } | {{/if}}{{#if personalInfo.phone}}{{{personalInfo.phone}}} | {{/if}}{{#if personalInfo.github}}\href{ {{{personalInfo.github}}} }{GitHub} | {{/if}}{{#if personalInfo.linkedin}}\href{ {{{personalInfo.linkedin}}} }{LinkedIn}{{/if}}
+\end{center}
+
+\vspace{10pt}
+
+{{#if personalInfo.summary}}
+\section*{Professional Summary}
+{{{personalInfo.summary}}}
+
+\vspace{10pt}
+{{/if}}
+
+\columnratio{0.66}
+\setlength{\columnsep}{0.03\textwidth}
+\begin{paracol}{2}
+
+{{#if experience}}
+    \section*{Experience}
+{{#each experience}}
+    \textbf{ {{{role}}} } \hfill \textit{ {{{duration}}} }\\
+    \textit{ {{{company}}}, {{{location}}} }\\[2pt]
+{{#if bullets}}
+    \begin{itemize}
+{{#each bullets}}
+        \item {{{this}}}
+{{/each}}
+    \end{itemize}
+{{/if}}
+    \vspace{8pt}
+
+{{/each}}
+{{/if}}
+    
+{{#if projects}}
+    \section*{Key Projects}
+{{#each projects}}
+    \textbf{ {{{name}}} } \hfill \textit{ {{{technologies}}} }\\[2pt]
+{{#if bullets}}
+    \begin{itemize}
+{{#each bullets}}
+        \item {{{this}}}
+{{/each}}
+    \end{itemize}
+{{/if}}
+    \vspace{6pt}
+    
+{{/each}}
+{{/if}}
+
+\switchcolumn
+
+{{#if education}}
+    \section*{Education}
+{{#each education}}
+    \textbf{ {{{institution}}} }\\
+    {{{degree}}}, {{{location}}}\\
+    \textit{ {{{duration}}} }\\
+{{#if gpa}}
+    \small{Marks/GPA: \textit{ {{{gpa}}} }}\\
+{{/if}}
+    \vspace{4pt}
+{{/each}}
+{{/if}}
+    
+{{#if skills}}
+    \section*{Technical Skills}
+{{#each skills}}
+    \textbf{ {{{category}}}:}\\
+    {{{items}}}\\[6pt]
+{{/each}}
+{{/if}}
+
+\end{paracol}
+
+\end{document}

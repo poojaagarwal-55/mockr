@@ -1,0 +1,51 @@
+{
+    "$schema": "https://turbo.build/schema.json",
+    "globalDependencies": [
+        ".env"
+    ],
+    "globalPassThroughEnv": [
+        "NEXT_PUBLIC_SUPABASE_URL",
+        "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+        "NEXT_PUBLIC_API_URL",
+        "NEXT_PUBLIC_WS_URL",
+        "NEXT_PUBLIC_P2P_URL",
+        "NEXT_PUBLIC_RAZORPAY_KEY_ID",
+        "NEXT_PUBLIC_MSG91_WIDGET_ID",
+        "NEXT_PUBLIC_MSG91_WIDGET_TOKEN",
+        "NEXT_PUBLIC_TUTOR_AGENT_V2",
+        "NEXT_PUBLIC_VOICE_AUDIO_TRANSPORT",
+        "JUDGE0_DEBUG_SOURCE",
+        "DEBUG_JUDGE0_SOURCE"
+    ],
+    "tasks": {
+        "build": {
+            "dependsOn": [
+                "^build"
+            ],
+            "outputs": [
+                ".next/**",
+                "dist/**"
+            ]
+        },
+        "dev": {
+            "cache": false,
+            "persistent": true
+        },
+        "lint": {
+            "dependsOn": [
+                "^build"
+            ]
+        },
+        "type-check": {
+            "dependsOn": [
+                "^build"
+            ]
+        },
+        "test": {
+            "outputs": []
+        },
+        "clean": {
+            "cache": false
+        }
+    }
+}

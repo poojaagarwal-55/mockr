@@ -1,0 +1,41 @@
+# Copy to terraform.tfvars and adjust. terraform.tfvars is gitignored.
+
+aws_region       = "ap-south-1"
+environment_name = "prod"
+
+# Networking. Keep NAT for private tasks; set use_nat_gateway=false to run tasks
+# in public subnets and save the ~$32/mo NAT cost (fine for this scale).
+use_nat_gateway    = true
+single_nat_gateway = true
+
+# Domains (must match what the frontends + Google OAuth will call).
+root_domain      = "practers.com"
+api_hostname     = "api.practers.com"
+contest_hostname = "contest.practers.com"
+p2p_hostname     = "p2p.practers.com"
+
+# TLS: leave acm_certificate_arn empty to have Terraform create a DNS-validated
+# cert. If Route53 hosts practers.com, set manage_route53=true + the zone id so
+# validation + A-records are automatic. Otherwise validate the cert + add CNAMEs
+# to the ALB in your DNS provider by hand.
+acm_certificate_arn = ""
+manage_route53      = false
+route53_zone_id     = ""
+
+# Frontend origins (were GCP secrets; now plain config).
+frontend_url         = "https://www.practers.com"
+company_frontend_url = "https://company.practers.com"
+cors_allowed_origins = "https://www.practers.com,https://company.practers.com"
+
+# All services deploy this tag; CI overrides per push with the git SHA.
+image_tag = "latest"
+
+# CI/CD: repo allowed to assume the deploy role via GitHub OIDC. Set
+# create_github_oidc_provider=false if the account already has the provider.
+github_repo                 = "mockr-labs/practers"
+create_github_oidc_provider = true
+
+# Alerts: set an email to get CloudWatch alarms (5xx / unhealthy / CPU).
+# You'll get a one-time SNS "confirm subscription" email after apply.
+# Leave empty to disable alarms entirely.
+alarm_email = ""

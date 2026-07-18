@@ -48,19 +48,7 @@ flowchart LR
 
 ## 🤔 "Can't I just ask ChatGPT to interview me?"
 
-It'll ask you questions. But a real interview isn't just talk — you **code in an editor**, **query a live database**, and **draw the system on a board**. Mockr gives you the whole room.
-
-| Live Coding IDE | SQL Editor | System Design Canvas |
-|:---:|:---:|:---:|
-| ![DSA IDE](docs/screenshots/dsa-ide.png) | ![SQL editor](docs/screenshots/sql-editor.png) | ![System design canvas](docs/screenshots/system-design-canvas.png) |
-| Real editor with hidden test cases — **run & submit**, just like the real thing. | Write real queries against real tables and see the **result set**. | Actually **draw** the architecture — boxes, arrows, requirements. |
-
-<br/>
-
-| One AI · Every Interview Type | Three Ways to Practise |
-|:---:|:---:|
-| ![Interview types](docs/screenshots/interview-types.png) | ![Interview modes](docs/screenshots/interview-modes.png) |
-| SDE, Coding, **System Design**, CS Fundamentals, Behavioural, PM, Data Science… | AI interviewer, live **peer-to-peer**, or an industry expert. |
+It'll ask you questions. But a real interview isn't just talk — you **code in a real editor**, **query a live database**, and **draw the system on a board**, all while explaining yourself out loud and on camera. Mockr gives you the whole room, not a chat box. *(Scroll down — see it for yourself. 👇)*
 
 ---
 
@@ -99,7 +87,29 @@ sequenceDiagram
 
 It interrupts. It follows up. It notices when you go quiet — the same pressure as the real room, without the cost of failing. **Ninety seconds in, you forget it's an AI.**
 
+![A live Mockr interview — you on camera, coding against real test cases, the clock running](docs/screenshots/live-interview.jpeg)
+
 <p align="center"><b>👉 Do one interview tonight. That's all it takes to feel the difference.</b></p>
+
+---
+
+## 🖼️ A look inside Mockr
+
+**Pick how you want to practise** — AI interviewer, live peer-to-peer, or an expert.
+
+![Interview options](docs/screenshots/interview-modes.png)
+
+**Code it, query it, design it — for real.**
+
+| 💻 Coding IDE | 🗄️ SQL Editor | 🎨 System Design Canvas |
+|:---:|:---:|:---:|
+| ![Coding IDE](docs/screenshots/dsa-ide.png) | ![SQL editor](docs/screenshots/sql-editor.png) | ![System design canvas](docs/screenshots/system-design-canvas.png) |
+
+**Learn from it, and watch yourself improve.**
+
+| 🧑‍🏫 AI Tutor | 📊 Progress & Reports |
+|:---:|:---:|
+| ![AI Tutor](docs/screenshots/ai-tutor.png) | ![Reports](docs/screenshots/reports.png) |
 
 ---
 

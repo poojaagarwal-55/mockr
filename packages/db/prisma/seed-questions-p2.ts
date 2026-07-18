@@ -1,0 +1,162 @@
+// ============================================
+// Question Data — Part 2 of 3  (Q6–Q10)
+// ============================================
+
+export const questionsP2 = [
+  // ── Q6: Restore IP Addresses ──
+  {
+    slug: 'restore-ip-addresses',
+    title: 'Restore IP Addresses',
+    category: 'DSA', subcategory: 'Backtracking', difficulty: 'Medium',
+    problemMd: `## Restore IP Addresses\n\nA valid IP address consists of exactly four integers separated by single dots. Each integer is between 0 and 255 (inclusive) and cannot have leading zeros.\n\nGiven a string s containing only digits, return all possible valid IP addresses that can be formed by inserting dots into s. You are not allowed to reorder or remove any digits in s. You may return the valid IP addresses in any order.`,
+    constraints: `1 ≤ s.length ≤ 20\ns contains digits only\nEach octet: 0–255 (no leading zeros)\nExactly 4 parts separated by dots`,
+    examples: [
+      { input: 's = "25525511135"', output: '["255.255.11.135","255.255.111.35"]' },
+      { input: 's = "0000"', output: '["0.0.0.0"]' },
+      { input: 's = "101023"', output: '["1.0.10.23","1.0.102.3","10.1.0.23","10.10.2.3","101.0.2.3"]' },
+    ],
+    hints: ['Use backtracking with 4 segments.', 'Each segment must be 1-3 digits and ≤ 255.'],
+    followUpQuestions: ['How do you handle leading zeros?', 'What is the time complexity?'],
+    tags: ['backtracking', 'strings'], companies: ['Amazon', 'Microsoft'],
+    targetRoles: ['backend', 'fullstack'], targetLevels: ['SDE1', 'SDE2'],
+    starters: [
+      { language: 'cpp', starter: `class Solution {\npublic:\n\tvector<string> restoreIpAddresses(string s) {\n\n\t}\n};`,
+        wrapperCode: `#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n\tstring line;getline(cin,line);auto j=nlohmann::json::parse(line);\n\tstring s=j["s"];\n\tSolution sol;auto res=sol.restoreIpAddresses(s);\n\tcout<<"[";for(int i=0;i<res.size();i++){if(i)cout<<",";cout<<"\\""+res[i]+"\\"";} cout<<"]"<<endl;\n}` },
+      { language: 'java', starter: `class Solution {\n\tpublic List<String> restoreIpAddresses(String s) {\n\n\t}\n}`,
+        wrapperCode: `import java.util.*;import org.json.*;\npublic class Main{public static void main(String[] a){\n\tScanner sc=new Scanner(System.in);StringBuilder sb=new StringBuilder();while(sc.hasNextLine())sb.append(sc.nextLine());\n\tJSONObject obj=new JSONObject(sb.toString());\n\tList<String> res=new Solution().restoreIpAddresses(obj.getString("s"));\n\tSystem.out.println(new JSONArray(res));\n}}` },
+      { language: 'python', starter: `class Solution(object):\n\tdef restoreIpAddresses(self, s):\n\t\t\"\"\"\n\t\t:type s: str\n\t\t:rtype: List[str]\n\t\t\"\"\"`,
+        wrapperCode: `import sys,json\ndef main():\n\td=json.loads(sys.stdin.read());print(json.dumps(Solution().restoreIpAddresses(d["s"])))\nmain()` },
+      { language: 'javascript', starter: `/**\n * @param {string} s\n * @return {string[]}\n */\nvar restoreIpAddresses = function(s) {\n\n};`,
+        wrapperCode: `const rl=require('readline').createInterface({input:process.stdin});let inp='';rl.on('line',l=>inp+=l);rl.on('close',()=>{const d=JSON.parse(inp);console.log(JSON.stringify(restoreIpAddresses(d.s)));});` },
+    ],
+    testCases: [
+      { input: '{"s":"25525511135"}\n', expected: '["255.255.11.135","255.255.111.35"]', type: 'sample', orderIdx: 0 },
+      { input: '{"s":"0000"}\n', expected: '["0.0.0.0"]', type: 'sample', orderIdx: 1 },
+      { input: '{"s":"101023"}\n', expected: '["1.0.10.23","1.0.102.3","10.1.0.23","10.10.2.3","101.0.2.3"]', type: 'sample', orderIdx: 2 },
+    ],
+  },
+  // ── Q7: Shortest Palindrome ──
+  {
+    slug: 'shortest-palindrome',
+    title: 'Shortest Palindrome',
+    category: 'DSA', subcategory: 'Strings', difficulty: 'Hard',
+    problemMd: `## Shortest Palindrome\n\nYou are given a string s. You can convert s to a palindrome by adding characters in front of it.\n\nReturn the shortest palindrome you can find by performing this transformation.`,
+    constraints: `0 ≤ s.length ≤ 50,000\ns consists of lowercase English letters only\nPrepend characters to the front only\nMinimize total length of result`,
+    examples: [
+      { input: 's = "aacecaaa"', output: '"aaacecaaa"' },
+      { input: 's = "abcd"', output: '"dcbabcd"' },
+    ],
+    hints: ['Find the longest palindrome prefix.', 'Use KMP failure function or hashing.'],
+    followUpQuestions: ['What is the time complexity?', 'How does KMP help here?'],
+    tags: ['strings', 'kmp'], companies: ['Google', 'Amazon'],
+    targetRoles: ['backend', 'fullstack'], targetLevels: ['SDE2', 'SDE3'],
+    starters: [
+      { language: 'cpp', starter: `class Solution {\npublic:\n\tstring shortestPalindrome(string s) {\n\n\t}\n};`,
+        wrapperCode: `#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n\tstring line;getline(cin,line);auto j=nlohmann::json::parse(line);\n\tcout<<Solution().shortestPalindrome(j["s"].get<string>())<<endl;\n}` },
+      { language: 'java', starter: `class Solution {\n\tpublic String shortestPalindrome(String s) {\n\n\t}\n}`,
+        wrapperCode: `import java.util.*;import org.json.*;\npublic class Main{public static void main(String[] a){\n\tScanner sc=new Scanner(System.in);StringBuilder sb=new StringBuilder();while(sc.hasNextLine())sb.append(sc.nextLine());\n\tSystem.out.println(new Solution().shortestPalindrome(new JSONObject(sb.toString()).getString("s")));\n}}` },
+      { language: 'python', starter: `class Solution(object):\n\tdef shortestPalindrome(self, s):\n\t\t\"\"\"\n\t\t:type s: str\n\t\t:rtype: str\n\t\t\"\"\"`,
+        wrapperCode: `import sys,json\ndef main():\n\td=json.loads(sys.stdin.read());print(Solution().shortestPalindrome(d["s"]))\nmain()` },
+      { language: 'javascript', starter: `/**\n * @param {string} s\n * @return {string}\n */\nvar shortestPalindrome = function(s) {\n\n};`,
+        wrapperCode: `const rl=require('readline').createInterface({input:process.stdin});let inp='';rl.on('line',l=>inp+=l);rl.on('close',()=>{const d=JSON.parse(inp);console.log(shortestPalindrome(d.s));});` },
+    ],
+    testCases: [
+      { input: '{"s":"aacecaaa"}\n', expected: 'aaacecaaa', type: 'sample', orderIdx: 0 },
+      { input: '{"s":"abcd"}\n', expected: 'dcbabcd', type: 'sample', orderIdx: 1 },
+      { input: '{"s":"a"}\n', expected: 'a', type: 'sample', orderIdx: 2 },
+    ],
+  },
+  // ── Q8: Trapping Rain Water II ──
+  {
+    slug: 'trapping-rain-water-ii',
+    title: 'Trapping Rain Water II',
+    category: 'DSA', subcategory: 'Heap', difficulty: 'Hard',
+    problemMd: `## Trapping Rain Water II\n\nGiven an m x n integer matrix heightMap representing the height of each unit cell in a 2D elevation map, return the volume of water it can trap after raining.`,
+    constraints: `1 ≤ m, n ≤ 200\n0 ≤ heightMap[i][j] ≤ 20,000\nBorder cells cannot trap water`,
+    examples: [
+      { input: 'heightMap = [[1,4,3,1,3,2],[3,2,1,3,2,4],[2,3,3,2,3,1]]', output: '4' },
+      { input: 'heightMap = [[3,3,3,3,3],[3,2,2,2,3],[3,2,1,2,3],[3,2,2,2,3],[3,3,3,3,3]]', output: '10' },
+    ],
+    hints: ['Use a min-heap with boundary cells.', 'Process cells from lowest boundary inward.'],
+    followUpQuestions: ['How is this different from the 1D version?', 'What is the time complexity?'],
+    tags: ['heap', 'bfs', 'matrix'], companies: ['Google', 'Amazon'],
+    targetRoles: ['backend', 'fullstack'], targetLevels: ['SDE2', 'SDE3'],
+    starters: [
+      { language: 'cpp', starter: `class Solution {\npublic:\n\tint trapRainWater(vector<vector<int>>& heightMap) {\n\n\t}\n};`,
+        wrapperCode: `#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n\tstring line;getline(cin,line);auto j=nlohmann::json::parse(line);\n\tvector<vector<int>> h=j["heightMap"].get<vector<vector<int>>>();\n\tcout<<Solution().trapRainWater(h)<<endl;\n}` },
+      { language: 'java', starter: `class Solution {\n\tpublic int trapRainWater(int[][] heightMap) {\n\n\t}\n}`,
+        wrapperCode: `import java.util.*;import org.json.*;\npublic class Main{public static void main(String[] a){\n\tScanner sc=new Scanner(System.in);StringBuilder sb=new StringBuilder();while(sc.hasNextLine())sb.append(sc.nextLine());\n\tJSONObject obj=new JSONObject(sb.toString());JSONArray hm=obj.getJSONArray("heightMap");\n\tint[][] h=new int[hm.length()][];for(int i=0;i<hm.length();i++){JSONArray r=hm.getJSONArray(i);h[i]=new int[r.length()];for(int jj=0;jj<r.length();jj++)h[i][jj]=r.getInt(jj);}\n\tSystem.out.println(new Solution().trapRainWater(h));\n}}` },
+      { language: 'python', starter: `class Solution(object):\n\tdef trapRainWater(self, heightMap):\n\t\t\"\"\"\n\t\t:type heightMap: List[List[int]]\n\t\t:rtype: int\n\t\t\"\"\"`,
+        wrapperCode: `import sys,json\ndef main():\n\td=json.loads(sys.stdin.read());print(Solution().trapRainWater(d["heightMap"]))\nmain()` },
+      { language: 'javascript', starter: `/**\n * @param {number[][]} heightMap\n * @return {number}\n */\nvar trapRainWater = function(heightMap) {\n\n};`,
+        wrapperCode: `const rl=require('readline').createInterface({input:process.stdin});let inp='';rl.on('line',l=>inp+=l);rl.on('close',()=>{const d=JSON.parse(inp);console.log(trapRainWater(d.heightMap));});` },
+    ],
+    testCases: [
+      { input: '{"heightMap":[[1,4,3,1,3,2],[3,2,1,3,2,4],[2,3,3,2,3,1]]}\n', expected: '4', type: 'sample', orderIdx: 0 },
+      { input: '{"heightMap":[[3,3,3,3,3],[3,2,2,2,3],[3,2,1,2,3],[3,2,2,2,3],[3,3,3,3,3]]}\n', expected: '10', type: 'sample', orderIdx: 1 },
+      { input: '{"heightMap":[[1,1],[1,1]]}\n', expected: '0', type: 'sample', orderIdx: 2 },
+    ],
+  },
+  // ── Q9: Kth Smallest Element in BST ──
+  {
+    slug: 'kth-smallest-element-in-bst',
+    title: 'Kth Smallest Element in BST',
+    category: 'DSA', subcategory: 'BinaryTree', difficulty: 'Medium',
+    problemMd: `## Kth Smallest Element in BST\n\nGiven the root of a binary search tree, and an integer k, return the kth smallest value (1-indexed) of all the values of the nodes in the tree.`,
+    constraints: `1 ≤ k ≤ n ≤ 10,000\n0 ≤ Node.val ≤ 10,000\nk is 1-indexed\nTree is a valid BST\nAll node values are unique`,
+    examples: [
+      { input: 'root = [3,1,4,null,2], k = 1', output: '1' },
+      { input: 'root = [5,3,6,2,4,null,null,1], k = 3', output: '3' },
+    ],
+    hints: ['Inorder traversal of a BST yields sorted order.', 'Count nodes during traversal and stop at k.'],
+    followUpQuestions: ['What is the time complexity?', 'How would you optimize for frequent queries?'],
+    tags: ['binary-tree', 'bst', 'inorder'], companies: ['Amazon', 'Meta', 'Bloomberg'],
+    targetRoles: ['backend', 'fullstack'], targetLevels: ['SDE1', 'SDE2'],
+    starters: [
+      { language: 'cpp', starter: `/**\n * Definition for a binary tree node.\n * struct TreeNode {\n *     int val;\n *     TreeNode *left;\n *     TreeNode *right;\n *     TreeNode() : val(0), left(nullptr), right(nullptr) {}\n *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}\n *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}\n * };\n */\nclass Solution {\npublic:\n\tint kthSmallest(TreeNode* root, int k) {\n\n\t}\n};`,
+        wrapperCode: `#include <bits/stdc++.h>\nusing namespace std;\nstruct TreeNode{int val;TreeNode*left;TreeNode*right;TreeNode():val(0),left(nullptr),right(nullptr){}TreeNode(int x):val(x),left(nullptr),right(nullptr){}TreeNode(int x,TreeNode*l,TreeNode*r):val(x),left(l),right(r){}};\nTreeNode* build(vector<int>& v,int i){if(i>=v.size()||v[i]==-1)return nullptr;TreeNode*n=new TreeNode(v[i]);n->left=build(v,2*i+1);n->right=build(v,2*i+2);return n;}\nint main(){\n\tstring line;getline(cin,line);auto j=nlohmann::json::parse(line);\n\tvector<int> arr;for(auto&x:j["root"])arr.push_back(x.is_null()?-1:x.get<int>());\n\tint k=j["k"];\n\tcout<<Solution().kthSmallest(build(arr,0),k)<<endl;\n}` },
+      { language: 'java', starter: `/**\n * Definition for a binary tree node.\n * public class TreeNode {\n *     int val;\n *     TreeNode left;\n *     TreeNode right;\n *     TreeNode() {}\n *     TreeNode(int val) { this.val = val; }\n *     TreeNode(int val, TreeNode left, TreeNode right) {\n *         this.val = val;\n *         this.left = left;\n *         this.right = right;\n *     }\n * }\n */\nclass Solution {\n\tpublic int kthSmallest(TreeNode root, int k) {\n\n\t}\n}`,
+        wrapperCode: `import java.util.*;import org.json.*;\nclass TreeNode{int val;TreeNode left;TreeNode right;TreeNode(){}TreeNode(int v){val=v;}TreeNode(int v,TreeNode l,TreeNode r){val=v;left=l;right=r;}}\npublic class Main{\n\tstatic TreeNode build(JSONArray a,int i){if(i>=a.length()||a.isNull(i))return null;TreeNode n=new TreeNode(a.getInt(i));n.left=build(a,2*i+1);n.right=build(a,2*i+2);return n;}\n\tpublic static void main(String[] args){\n\t\tScanner sc=new Scanner(System.in);StringBuilder sb=new StringBuilder();while(sc.hasNextLine())sb.append(sc.nextLine());\n\t\tJSONObject obj=new JSONObject(sb.toString());\n\t\tSystem.out.println(new Solution().kthSmallest(build(obj.getJSONArray("root"),0),obj.getInt("k")));\n\t}\n}` },
+      { language: 'python', starter: `# Definition for a binary tree node.\n# class TreeNode(object):\n#     def __init__(self, val=0, left=None, right=None):\n#         self.val = val\n#         self.left = left\n#         self.right = right\nclass Solution(object):\n\tdef kthSmallest(self, root, k):\n\t\t\"\"\"\n\t\t:type root: Optional[TreeNode]\n\t\t:type k: int\n\t\t:rtype: int\n\t\t\"\"\"`,
+        wrapperCode: `import sys,json\nclass TreeNode(object):\n\tdef __init__(self,val=0,left=None,right=None):self.val=val;self.left=left;self.right=right\ndef build(arr,i=0):\n\tif i>=len(arr) or arr[i] is None:return None\n\tn=TreeNode(arr[i]);n.left=build(arr,2*i+1);n.right=build(arr,2*i+2);return n\ndef main():\n\td=json.loads(sys.stdin.read());print(Solution().kthSmallest(build(d["root"]),d["k"]))\nmain()` },
+      { language: 'javascript', starter: `/**\n * Definition for a binary tree node.\n * function TreeNode(val, left, right) {\n *     this.val = (val===undefined ? 0 : val)\n *     this.left = (left===undefined ? null : left)\n *     this.right = (right===undefined ? null : right)\n * }\n */\n/**\n * @param {TreeNode} root\n * @param {number} k\n * @return {number}\n */\nvar kthSmallest = function(root, k) {\n\n};`,
+        wrapperCode: `function TreeNode(v,l,r){this.val=(v===undefined?0:v);this.left=(l===undefined?null:l);this.right=(r===undefined?null:r);}\nfunction build(a,i=0){if(i>=a.length||a[i]===null)return null;let n=new TreeNode(a[i]);n.left=build(a,2*i+1);n.right=build(a,2*i+2);return n;}\nconst rl=require('readline').createInterface({input:process.stdin});let inp='';rl.on('line',l=>inp+=l);rl.on('close',()=>{const d=JSON.parse(inp);console.log(kthSmallest(build(d.root),d.k));});` },
+    ],
+    testCases: [
+      { input: '{"root":[3,1,4,null,2],"k":1}\n', expected: '1', type: 'sample', orderIdx: 0 },
+      { input: '{"root":[5,3,6,2,4,null,null,1],"k":3}\n', expected: '3', type: 'sample', orderIdx: 1 },
+      { input: '{"root":[1],"k":1}\n', expected: '1', type: 'sample', orderIdx: 2 },
+    ],
+  },
+  // ── Q10: Split Array Largest Sum ──
+  {
+    slug: 'split-array-largest-sum',
+    title: 'Split Array Largest Sum',
+    category: 'DSA', subcategory: 'BinarySearch', difficulty: 'Hard',
+    problemMd: `## Split Array Largest Sum\n\nGiven an integer array nums and an integer k, split nums into k non-empty subarrays such that the largest sum of any subarray is minimized.\n\nReturn the minimized largest sum of the split.\n\nA subarray is a contiguous part of the array.`,
+    constraints: `1 ≤ nums.length ≤ 1000\n0 ≤ nums[i] ≤ 1,000,000\n1 ≤ k ≤ min(50, nums.length)\nSubarrays must be contiguous and non-empty`,
+    examples: [
+      { input: 'nums = [7,2,5,10,8], k = 2', output: '18', explanation: 'Split into [7,2,5] and [10,8], largest sum is 18.' },
+      { input: 'nums = [1,2,3,4,5], k = 2', output: '9', explanation: 'Split into [1,2,3] and [4,5], largest sum is 9.' },
+    ],
+    hints: ['Binary search on the answer.', 'For a given max sum, check if you can split into ≤ k subarrays.'],
+    followUpQuestions: ['Why does binary search work here?', 'What is the time complexity?'],
+    tags: ['binary-search', 'greedy', 'dp'], companies: ['Google', 'Amazon'],
+    targetRoles: ['backend', 'fullstack'], targetLevels: ['SDE2', 'SDE3'],
+    starters: [
+      { language: 'cpp', starter: `class Solution {\npublic:\n\tint splitArray(vector<int>& nums, int k) {\n\n\t}\n};`,
+        wrapperCode: `#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n\tstring line;getline(cin,line);auto j=nlohmann::json::parse(line);\n\tvector<int> nums=j["nums"].get<vector<int>>();int k=j["k"];\n\tcout<<Solution().splitArray(nums,k)<<endl;\n}` },
+      { language: 'java', starter: `class Solution {\n\tpublic int splitArray(int[] nums, int k) {\n\n\t}\n}`,
+        wrapperCode: `import java.util.*;import org.json.*;\npublic class Main{public static void main(String[] a){\n\tScanner sc=new Scanner(System.in);StringBuilder sb=new StringBuilder();while(sc.hasNextLine())sb.append(sc.nextLine());\n\tJSONObject obj=new JSONObject(sb.toString());JSONArray arr=obj.getJSONArray("nums");int k=obj.getInt("k");\n\tint[]nums=new int[arr.length()];for(int i=0;i<arr.length();i++)nums[i]=arr.getInt(i);\n\tSystem.out.println(new Solution().splitArray(nums,k));\n}}` },
+      { language: 'python', starter: `class Solution(object):\n\tdef splitArray(self, nums, k):\n\t\t\"\"\"\n\t\t:type nums: List[int]\n\t\t:type k: int\n\t\t:rtype: int\n\t\t\"\"\"`,
+        wrapperCode: `import sys,json\ndef main():\n\td=json.loads(sys.stdin.read());print(Solution().splitArray(d["nums"],d["k"]))\nmain()` },
+      { language: 'javascript', starter: `/**\n * @param {number[]} nums\n * @param {number} k\n * @return {number}\n */\nvar splitArray = function(nums, k) {\n\n};`,
+        wrapperCode: `const rl=require('readline').createInterface({input:process.stdin});let inp='';rl.on('line',l=>inp+=l);rl.on('close',()=>{const d=JSON.parse(inp);console.log(splitArray(d.nums,d.k));});` },
+    ],
+    testCases: [
+      { input: '{"nums":[7,2,5,10,8],"k":2}\n', expected: '18', type: 'sample', orderIdx: 0 },
+      { input: '{"nums":[1,2,3,4,5],"k":2}\n', expected: '9', type: 'sample', orderIdx: 1 },
+      { input: '{"nums":[1,4,4],"k":3}\n', expected: '4', type: 'sample', orderIdx: 2 },
+    ],
+  },
+];

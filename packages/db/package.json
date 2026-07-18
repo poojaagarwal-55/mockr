@@ -1,0 +1,32 @@
+{
+    "name": "@interviewforge/db",
+    "version": "0.0.1",
+    "type": "module",
+    "private": true,
+    "main": "./dist/src/index.js",
+    "types": "./src/index.ts",
+    "exports": {
+        ".": {
+            "import": "./dist/src/index.js",
+            "types": "./src/index.ts"
+        }
+    },
+    "scripts": {
+        "build": "tsc",
+        "generate": "prisma generate",
+        "push": "prisma db push",
+        "seed": "tsx prisma/seed.ts",
+        "studio": "prisma studio",
+        "migrate": "prisma migrate dev",
+        "type-check": "tsc --noEmit"
+    },
+    "dependencies": {
+        "@prisma/client": "^6.19.2"
+    },
+    "devDependencies": {
+        "@types/node": "^25.3.3",
+        "prisma": "^6.4.0",
+        "tsx": "^4.19.0",
+        "typescript": "^5.7.0"
+    }
+}

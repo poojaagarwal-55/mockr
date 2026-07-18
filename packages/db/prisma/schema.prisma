@@ -1,0 +1,2431 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id                                                   String                              @id @default(uuid())
+  email                                                String                              @unique
+  fullName                                             String                              @map("full_name")
+  role                                                 String                              @default("user")
+  placementCollegeEmailDomain                         String?                             @map("placement_college_email_domain")
+  contestInstructionTemplate                           String?                             @map("contest_instruction_template") @db.Text
+  avatarUrl                                            String?                             @map("avatar_url")
+  createdAt                                            DateTime                            @default(now()) @map("created_at")
+  updatedAt                                            DateTime                            @updatedAt @map("updated_at")
+  country                                              String?
+  mobile                                               String?
+  username                                             String?                             @unique
+  timezone                                             String?
+  onboardingCompleted                                  Boolean                             @default(false) @map("onboarding_completed")
+  onboardingCompany                                    String?                             @map("onboarding_company")
+  onboardingField                                      String?                             @map("onboarding_field")
+  onboardingPosition                                   String?                             @map("onboarding_position")
+  onboardingTimeline                                   String?                             @map("onboarding_timeline")
+  onboardingTrack                                      String?                             @map("onboarding_track")
+  birthday                                             DateTime?
+  education                                            Json?                               @map("education")
+  gender                                               String?
+  githubUrl                                            String?                             @map("github_url")
+  linkedinUrl                                          String?                             @map("linkedin_url")
+  location                                             String?
+  readmeUrl                                            String?                             @map("readme_url")
+  skills                                               String[]                            @default([])
+  twitterUrl                                           String?                             @map("twitter_url")
+  website                                              String?
+  workExperience                                       Json?                               @map("work_experience")
+  currentStreak                                        Int                                 @default(0) @map("current_streak")
+  longestStreak                                        Int                                 @default(0) @map("longest_streak")
+  lastActivityDate                                     DateTime?                           @map("last_activity_date") @db.Timestamp(6)
+  emailVerified                                        Boolean                             @default(false) @map("email_verified")
+  emailVerifiedAt                                      DateTime?                           @map("email_verified_at")
+  mobileVerified                                       Boolean                             @default(false) @map("mobile_verified")
+  mobileVerifiedAt                                     DateTime?                           @map("mobile_verified_at")
+  isExpert                                             Boolean                             @default(false) @map("is_expert")
+  lastLoginAt                                          DateTime?                           @map("last_login_at")
+  lastLoginIp                                          String?                             @map("last_login_ip")
+  lastLoginLocation                                    String?                             @map("last_login_location")
+  deviceToken                                          String?                             @map("device_token")
+  deviceTokenCreatedAt                                 DateTime?                           @map("device_token_created_at")
+  acceptedActionPlans                                  AcceptedActionPlan[]
+  blog_comments                                        blog_comments[]
+  blog_posts                                           blog_posts[]                        @relation("blog_author")
+  blog_reactions                                       blog_reactions[]
+  couponRedemptions                                    CouponRedemption[]
+  couponRevocations                                    CouponRevocation[]
+  creditLedger                                         CreditLedger[]
+  creditWallet                                         CreditWallet?
+  customQuestionSheets                                 CustomQuestionSheet[]
+  reports                                              EvaluationReport[]
+  featureUsage                                         FeatureUsage[]
+  githubIntegration                                    GitHubIntegration?
+  hourlySubmissions                                    HourlySubmissionCounter[]
+  jobApplyProfile                                      JobApplyProfile?
+  recordings                                           InterviewRecording[]
+  sessions                                             InterviewSession[]
+  latexResumes                                         LatexResume[]
+  loginHistory                                         LoginHistory[]
+  passwordResetTokens                                  PasswordResetToken[]
+  payments                                             Payment[]
+  peer_feedback_peer_feedback_ratee_user_idTousers     peer_feedback[]                     @relation("peer_feedback_ratee_user_idTousers")
+  peer_feedback_peer_feedback_rater_user_idTousers     peer_feedback[]                     @relation("peer_feedback_rater_user_idTousers")
+  peer_invites_peer_invites_accepted_by_user_idTousers peer_invites[]                      @relation("peer_invites_accepted_by_user_idTousers")
+  peer_invites_peer_invites_inviter_user_idTousers     peer_invites[]                      @relation("peer_invites_inviter_user_idTousers")
+  peer_queue_tickets                                   peer_queue_tickets[]
+  peer_session_messages                                peer_session_messages[]
+  peer_session_participants                            peer_session_participants[]
+  peer_session_question_assignments                    peer_session_question_assignments[]
+  peer_sessions                                        peer_sessions[]
+  peer_skill_history                                   peer_skill_history[]
+  peer_skill_profiles                                  peer_skill_profiles?
+  questionReports                                      QuestionReport[]
+  questionSheets                                       QuestionSheet[]
+  resumes                                              Resume[]
+  subscriptions                                        Subscription[]
+  tutorArtifacts                                       TutorArtifact[]
+  tutorChatMessages                                    TutorChatMessage[]
+  tutorConversations                                   TutorConversation[]
+  tutorMemories                                        TutorMemory[]
+  tutorToolCallLogs                                    TutorToolCallLog[]
+  mistakes                                             UserMistake[]
+  questionProgress                                     UserQuestionProgress[]
+  questionSubmissions                                  UserQuestionSubmission[]
+  tutorProfile                                         UserTutorProfile?
+  weakAreas                                            UserWeakArea[]
+  verificationCodes                                    VerificationCode[]
+  jobApplications                                      JobApplication[]
+  notifications                                        UserNotification[]
+  technicalAssignmentSubmissions                       TechnicalAssignmentSubmission[]
+  jobRoundCandidates                                   JobRoundCandidate[]
+  jobRoundEvaluationReports                            JobRoundEvaluationReport[]
+  directInterviews                                     DirectInterview[]
+  directInterviewMessages                              DirectInterviewMessage[]
+  secureOaSessions                                     SecureOaSession[]                  @relation("SecureOaSessionCandidate")
+  expertProfile                                        expert_profiles?
+  expertBookingRequests                                expert_booking_requests[]
+  expertBookingSlotsClaimed                            expert_booking_slots[]              @relation("ExpertBookingSlotClaimedBy")
+  expertSessionsAsCandidate                            expert_sessions[]                   @relation("ExpertSessionCandidate")
+  expertSessionsAsExpert                               expert_sessions[]                   @relation("ExpertSessionExpert")
+  expertSessionQuestionsAdded                          expert_session_questions[]
+  expertFeedbackGiven                                  expert_feedback[]                   @relation("ExpertFeedbackExpert")
+  expertFeedbackReceived                               expert_feedback[]                   @relation("ExpertFeedbackCandidate")
+  contestsCreated                                      Contest[]                           @relation("ContestCreator")
+  contestTestingListsOwned                             ContestTestingTester[]              @relation("ContestTestingOwner")
+  contestTestingListsIncludedIn                        ContestTestingTester[]              @relation("ContestTestingUser")
+
+  @@index([role])
+  @@index([placementCollegeEmailDomain])
+  @@map("users")
+}
+
+model Company {
+  id                 String   @id @default(uuid())
+  email              String   @unique
+  name               String   @map("name")
+  domain             String   @map("domain")
+  contactName        String?  @map("contact_name")
+  websiteUrl         String?  @map("website_url")
+  logoUrl            String?  @map("logo_url")
+  industry           String?
+  companySize        String?  @map("company_size")
+  headquarters       String?
+  defaultTimezone    String   @default("Asia/Kolkata") @map("default_timezone")
+  defaultWorkMode    String   @default("Hybrid") @map("default_work_mode")
+  defaultEmploymentType String @default("Full-time") @map("default_employment_type")
+  defaultCurrency    String   @default("INR") @map("default_currency")
+  defaultAssessmentDeadlineDays Int @default(7) @map("default_assessment_deadline_days")
+  notifyNewApplications Boolean @default(true) @map("notify_new_applications")
+  notifyAssessmentSubmissions Boolean @default(true) @map("notify_assessment_submissions")
+  notifyWeeklyDigest Boolean @default(true) @map("notify_weekly_digest")
+  notifyTeamChanges  Boolean  @default(true) @map("notify_team_changes")
+  lastLoginAt        DateTime? @map("last_login_at")
+  lastLoginIp        String?  @map("last_login_ip")
+  lastLoginLocation  String?  @map("last_login_location")
+  emailVerified      Boolean  @default(false) @map("email_verified")
+  emailVerifiedAt    DateTime? @map("email_verified_at")
+  createdAt          DateTime @default(now()) @map("created_at")
+  updatedAt          DateTime @updatedAt @map("updated_at")
+  verificationCodes  CompanyVerificationCode[]
+  jobOpenings        CompanyJobOpening[]
+  technicalAssignments TechnicalAssignment[]
+  jobRounds          JobRound[]
+  teams              CompanyTeam[]                     @relation("CompanyTeams")
+  createdTeams       CompanyTeam[]                     @relation("CompanyTeamsCreated")
+  teamMembers        CompanyTeamMember[]               @relation("CompanyTeamMembers")
+  addedTeamMembers   CompanyTeamMember[]               @relation("CompanyTeamMembersAddedBy")
+  teamInvitations    CompanyTeamInvitation[]           @relation("CompanyTeamInvitations")
+  sentTeamInvitations CompanyTeamInvitation[]           @relation("CompanyTeamInvitationsSentBy")
+  directInterviews   DirectInterview[]
+  secureOaSessions   SecureOaSession[]
+
+  @@map("companies")
+}
+
+model CompanyMemberAccount {
+  id                  String                          @id
+  email               String                          @unique
+  fullName            String                          @map("full_name")
+  avatarUrl           String?                         @map("avatar_url")
+  lastLoginAt         DateTime?                       @map("last_login_at")
+  lastLoginIp         String?                         @map("last_login_ip")
+  lastLoginLocation   String?                         @map("last_login_location")
+  emailVerified       Boolean                         @default(false) @map("email_verified")
+  emailVerifiedAt     DateTime?                       @map("email_verified_at")
+  createdAt           DateTime                        @default(now()) @map("created_at")
+  updatedAt           DateTime                        @updatedAt @map("updated_at")
+  verificationCodes   CompanyMemberVerificationCode[]
+  teamMemberships     CompanyTeamMember[]             @relation("CompanyTeamMemberAccounts")
+  acceptedInvitations CompanyTeamInvitation[]          @relation("AcceptedCompanyTeamInvitationAccounts")
+
+  @@map("company_member_accounts")
+}
+
+model CompanyJobOpening {
+  id                  String    @id @default(uuid())
+  companyId           String    @map("company_id")
+  companyName         String    @map("company_name")
+  companyLogoUrl      String?   @map("company_logo_url")
+  title               String
+  location            String
+  workMode            String    @map("work_mode")
+  employmentType      String    @map("employment_type")
+  roleType            String    @map("role_type")
+  profession          String
+  discipline          String
+  travel              String
+  openings            Int       @default(1)
+  experienceLevel     String    @map("experience_level")
+  compensationType    String    @map("compensation_type")
+  compensation        String?
+  duration            String?
+  timeCommitment      String?   @map("time_commitment")
+  applicationDeadline DateTime? @map("application_deadline")
+  skills              String[]  @default([])
+  companyOverview     String?   @map("company_overview") @db.Text
+  aboutRole           String    @map("about_role") @db.Text
+  responsibilities    String[]  @default([])
+  requirements        String[]  @default([])
+  benefits            String[]  @default([])
+  applicationNote     String?   @map("application_note") @db.Text
+  scoringConfig       Json?     @map("scoring_config")
+  nextRoundType       String?   @map("next_round_type")
+  nextRoundConfiguredAt DateTime? @map("next_round_configured_at")
+  currentRoundType    String?   @map("current_round_type")
+  currentRoundResourceId String? @map("current_round_resource_id")
+  currentRoundConfiguredAt DateTime? @map("current_round_configured_at")
+  status              String    @default("draft")
+  publishedAt         DateTime? @map("published_at")
+  createdAt           DateTime  @default(now()) @map("created_at")
+  updatedAt           DateTime  @updatedAt @map("updated_at")
+  company             Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  applications         JobApplication[]
+  technicalAssignments TechnicalAssignment[]
+  rounds               JobRound[]
+  directInterviews     DirectInterview[]
+
+  @@index([companyId, status, createdAt])
+  @@index([status, employmentType, workMode])
+  @@map("company_job_openings")
+}
+
+model CompanyVerificationCode {
+  id        String   @id @default(uuid())
+  companyId String   @map("company_id")
+  type      String
+  code      String
+  target    String
+  expiresAt DateTime @map("expires_at")
+  verified  Boolean  @default(false)
+  attempts  Int      @default(0)
+  createdAt DateTime @default(now()) @map("created_at")
+  company   Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@index([companyId, type, verified])
+  @@index([code, expiresAt])
+  @@map("company_verification_codes")
+}
+
+model CompanyMemberVerificationCode {
+  id               String               @id @default(uuid())
+  companyAccountId String               @map("company_account_id")
+  type             String
+  code             String
+  target           String
+  expiresAt        DateTime             @map("expires_at")
+  verified         Boolean              @default(false)
+  attempts         Int                  @default(0)
+  createdAt        DateTime             @default(now()) @map("created_at")
+  account          CompanyMemberAccount @relation(fields: [companyAccountId], references: [id], onDelete: Cascade)
+
+  @@index([companyAccountId, type, verified])
+  @@index([code, expiresAt])
+  @@map("company_member_verification_codes")
+}
+
+model CompanyTeam {
+  id            String                  @id @default(uuid())
+  companyId     String                  @map("company_id")
+  name          String
+  description   String?
+  avatarColor   String?                 @map("avatar_color")
+  createdById   String                  @map("created_by_id")
+  isArchived    Boolean                 @default(false) @map("is_archived")
+  createdAt     DateTime                @default(now()) @map("created_at")
+  updatedAt     DateTime                @updatedAt @map("updated_at")
+  company       Company                 @relation("CompanyTeams", fields: [companyId], references: [id], onDelete: Cascade)
+  createdBy     Company                 @relation("CompanyTeamsCreated", fields: [createdById], references: [id], onDelete: Restrict)
+  members       CompanyTeamMember[]
+  invitations   CompanyTeamInvitation[]
+
+  @@index([companyId, isArchived, createdAt])
+  @@map("company_teams")
+}
+
+model CompanyTeamMember {
+  id             String                 @id @default(uuid())
+  companyId      String                 @map("company_id")
+  teamId         String                 @map("team_id")
+  companyAccountId String?              @map("company_account_id")
+  invitationId   String?                @unique @map("invitation_id")
+  email          String
+  nameHint       String?                @map("name_hint")
+  role           String                 @default("member")
+  status         String                 @default("active")
+  joinedAt       DateTime?              @map("joined_at")
+  addedById      String                 @map("added_by_id")
+  createdAt      DateTime               @default(now()) @map("created_at")
+  updatedAt      DateTime               @updatedAt @map("updated_at")
+  company        Company                @relation("CompanyTeamMembers", fields: [companyId], references: [id], onDelete: Cascade)
+  addedBy        Company                @relation("CompanyTeamMembersAddedBy", fields: [addedById], references: [id], onDelete: Restrict)
+  team           CompanyTeam            @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  account        CompanyMemberAccount?  @relation("CompanyTeamMemberAccounts", fields: [companyAccountId], references: [id], onDelete: SetNull)
+  invitation     CompanyTeamInvitation? @relation(fields: [invitationId], references: [id], onDelete: SetNull)
+  assignedDirectInterviews DirectInterview[]
+  sentDirectInterviewMessages DirectInterviewMessage[]
+  addedDirectInterviewQuestions DirectInterviewQuestion[]
+
+  @@unique([teamId, email])
+  @@unique([teamId, companyAccountId])
+  @@index([companyId, status])
+  @@index([companyAccountId, status])
+  @@map("company_team_members")
+}
+
+model CompanyTeamInvitation {
+  id               String             @id @default(uuid())
+  companyId        String             @map("company_id")
+  teamId           String             @map("team_id")
+  invitedById      String             @map("invited_by_id")
+  acceptedByCompanyAccountId String?  @map("accepted_by_company_account_id")
+  email            String
+  tokenHash        String             @unique @map("token_hash")
+  role             String             @default("member")
+  status           String             @default("pending")
+  expiresAt        DateTime           @map("expires_at")
+  acceptedAt       DateTime?          @map("accepted_at")
+  metadata         Json?
+  createdAt        DateTime           @default(now()) @map("created_at")
+  updatedAt        DateTime           @updatedAt @map("updated_at")
+  company          Company            @relation("CompanyTeamInvitations", fields: [companyId], references: [id], onDelete: Cascade)
+  team             CompanyTeam        @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  inviter          Company            @relation("CompanyTeamInvitationsSentBy", fields: [invitedById], references: [id], onDelete: Restrict)
+  acceptedByAccount CompanyMemberAccount? @relation("AcceptedCompanyTeamInvitationAccounts", fields: [acceptedByCompanyAccountId], references: [id], onDelete: SetNull)
+  member           CompanyTeamMember?
+
+  @@index([companyId, status, createdAt])
+  @@index([teamId, status])
+  @@index([email, status, expiresAt])
+  @@map("company_team_invitations")
+}
+
+model VerificationCode {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  type      String
+  code      String
+  target    String
+  expiresAt DateTime @map("expires_at")
+  verified  Boolean  @default(false)
+  attempts  Int      @default(0)
+  createdAt DateTime @default(now()) @map("created_at")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, type, verified])
+  @@index([code, expiresAt])
+  @@map("verification_codes")
+}
+
+model Resume {
+  id          String             @id @default(uuid())
+  userId      String             @map("user_id")
+  fileName    String             @map("file_name")
+  fileUrl     String             @map("file_url")
+  rawText     String?            @map("raw_text")
+  analysis    Json?
+  uploadedAt  DateTime           @default(now()) @map("uploaded_at")
+  atsAnalysis Json?              @map("ats_analysis")
+  sessions    InterviewSession[]
+  user        User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("resumes")
+}
+
+model JobApplyProfile {
+  id               String   @id @default(uuid())
+  userId           String   @unique @map("user_id")
+  profileLanguage  String   @default("English") @map("profile_language")
+  pronouns         String?
+  headline         String?
+  industry         String?
+  city             String?
+  country          String?
+  postalCode       String?  @map("postal_code")
+  about            String?
+  openTo           String?  @map("open_to")
+  coverImageUrl    String?  @map("cover_image_url")
+  selectedResumeId String?  @map("selected_resume_id")
+  leetcodeUrl      String?  @map("leetcode_url")
+  geeksforgeeksUrl String?  @map("geeksforgeeks_url")
+  codeforcesUrl    String?  @map("codeforces_url")
+  codechefUrl      String?  @map("codechef_url")
+  experiences      Json?    @default("[]")
+  education        Json?    @default("[]")
+  skills           Json?    @default("[]")
+  featured         Json?    @default("[]")
+  projects         Json?    @default("[]")
+  isPublished      Boolean  @default(false) @map("is_published")
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([isPublished])
+  @@map("job_apply_profiles")
+}
+
+model JobApplication {
+  id                    String   @id @default(uuid())
+  jobId                 String   @map("job_id")
+  userId                String   @map("user_id")
+  selectedProjects      Json     @default("[]") @map("selected_projects")
+  githubProfileSnapshot Json?    @map("github_profile_snapshot")
+  githubAnalysis        Json?    @map("github_analysis")
+  codingProfiles        Json?    @map("coding_profiles")
+  codingAnalysis        Json?    @map("coding_analysis")
+  evidencePack          Json?    @map("evidence_pack")
+  recruiterAnalysis     Json?    @map("recruiter_analysis")
+  recruiterReport       Json?    @map("recruiter_report")
+  nextRoundType         String?  @map("next_round_type")
+  nextRoundMovedAt      DateTime? @map("next_round_moved_at")
+  status                String   @default("submitted")
+  submittedAt           DateTime @default(now()) @map("submitted_at")
+  updatedAt             DateTime @updatedAt @map("updated_at")
+  job                   CompanyJobOpening @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  technicalAssignmentSubmissions TechnicalAssignmentSubmission[]
+  roundCandidates       JobRoundCandidate[]
+  jobRoundEvaluationReports JobRoundEvaluationReport[]
+  directInterviews      DirectInterview[]
+
+  @@unique([jobId, userId])
+  @@index([jobId, submittedAt])
+  @@index([userId, submittedAt])
+  @@map("job_applications")
+}
+
+model TechnicalAssignment {
+  id                     String   @id @default(uuid())
+  companyId              String   @map("company_id")
+  jobId                  String   @map("job_id")
+  roundId                String?  @unique @map("round_id")
+  title                  String
+  timeLimit              String   @map("time_limit")
+  estimatedHours         String?  @map("estimated_hours")
+  deadlinePolicy         String?  @map("deadline_policy") @db.Text
+  overview               String   @db.Text
+  scenario               String   @db.Text
+  tasks                  String[] @default([])
+  starterContext         String?  @map("starter_context") @db.Text
+  constraints            String[] @default([])
+  allowedStack           String[] @default([]) @map("allowed_stack")
+  deliverables           String[] @default([])
+  submissionInstructions String?  @map("submission_instructions") @db.Text
+  thinkingQuestions      String[] @default([]) @map("thinking_questions")
+  candidateMessage       String?  @map("candidate_message") @db.Text
+  rubric                 Json
+  status                 String   @default("live")
+  closesAt               DateTime @map("closes_at")
+  createdAt              DateTime @default(now()) @map("created_at")
+  updatedAt              DateTime @updatedAt @map("updated_at")
+  company                Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  job                    CompanyJobOpening @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  round                  JobRound? @relation(fields: [roundId], references: [id], onDelete: SetNull)
+  submissions            TechnicalAssignmentSubmission[]
+
+  @@index([companyId, closesAt])
+  @@index([jobId, closesAt])
+  @@index([status, closesAt])
+  @@map("technical_assignments")
+}
+
+model TechnicalAssignmentSubmission {
+  id            String   @id @default(uuid())
+  assignmentId  String   @map("assignment_id")
+  userId        String   @map("user_id")
+  applicationId String?  @map("application_id")
+  repoUrl       String   @map("repo_url")
+  status        String   @default("submitted")
+  score         Int      @default(0)
+  evidence      Json?
+  report        Json?
+  nextRoundType String?  @map("next_round_type")
+  nextRoundMovedAt DateTime? @map("next_round_moved_at")
+  roundCandidateId String? @map("round_candidate_id")
+  submittedAt   DateTime @default(now()) @map("submitted_at")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+  assignment    TechnicalAssignment @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  application   JobApplication? @relation(fields: [applicationId], references: [id], onDelete: SetNull)
+  roundCandidate JobRoundCandidate? @relation(fields: [roundCandidateId], references: [id], onDelete: SetNull)
+
+  @@unique([assignmentId, userId])
+  @@index([assignmentId, submittedAt])
+  @@index([userId, submittedAt])
+  @@index([applicationId])
+  @@index([roundCandidateId])
+  @@map("technical_assignment_submissions")
+}
+
+model JobRound {
+  id              String   @id @default(uuid())
+  jobId           String   @map("job_id")
+  companyId       String   @map("company_id")
+  roundNumber     Int      @map("round_number")
+  roundType       String   @map("round_type")
+  title           String
+  status          String   @default("draft")
+  opensAt         DateTime? @map("opens_at")
+  closesAt        DateTime? @map("closes_at")
+  resourceId      String?  @map("resource_id")
+  config          Json?
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+  job             CompanyJobOpening @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  company         Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  candidates      JobRoundCandidate[]
+  reports         JobRoundEvaluationReport[]
+  technicalAssignment TechnicalAssignment?
+  directInterviews DirectInterview[]
+  secureOaSessions SecureOaSession[]
+  proctoringRules ProctoringRule[]
+
+  @@unique([jobId, roundNumber])
+  @@index([companyId, status, createdAt])
+  @@index([jobId, roundType, status])
+  @@map("job_rounds")
+}
+
+model JobRoundCandidate {
+  id              String   @id @default(uuid())
+  roundId         String   @map("round_id")
+  applicationId   String   @map("application_id")
+  userId          String   @map("user_id")
+  status          String   @default("invited")
+  advanced        Boolean  @default(false)
+  score           Int      @default(0)
+  metadata        Json?
+  submittedAt     DateTime? @map("submitted_at")
+  evaluatedAt     DateTime? @map("evaluated_at")
+  advancedAt      DateTime? @map("advanced_at")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+  round           JobRound @relation(fields: [roundId], references: [id], onDelete: Cascade)
+  application     JobApplication @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  user            User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  report          JobRoundEvaluationReport?
+  technicalAssignmentSubmissions TechnicalAssignmentSubmission[]
+  directInterview DirectInterview?
+  secureOaSessions SecureOaSession[]
+
+  @@unique([roundId, applicationId])
+  @@index([roundId, status, score])
+  @@index([applicationId, createdAt])
+  @@index([userId, createdAt])
+  @@map("job_round_candidates")
+}
+
+model SecureOaSession {
+  id                     String              @id @default(uuid())
+  jobRoundId             String              @map("job_round_id")
+  jobRoundCandidateId    String              @map("job_round_candidate_id")
+  candidateUserId        String              @map("candidate_user_id")
+  companyId              String              @map("company_id")
+  status                 String              @default("pending")
+  startedAt              DateTime?           @map("started_at")
+  submittedAt            DateTime?           @map("submitted_at")
+  terminatedAt           DateTime?           @map("terminated_at")
+  terminatedReason       String?             @map("terminated_reason")
+  clientFingerprint      String?             @map("client_fingerprint")
+  userAgent              String?             @map("user_agent")
+  ipAddress              String?             @map("ip_address")
+  integrityScore         Int?                @map("integrity_score")
+  integrityRulesSnapshot Json?               @map("integrity_rules_snapshot")
+  createdAt              DateTime            @default(now()) @map("created_at")
+  updatedAt              DateTime            @updatedAt @map("updated_at")
+  jobRound               JobRound            @relation(fields: [jobRoundId], references: [id], onDelete: Cascade)
+  jobRoundCandidate      JobRoundCandidate   @relation(fields: [jobRoundCandidateId], references: [id], onDelete: Cascade)
+  candidate              User                @relation("SecureOaSessionCandidate", fields: [candidateUserId], references: [id], onDelete: Restrict)
+  company                Company             @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  events                 ProctoringEvent[]
+  snapshots              ProctoringSnapshot[]
+
+  @@unique([jobRoundId, jobRoundCandidateId])
+  @@index([jobRoundId, status])
+  @@index([candidateUserId, status])
+  @@index([companyId, status, createdAt])
+  @@map("secure_oa_sessions")
+}
+
+model ProctoringEvent {
+  id                    String                @id @default(uuid())
+  sessionId             String                @map("session_id")
+  clientEventId         String                @map("client_event_id")
+  eventType             String                @map("event_type")
+  severity              String
+  payload               Json
+  clientTimestamp       DateTime              @map("client_timestamp")
+  serverTimestamp       DateTime              @default(now()) @map("server_timestamp")
+  processedAt           DateTime?             @map("processed_at")
+  triggeredTermination  Boolean               @default(false) @map("triggered_termination")
+  session               SecureOaSession       @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  triggeredSnapshots    ProctoringSnapshot[]  @relation("SnapshotTriggeringEvent")
+
+  @@unique([sessionId, clientEventId])
+  @@index([sessionId, serverTimestamp])
+  @@index([sessionId, eventType])
+  @@index([sessionId, severity])
+  @@map("proctoring_events")
+}
+
+model ProctoringSnapshot {
+  id                String            @id @default(uuid())
+  sessionId         String            @map("session_id")
+  s3Key             String            @map("s3_key")
+  s3Bucket          String            @map("s3_bucket")
+  mimeType          String            @map("mime_type")
+  width             Int
+  height            Int
+  byteSize          Int               @map("byte_size")
+  takenAt           DateTime          @map("taken_at")
+  uploadedAt        DateTime          @default(now()) @map("uploaded_at")
+  trigger           String
+  triggeringEventId String?           @map("triggering_event_id")
+  session           SecureOaSession   @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  triggeringEvent   ProctoringEvent?  @relation("SnapshotTriggeringEvent", fields: [triggeringEventId], references: [id], onDelete: SetNull)
+
+  @@index([sessionId, takenAt])
+  @@map("proctoring_snapshots")
+}
+
+model ProctoringRule {
+  id          String    @id @default(uuid())
+  jobRoundId  String?   @map("job_round_id")
+  version     Int
+  rules       Json
+  isActive    Boolean   @default(true) @map("is_active")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  jobRound    JobRound? @relation(fields: [jobRoundId], references: [id], onDelete: Cascade)
+
+  @@unique([jobRoundId, version])
+  @@index([jobRoundId, isActive])
+  @@map("proctoring_rules")
+}
+
+model JobRoundEvaluationReport {
+  id                    String   @id @default(uuid())
+  roundCandidateId      String   @unique @map("round_candidate_id")
+  jobRoundId            String   @map("job_round_id")
+  applicationId         String   @map("application_id")
+  userId                String   @map("user_id")
+  roundType             String   @map("round_type")
+  overallScore          Int      @default(0) @map("overall_score")
+  repoHeadSha           String?  @map("repo_head_sha")
+  evidenceSnapshot      Json?    @map("evidence_snapshot")
+  rubricBreakdown       Json?    @map("rubric_breakdown")
+  aiSummary             String?  @map("ai_summary") @db.Text
+  report                Json?
+  evaluatedAt           DateTime @default(now()) @map("evaluated_at")
+  createdAt             DateTime @default(now()) @map("created_at")
+  updatedAt             DateTime @updatedAt @map("updated_at")
+  roundCandidate        JobRoundCandidate @relation(fields: [roundCandidateId], references: [id], onDelete: Cascade)
+  jobRound              JobRound @relation(fields: [jobRoundId], references: [id], onDelete: Cascade)
+  application           JobApplication @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  user                  User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([jobRoundId, overallScore])
+  @@index([applicationId, evaluatedAt])
+  @@index([userId, evaluatedAt])
+  @@map("job_round_evaluation_reports")
+}
+
+model InterviewQuestionSet {
+  id          String              @id @default(uuid())
+  title       String
+  description String?             @db.Text
+  isSeeded    Boolean             @default(false) @map("is_seeded")
+  createdAt   DateTime            @default(now()) @map("created_at")
+  updatedAt   DateTime            @updatedAt @map("updated_at")
+  questions   InterviewQuestion[]
+
+  @@map("interview_question_sets")
+}
+
+model InterviewQuestion {
+  id             String                    @id @default(uuid())
+  questionSetId  String                    @map("question_set_id")
+  prompt         String                    @db.Text
+  difficulty     String?
+  expectedTopics Json?                     @map("expected_topics")
+  orderIndex     Int                       @default(0) @map("order_index")
+  createdAt      DateTime                  @default(now()) @map("created_at")
+  updatedAt      DateTime                  @updatedAt @map("updated_at")
+  questionSet    InterviewQuestionSet      @relation(fields: [questionSetId], references: [id], onDelete: Cascade)
+  directInterviews DirectInterviewQuestion[]
+
+  @@index([questionSetId, orderIndex])
+  @@map("interview_questions")
+}
+
+model DirectInterview {
+  id                  String                    @id @default(uuid())
+  jobRoundCandidateId String                    @unique @map("job_round_candidate_id")
+  companyId           String                    @map("company_id")
+  jobId               String                    @map("job_id")
+  applicationId       String                    @map("application_id")
+  roundId             String                    @map("round_id")
+  candidateUserId     String                    @map("candidate_user_id")
+  status              String                    @default("shortlisted")
+  selectedFrom        String                    @default("application_review") @map("selected_from")
+  score               Int                       @default(0)
+  scheduledAt         DateTime?                 @map("scheduled_at")
+  timezone            String?
+  durationMinutes     Int?                      @map("duration_minutes")
+  meetingUrl          String?                   @map("meeting_url")
+  interviewMode       String?                   @map("interview_mode")
+  location            String?
+  scheduleNotes       String?                   @map("schedule_notes") @db.Text
+  interviewerMemberId String?                   @map("interviewer_member_id")
+  assignedById        String?                   @map("assigned_by_id")
+  interviewerNotes    String?                   @map("interviewer_notes") @db.Text
+  questionPlan        Json?                     @map("question_plan")
+  startedAt           DateTime?                 @map("started_at")
+  completedAt         DateTime?                 @map("completed_at")
+  createdAt           DateTime                  @default(now()) @map("created_at")
+  updatedAt           DateTime                  @updatedAt @map("updated_at")
+  jobRoundCandidate   JobRoundCandidate         @relation(fields: [jobRoundCandidateId], references: [id], onDelete: Cascade)
+  company             Company                   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  job                 CompanyJobOpening         @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  application         JobApplication            @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  round               JobRound                  @relation(fields: [roundId], references: [id], onDelete: Cascade)
+  candidate           User                      @relation(fields: [candidateUserId], references: [id], onDelete: Cascade)
+  interviewer         CompanyTeamMember?        @relation(fields: [interviewerMemberId], references: [id], onDelete: SetNull)
+  messages            DirectInterviewMessage[]
+  questions           DirectInterviewQuestion[]
+
+  @@index([companyId, status, createdAt])
+  @@index([jobId, status])
+  @@index([candidateUserId, createdAt])
+  @@index([interviewerMemberId, scheduledAt])
+  @@map("direct_interviews")
+}
+
+model DirectInterviewMessage {
+  id                    String             @id @default(uuid())
+  directInterviewId     String             @map("direct_interview_id")
+  senderType            String             @map("sender_type")
+  senderCompanyMemberId String?            @map("sender_company_member_id")
+  senderUserId          String?            @map("sender_user_id")
+  senderName            String             @map("sender_name")
+  body                  String             @db.Text
+  readAt                DateTime?          @map("read_at")
+  createdAt             DateTime           @default(now()) @map("created_at")
+  directInterview       DirectInterview    @relation(fields: [directInterviewId], references: [id], onDelete: Cascade)
+  senderCompanyMember   CompanyTeamMember? @relation(fields: [senderCompanyMemberId], references: [id], onDelete: SetNull)
+  senderUser            User?              @relation(fields: [senderUserId], references: [id], onDelete: SetNull)
+
+  @@index([directInterviewId, senderType, readAt, createdAt])
+  @@index([senderCompanyMemberId, createdAt])
+  @@index([senderUserId, createdAt])
+  @@map("direct_interview_messages")
+}
+
+model DirectInterviewQuestion {
+  id                  String             @id @default(uuid())
+  directInterviewId   String             @map("direct_interview_id")
+  interviewQuestionId String             @map("interview_question_id")
+  addedByMemberId     String?            @map("added_by_member_id")
+  createdAt           DateTime           @default(now()) @map("created_at")
+  directInterview     DirectInterview    @relation(fields: [directInterviewId], references: [id], onDelete: Cascade)
+  interviewQuestion   InterviewQuestion  @relation(fields: [interviewQuestionId], references: [id], onDelete: Cascade)
+  addedByMember       CompanyTeamMember? @relation(fields: [addedByMemberId], references: [id], onDelete: SetNull)
+
+  @@unique([directInterviewId, interviewQuestionId])
+  @@index([interviewQuestionId])
+  @@index([addedByMemberId])
+  @@map("direct_interview_questions")
+}
+
+model UserNotification {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  type      String
+  title     String
+  message   String   @db.Text
+  href      String?
+  read      Boolean  @default(false)
+  metadata  Json?
+  createdAt DateTime @default(now()) @map("created_at")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, read, createdAt])
+  @@map("user_notifications")
+}
+
+model GitHubProjectAnalysis {
+  id             String   @id @default(uuid())
+  userId         String   @map("user_id")
+  repoFullName   String   @map("repo_full_name")
+  repoNodeId     String?  @map("repo_node_id")
+  defaultBranch  String?  @map("default_branch")
+  headSha        String?  @map("head_sha")
+  isFork         Boolean  @default(false) @map("is_fork")
+  score          Int      @default(0)
+  analysis       Json
+  analyzedAt     DateTime @default(now()) @map("analyzed_at")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  @@unique([userId, repoFullName, headSha])
+  @@index([userId, repoFullName])
+  @@map("github_project_analyses")
+}
+
+model SkillSuggestion {
+  id              String   @id @default(uuid())
+  name            String
+  normalizedName  String   @unique @map("normalized_name")
+  source          String   @default("seed")
+  usageCount      Int      @default(0) @map("usage_count")
+  createdByUserId String?  @map("created_by_user_id")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  @@index([name])
+  @@index([usageCount])
+  @@map("skill_suggestions")
+}
+
+model GitHubIntegration {
+  id                    String    @id @default(uuid())
+  userId                String    @unique @map("user_id")
+  githubUserId          String?   @map("github_user_id")
+  githubUsername        String?   @map("github_username")
+  encryptedAccessToken  String    @map("encrypted_access_token")
+  encryptedRefreshToken String?   @map("encrypted_refresh_token")
+  scopes                String[]  @default([])
+  connectedAt           DateTime  @default(now()) @map("connected_at")
+  lastSyncedAt          DateTime? @map("last_synced_at")
+  revokedAt             DateTime? @map("revoked_at")
+  createdAt             DateTime  @default(now()) @map("created_at")
+  updatedAt             DateTime  @updatedAt @map("updated_at")
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([githubUsername])
+  @@index([revokedAt])
+  @@map("github_integrations")
+}
+
+model InterviewSession {
+  id               String              @id @default(uuid())
+  userId           String              @map("user_id")
+  resumeId         String?             @map("resume_id")
+  role             String
+  level            String
+  mode             String              @default("mock")
+  stage            String              @default("INTRO")
+  status           String              @default("PENDING")
+  startedAt        DateTime?           @map("started_at")
+  completedAt      DateTime?           @map("completed_at")
+  createdAt        DateTime            @default(now()) @map("created_at")
+  type             String              @default("full_interview")
+  moduleConfig     Json?               @map("module_config")
+  report           EvaluationReport?
+  recording        InterviewRecording?
+  resume           Resume?             @relation(fields: [resumeId], references: [id])
+  user             User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages         SessionMessage[]
+  sessionQuestions SessionQuestion[]
+
+  @@index([userId])
+  @@index([status])
+  @@index([type])
+  @@map("interview_sessions")
+}
+
+model SessionMessage {
+  id        String           @id @default(uuid())
+  sessionId String           @map("session_id")
+  role      String
+  content   String
+  stage     String
+  metadata  Json?
+  createdAt DateTime         @default(now()) @map("created_at")
+  session   InterviewSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId])
+  @@map("session_messages")
+}
+
+model UserQuestionProgress {
+  id              String    @id @default(uuid())
+  userId          String    @map("user_id")
+  questionId      String    @map("question_id")
+  status          String    @default("attempted")
+  lastAttemptedAt DateTime  @default(now()) @map("last_attempted_at")
+  solvedAt        DateTime? @map("solved_at")
+  timeTaken       Int?      @map("time_taken")
+  language        String?
+  bestScore       Decimal?  @map("best_score") @db.Decimal(5, 2)
+  attemptCount    Int       @default(1) @map("attempt_count")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, questionId])
+  @@index([userId])
+  @@index([status])
+  @@map("user_question_progress")
+}
+
+model UserQuestionSubmission {
+  id         String   @id @default(uuid())
+  userId     String   @map("user_id")
+  questionId String   @map("question_id")
+  code       String
+  language   String
+  status     String   @default("pending")
+  score      Decimal? @db.Decimal(5, 2)
+  timeTaken  Int?     @map("time_taken")
+  runtimeMs  Int?     @map("runtime_ms")
+  memoryKb   Int?     @map("memory_kb")
+  createdAt  DateTime @default(now()) @map("created_at")
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([questionId])
+  @@index([status])
+  @@map("user_question_submissions")
+}
+
+model SessionQuestion {
+  id                    String           @id @default(uuid())
+  sessionId             String           @map("session_id")
+  questionId            String?          @map("question_id")
+  askedAt               DateTime         @default(now()) @map("asked_at")
+  timeSpent             Int?             @map("time_spent")
+  finalCode             String?          @map("final_code")
+  score                 Decimal?         @db.Decimal(4, 2)
+  aiNotes               String?          @map("ai_notes")
+  hintsUsed             Int              @default(0) @map("hints_used")
+  questionFundamentalId String?          @map("question_fundamental_id")
+  questionSqlId         String?          @map("question_sql_id")
+  questionCategory      String?          @map("question_category")
+  questionDifficulty    String?          @map("question_difficulty")
+  questionTitle         String?          @map("question_title")
+  sampleAnswer          String?          @map("sample_answer")
+  session               InterviewSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId])
+  @@index([questionId])
+  @@map("session_questions")
+}
+
+model EvaluationReport {
+  id                  String               @id @default(uuid())
+  sessionId           String               @unique @map("session_id")
+  userId              String               @map("user_id")
+  overallScore        Decimal              @map("overall_score") @db.Decimal(5, 2)
+  rubricScores        Json                 @map("rubric_scores")
+  competencyScores    Json?                @map("competency_scores")
+  sectionFeedback     Json                 @map("section_feedback")
+  strengths           Json                 @default("[]")
+  improvements        Json                 @default("[]")
+  benchmark           Json?
+  generatedAt         DateTime             @default(now()) @map("generated_at")
+  questions           Json?                @map("questions")
+  acceptedActionPlans AcceptedActionPlan[]
+  session             InterviewSession     @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  user                User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  questionSheets      QuestionSheet[]
+  tutorChatMessages   TutorChatMessage[]
+  tutorConversations  TutorConversation[]
+  mistakes            UserMistake[]
+  weakAreas           UserWeakArea[]
+
+  @@index([userId])
+  @@map("evaluation_reports")
+}
+
+model QuestionSheet {
+  id          String            @id @default(cuid())
+  userId      String            @map("user_id")
+  reportId    String?           @map("report_id")
+  sessionId   String?           @map("session_id")
+  label       String
+  generatedAt DateTime          @default(now()) @map("generated_at")
+  questions   Json
+  progress    Json
+  report      EvaluationReport? @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  user        User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([reportId])
+  @@map("question_sheets")
+}
+
+model CustomQuestionSheet {
+  id          String   @id @default(cuid())
+  userId      String   @map("user_id")
+  name        String
+  description String?
+  questionIds Json     @default("[]") @map("question_ids")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([userId, createdAt])
+  @@map("custom_question_sheets")
+}
+
+model TutorConversation {
+  id            String             @id @default(cuid())
+  userId        String             @map("user_id")
+  reportId      String?            @map("report_id")
+  title         String
+  status        String             @default("active")
+  createdAt     DateTime           @default(now()) @map("created_at")
+  updatedAt     DateTime           @updatedAt @map("updated_at")
+  lastMessageAt DateTime           @default(now()) @map("last_message_at")
+  artifacts     TutorArtifact[]
+  messages      TutorChatMessage[]
+  report        EvaluationReport?  @relation(fields: [reportId], references: [id])
+  user          User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, lastMessageAt])
+  @@index([reportId])
+  @@map("tutor_conversations")
+}
+
+model TutorChatMessage {
+  id             String             @id @default(cuid())
+  userId         String             @map("user_id")
+  reportId       String?            @map("report_id")
+  role           String
+  content        String
+  createdAt      DateTime           @default(now()) @map("created_at")
+  conversationId String?            @map("conversation_id")
+  conversation   TutorConversation? @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  report         EvaluationReport?  @relation(fields: [reportId], references: [id])
+  user           User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, conversationId, createdAt])
+  @@index([userId, reportId, createdAt])
+  @@index([conversationId, createdAt])
+  @@index([reportId, createdAt])
+  @@map("tutor_chat_messages")
+}
+
+model AcceptedActionPlan {
+  id                 String            @id @default(cuid())
+  userId             String            @map("user_id")
+  reportId           String?           @map("report_id")
+  sessionId          String?           @map("session_id")
+  timespan           String
+  label              String
+  startDate          DateTime          @map("start_date")
+  endDate            DateTime          @map("end_date")
+  actionPlan         Json              @map("action_plan")
+  acceptedAt         DateTime          @default(now()) @map("accepted_at")
+  artifactId         String?           @map("artifact_id")
+  totalDays          Int?              @map("total_days")
+  currentDay         Int               @default(1) @map("current_day")
+  completedDays      Int[]             @default([]) @map("completed_days")
+  completedQuestions String[]          @default([]) @map("completed_questions")
+  lastAccessedAt     DateTime?         @map("last_accessed_at")
+  artifact           TutorArtifact?    @relation(fields: [artifactId], references: [id])
+  report             EvaluationReport? @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  user               User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, acceptedAt])
+  @@index([userId, startDate, endDate])
+  @@index([reportId])
+  @@index([artifactId])
+  @@map("accepted_action_plans")
+}
+
+model Subscription {
+  id                     String             @id @default(uuid())
+  userId                 String             @map("user_id")
+  razorpaySubscriptionId String?            @unique @map("razorpay_subscription_id")
+  planId                 String?            @map("plan_id")
+  status                 String             @default("created")
+  currentPeriodStart     DateTime?          @map("current_period_start")
+  currentPeriodEnd       DateTime?          @map("current_period_end")
+  createdAt              DateTime           @default(now()) @map("created_at")
+  updatedAt              DateTime           @updatedAt @map("updated_at")
+  plan                   Plan               @default(FREE)
+  cycle                  BillingCycle       @default(MONTHLY)
+  source                 SubscriptionSource @default(PURCHASE)
+  cancelAtPeriodEnd      Boolean            @default(false) @map("cancel_at_period_end")
+  couponId               String?            @map("coupon_id")
+  scheduledPlanChange    String?            @map("scheduled_plan_change")
+  scheduledChangeDate    DateTime?          @map("scheduled_change_date")
+  previousPlan           String?            @map("previous_plan")
+  upgradePaymentId       String?            @map("upgrade_payment_id")
+  cancelledAt            DateTime?          @map("cancelled_at")
+  cancellationReason     String?            @map("cancellation_reason")
+  expiredAt              DateTime?          @map("expired_at")
+  failedPaymentAttempts  Int                @default(0) @map("failed_payment_attempts")
+  lastFailedPaymentAt    DateTime?          @map("last_failed_payment_at")
+  coupon                 Coupon?            @relation(fields: [couponId], references: [id])
+  upgradePayment         Payment?           @relation("UpgradePayments", fields: [upgradePaymentId], references: [id])
+  user                   User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([status])
+  @@index([userId, status])
+  @@index([scheduledPlanChange])
+  @@index([scheduledChangeDate])
+  @@index([cancelledAt])
+  @@index([expiredAt])
+  @@index([status, currentPeriodEnd])
+  @@map("subscriptions")
+}
+
+model Payment {
+  id                        String                      @id @default(uuid())
+  userId                    String
+  razorpayPaymentId         String?                     @unique(map: "payments_razorpay_payment_id_key")
+  razorpayOrderId           String?                     @unique(map: "payments_razorpay_order_id_key")
+  razorpaySignature         String?
+  amount                    Int
+  currency                  String                      @default("INR")
+  status                    String                      @default("created")
+  method                    String?
+  createdAt                 DateTime                    @default(now())
+  updatedAt                 DateTime
+  kind                      PaymentKind                 @default(SUBSCRIPTION)
+  metadata                  Json?
+  receiptId                 String?                     @unique(map: "payments_receipt_id_key")
+  orderExpiry               DateTime?                   @db.Timestamp(6)
+  orderNotes                Json?
+  totalAmountDue            Int?
+  amountPaid                Int?                        @default(0)
+  remainingAmount           Int?                        @default(0)
+  parentPaymentId           String?
+  partialPaymentSequence    Int?
+  isPartialPayment          Boolean?                    @default(false)
+  frontendAmount            Decimal?                    @db.Decimal
+  backendAmount             Int?
+  conversionValidated       Boolean?                    @default(false)
+  amountPrecision           Int?                        @default(2)
+  previousStatus            String?
+  statusUpdatedAt           DateTime?                   @default(now()) @db.Timestamp(6)
+  paymentCompletedUtc       DateTime?                   @db.Timestamp(6)
+  bankReversalDetected      Boolean?                    @default(false)
+  bankReversalDate          DateTime?                   @db.Timestamp(6)
+  bankReversalReason        String?
+  originalSuccessDate       DateTime?                   @db.Timestamp(6)
+  settlementStatus          String?                     @default("pending")
+  settlementAmount          Int?
+  settlementDate            DateTime?                   @db.Timestamp(6)
+  settlementUtr             String?
+  settlementBatchId         String?
+  settlementFees            Int?
+  userAgent                 String?
+  clientIp                  String?
+  sessionId                 String?
+  isUpgradePayment          Boolean                     @default(false) @map("is_upgrade_payment")
+  upgradeFromPlan           String?                     @map("upgrade_from_plan")
+  upgradeToPlan             String?                     @map("upgrade_to_plan")
+  proratedDays              Int?                        @map("prorated_days")
+  ledger_transactions       LedgerTransaction[]
+  payment_audit_logs        payment_audit_logs[]
+  payment_state_transitions payment_state_transitions[]
+  payment_webhook_events    payment_webhook_events[]
+  users                     User                        @relation(fields: [userId], references: [id], onDelete: Cascade, map: "payments_user_id_fkey")
+  upgradeSubscriptions      Subscription[]              @relation("UpgradePayments")
+
+  @@index([userId], map: "payments_user_id_idx")
+  @@index([status])
+  @@index([bankReversalDetected], map: "payments_bank_reversal_detected_idx")
+  @@index([settlementStatus], map: "payments_settlement_status_idx")
+  @@index([isUpgradePayment])
+  @@map("payments")
+}
+
+model CreditWallet {
+  id                   String         @id @default(uuid())
+  userId               String         @unique @map("user_id")
+  freeCreditsRemaining Int            @default(0) @map("free_credits_remaining")
+  freeCreditsGranted   Boolean        @default(true) @map("free_credits_granted")
+  monthlyBalance       Int            @default(0) @map("monthly_balance")
+  monthlyGrantedAt     DateTime?      @map("monthly_granted_at")
+  monthlyResetAt       DateTime?      @map("monthly_reset_at")
+  purchasedBalance     Int            @default(0) @map("purchased_balance")
+  createdAt            DateTime       @default(now()) @map("created_at")
+  updatedAt            DateTime       @updatedAt @map("updated_at")
+  ledger               CreditLedger[]
+  user                 User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("credit_wallets")
+}
+
+model CreditLedger {
+  id           String       @id @default(uuid())
+  userId       String       @map("user_id")
+  walletId     String       @map("wallet_id")
+  bucket       String
+  delta        Int
+  reason       String
+  refType      String?      @map("ref_type")
+  refId        String?      @map("ref_id")
+  balanceAfter Json         @map("balance_after")
+  createdAt    DateTime     @default(now()) @map("created_at")
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  wallet       CreditWallet @relation(fields: [walletId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@index([refType, refId])
+  @@map("credit_ledger")
+}
+
+model FeatureUsage {
+  id          String   @id @default(uuid())
+  userId      String   @map("user_id")
+  featureKey  String   @map("feature_key")
+  periodStart DateTime @map("period_start")
+  count       Int      @default(0)
+  tokens      Int      @default(0)
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  createdAt   DateTime @default(now()) @map("created_at")
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, featureKey, periodStart])
+  @@index([userId])
+  @@map("feature_usage")
+}
+
+model HourlySubmissionCounter {
+  id           String   @id @default(uuid())
+  userId       String   @map("user_id")
+  questionId   String   @map("question_id")
+  hourBucket   DateTime @map("hour_bucket")
+  successCount Int      @default(0) @map("success_count")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+  createdAt    DateTime @default(now()) @map("created_at")
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, questionId, hourBucket])
+  @@index([userId, hourBucket])
+  @@map("hourly_submission_counters")
+}
+
+model Coupon {
+  id              String             @id @default(uuid())
+  code            String             @unique
+  type            CouponType
+  plan            Plan?
+  durationDays    Int?               @map("duration_days")
+  discountPercent Int?               @map("discount_percent")
+  maxRedemptions  Int?               @map("max_redemptions")
+  redemptions     Int                @default(0)
+  perUserLimit    Int                @default(1) @map("per_user_limit")
+  expiresAt       DateTime?          @map("expires_at")
+  active          Boolean            @default(true)
+  notes           String?
+  createdAt       DateTime           @default(now()) @map("created_at")
+  updatedAt       DateTime           @updatedAt @map("updated_at")
+  allowedEmail    String?            @map("allowed_email")
+  createdBy       String?            @map("created_by")
+  redemptionList  CouponRedemption[]
+  revocations     CouponRevocation[]
+  subscriptions   Subscription[]
+
+  @@index([active])
+  @@index([allowedEmail])
+  @@map("coupons")
+}
+
+model CouponRedemption {
+  id         String   @id @default(uuid())
+  couponId   String   @map("coupon_id")
+  userId     String   @map("user_id")
+  redeemedAt DateTime @default(now()) @map("redeemed_at")
+  coupon     Coupon   @relation(fields: [couponId], references: [id], onDelete: Cascade)
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([couponId, userId])
+  @@index([userId])
+  @@map("coupon_redemptions")
+}
+
+model CouponRevocation {
+  id        String   @id @default(uuid())
+  couponId  String   @map("coupon_id")
+  userId    String   @map("user_id")
+  revokedBy String   @map("revoked_by")
+  revokedAt DateTime @default(now()) @map("revoked_at")
+  reason    String?
+  createdAt DateTime @default(now()) @map("created_at")
+  coupon    Coupon   @relation(fields: [couponId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([couponId, userId])
+  @@index([couponId, userId])
+  @@index([userId])
+  @@map("coupon_revocations")
+}
+
+model WebhookEvent {
+  id          String   @id @default(uuid())
+  provider    String
+  eventId     String   @unique @map("event_id")
+  eventType   String   @map("event_type")
+  payload     Json
+  processedAt DateTime @default(now()) @map("processed_at")
+
+  @@index([provider, eventType])
+  @@map("webhook_events")
+}
+
+model QuestionReport {
+  id            String   @id @default(uuid())
+  userId        String   @map("user_id")
+  questionId    String   @map("question_id")
+  questionType  String   @map("question_type")
+  questionTitle String?  @map("question_title")
+  reason        String
+  description   String?
+  sessionId     String?  @map("session_id")
+  createdAt     DateTime @default(now()) @map("created_at")
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([questionId])
+  @@index([userId])
+  @@map("question_reports")
+}
+
+model Waitlist {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("waitlist")
+}
+
+model LatexResume {
+  id          String    @id @default(uuid())
+  userId      String    @map("user_id")
+  title       String
+  latexSource String    @map("latex_source")
+  template    String    @default("default")
+  compiledUrl String?   @map("compiled_url")
+  compiledAt  DateTime? @map("compiled_at")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("latex_resumes")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model peer_feedback {
+  id                                       String        @id
+  session_id                               String
+  rater_user_id                            String
+  ratee_user_id                            String
+  problem_solving                          Int
+  communication                            Int
+  code_quality                             Int
+  interviewing                             Int
+  overall_rating                           Int
+  solved_question                          Boolean?
+  would_match_again                        Boolean       @default(true)
+  what_went_well                           String?
+  improvement_areas                        String?
+  ai_summary                               String?
+  session_happened                         Boolean       @default(true)
+  created_at                               DateTime      @default(now())
+  users_peer_feedback_ratee_user_idTousers User          @relation("peer_feedback_ratee_user_idTousers", fields: [ratee_user_id], references: [id], onDelete: Cascade)
+  users_peer_feedback_rater_user_idTousers User          @relation("peer_feedback_rater_user_idTousers", fields: [rater_user_id], references: [id], onDelete: Cascade)
+  peer_sessions                            peer_sessions @relation(fields: [session_id], references: [id], onDelete: Cascade)
+
+  @@unique([session_id, rater_user_id])
+  @@index([ratee_user_id])
+  @@index([session_id])
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model peer_invites {
+  id                                            String         @id
+  token                                         String         @unique
+  inviter_user_id                               String
+  accepted_by_user_id                           String?
+  peer_session_id                               String?
+  interview_type                                String         @default("coding")
+  preferred_language                            String         @default("python")
+  timing_preset                                 String         @default("standard_45")
+  max_uses                                      Int            @default(1)
+  used_count                                    Int            @default(0)
+  expires_at                                    DateTime
+  revoked_at                                    DateTime?
+  accepted_at                                   DateTime?
+  created_at                                    DateTime       @default(now())
+  users_peer_invites_accepted_by_user_idTousers User?          @relation("peer_invites_accepted_by_user_idTousers", fields: [accepted_by_user_id], references: [id])
+  users_peer_invites_inviter_user_idTousers     User           @relation("peer_invites_inviter_user_idTousers", fields: [inviter_user_id], references: [id], onDelete: Cascade)
+  peer_sessions                                 peer_sessions? @relation(fields: [peer_session_id], references: [id])
+
+  @@index([expires_at])
+  @@index([inviter_user_id])
+  @@index([peer_session_id])
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model peer_match_history {
+  id         String   @id
+  session_id String?
+  user_a_id  String
+  user_b_id  String
+  score      Decimal? @db.Decimal(8, 4)
+  source     String   @default("primary")
+  status     String   @default("matched")
+  matched_at DateTime @default(now())
+
+  @@index([session_id])
+  @@index([user_a_id, matched_at])
+  @@index([user_b_id, matched_at])
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model peer_queue_tickets {
+  id                 String         @id
+  user_id            String
+  slot_id            String?
+  role               String
+  level              String         @default("beginner")
+  interview_type     String         @default("coding")
+  preferred_language String         @default("python")
+  languages          String[]       @default([])
+  timing_preset      String         @default("standard_45")
+  status             String         @default("queued")
+  rating             Decimal?       @db.Decimal(8, 4)
+  exp_band           Int?
+  booked_at          DateTime       @default(now())
+  cutoff_at          DateTime?
+  fallback_at        DateTime?
+  fallback_attempts  Int            @default(0)
+  expires_at         DateTime
+  matched_session_id String?
+  metadata           Json?
+  created_at         DateTime       @default(now())
+  updated_at         DateTime
+  peer_sessions      peer_sessions? @relation(fields: [matched_session_id], references: [id])
+  users              User           @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([role, level, interview_type])
+  @@index([matched_session_id, preferred_language])
+  @@index([matched_session_id, status])
+  @@index([slot_id, preferred_language])
+  @@index([slot_id, status])
+  @@index([slot_id, booked_at])
+  @@index([status, expires_at])
+  @@index([user_id])
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model peer_session_messages {
+  id            String        @id
+  session_id    String
+  user_id       String
+  type          String        @default("chat")
+  content       String
+  created_at    DateTime      @default(now())
+  peer_sessions peer_sessions @relation(fields: [session_id], references: [id], onDelete: Cascade)
+  users         User          @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([session_id, created_at])
+  @@index([user_id, created_at])
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model peer_session_participants {
+  id                                String                              @id
+  session_id                        String
+  user_id                           String
+  participant_role                  String                              @default("candidate")
+  level_at_match                    String                              @default("beginner")
+  preferred_language                String                              @default("python")
+  is_ready                          Boolean                             @default(false)
+  joined_at                         DateTime?
+  left_at                           DateTime?
+  created_at                        DateTime                            @default(now())
+  peer_sessions                     peer_sessions                       @relation(fields: [session_id], references: [id], onDelete: Cascade)
+  users                             User                                @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  peer_session_question_assignments peer_session_question_assignments[]
+
+  @@unique([session_id, user_id])
+  @@index([session_id])
+  @@index([user_id])
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model peer_session_question_assignments {
+  id                        String                     @id
+  session_id                String
+  participant_id            String?
+  user_id                   String
+  question_id               String
+  question_title            String
+  question_category         String
+  question_difficulty       String
+  opened_prep_at            DateTime?
+  final_code                String?
+  final_language            String?
+  created_at                DateTime                   @default(now())
+  peer_session_participants peer_session_participants? @relation(fields: [participant_id], references: [id])
+  peer_sessions             peer_sessions              @relation(fields: [session_id], references: [id], onDelete: Cascade)
+  users                     User                       @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@unique([session_id, user_id])
+  @@index([session_id])
+  @@index([user_id])
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model peer_sessions {
+  id                                String                              @id
+  room_id                           String                              @unique
+  source                            String                              @default("queue")
+  interview_type                    String                              @default("coding")
+  timing_preset                     String                              @default("standard_45")
+  status                            String                              @default("PENDING")
+  created_by_user_id                String?
+  scheduled_for                     DateTime?
+  started_at                        DateTime?
+  ended_at                          DateTime?
+  created_at                        DateTime                            @default(now())
+  updated_at                        DateTime
+  peer_feedback                     peer_feedback[]
+  peer_invites                      peer_invites[]
+  peer_queue_tickets                peer_queue_tickets[]
+  peer_session_messages             peer_session_messages[]
+  peer_session_participants         peer_session_participants[]
+  peer_session_question_assignments peer_session_question_assignments[]
+  users                             User?                               @relation(fields: [created_by_user_id], references: [id])
+
+  @@index([created_at])
+  @@index([scheduled_for])
+  @@index([source, status, scheduled_for])
+  @@index([status])
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model peer_skill_history {
+  id             String   @id
+  user_id        String
+  previous_level String
+  new_level      String
+  previous_score Decimal  @db.Decimal(7, 2)
+  new_score      Decimal  @db.Decimal(7, 2)
+  reason         String?
+  created_at     DateTime @default(now())
+  users          User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id, created_at])
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model peer_skill_profiles {
+  id             String   @id
+  user_id        String   @unique
+  current_level  String   @default("beginner")
+  score          Decimal  @default(250) @db.Decimal(7, 2)
+  sessions_rated Int      @default(0)
+  onboarded      Boolean  @default(false)
+  updated_at     DateTime
+  created_at     DateTime @default(now())
+  users          User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([current_level])
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model FinancialAccount {
+  id                                                                  String             @id @default(dbgenerated("(gen_random_uuid())::text"))
+  code                                                                String             @unique
+  name                                                                String
+  type                                                                String
+  status                                                              String?            @default("ACTIVE")
+  description                                                         String?
+  parent_account_id                                                   String?
+  metadata                                                            Json?
+  created_at                                                          DateTime?          @default(now()) @db.Timestamp(6)
+  updated_at                                                          DateTime?          @default(now()) @db.Timestamp(6)
+  financial_accounts                                                  FinancialAccount?  @relation("FinancialAccountChildren", fields: [parent_account_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  other_financial_accounts                                            FinancialAccount[] @relation("FinancialAccountChildren")
+  ledger_entries_ledger_entries_credit_account_idTofinancial_accounts LedgerEntry[]      @relation("LedgerEntryCreditAccount")
+  ledger_entries_ledger_entries_debit_account_idTofinancial_accounts  LedgerEntry[]      @relation("LedgerEntryDebitAccount")
+
+  @@index([code])
+  @@index([parent_account_id])
+  @@index([status])
+  @@index([type])
+  @@map("financial_accounts")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model LedgerEntry {
+  id                                                                      String            @id @default(dbgenerated("(gen_random_uuid())::text"))
+  transactionId                                                           String            @map("transaction_id")
+  debitAccountId                                                          String?           @map("debit_account_id")
+  creditAccountId                                                         String?           @map("credit_account_id")
+  amount                                                                  Int
+  description                                                             String?
+  metadata                                                                Json?
+  createdAt                                                               DateTime?         @default(now()) @map("created_at") @db.Timestamp(6)
+  financial_accounts_ledger_entries_credit_account_idTofinancial_accounts FinancialAccount? @relation("LedgerEntryCreditAccount", fields: [creditAccountId], references: [id], onUpdate: NoAction)
+  financial_accounts_ledger_entries_debit_account_idTofinancial_accounts  FinancialAccount? @relation("LedgerEntryDebitAccount", fields: [debitAccountId], references: [id], onUpdate: NoAction)
+  ledger_transactions                                                     LedgerTransaction @relation(fields: [transactionId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([createdAt])
+  @@index([creditAccountId])
+  @@index([debitAccountId])
+  @@index([transactionId])
+  @@map("ledger_entries")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model LedgerTransaction {
+  id             String        @id @default(dbgenerated("(gen_random_uuid())::text"))
+  paymentId      String?       @map("payment_id")
+  referenceType  String        @map("reference_type")
+  referenceId    String?       @map("reference_id")
+  description    String
+  currency       String?       @default("INR")
+  totalDebit     Int           @map("total_debit")
+  totalCredit    Int           @map("total_credit")
+  postedAt       DateTime?     @default(now()) @map("posted_at") @db.Timestamp(6)
+  metadata       Json?
+  createdAt      DateTime?     @default(now()) @map("created_at") @db.Timestamp(6)
+  ledger_entries LedgerEntry[]
+  payments       Payment?      @relation(fields: [paymentId], references: [id], onUpdate: NoAction)
+
+  @@index([paymentId])
+  @@index([postedAt])
+  @@index([referenceId])
+  @@index([referenceType])
+  @@map("ledger_transactions")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model payment_audit_logs {
+  id            String    @id @default(dbgenerated("(gen_random_uuid())::text"))
+  paymentId     String
+  eventType     String
+  eventData     Json
+  sequence      Int       @unique
+  previousHash  String?
+  hash          String    @unique
+  sanitizedData Json
+  userId        String?
+  sessionId     String?
+  clientIp      String?
+  userAgent     String?
+  createdAt     DateTime? @default(now()) @db.Timestamp(6)
+  payments      Payment   @relation(fields: [paymentId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "payment_audit_logs_payment_id_fkey")
+
+  @@index([createdAt], map: "payment_audit_logs_created_at_idx")
+  @@index([eventType], map: "payment_audit_logs_event_type_idx")
+  @@index([paymentId], map: "payment_audit_logs_payment_id_idx")
+  @@index([sequence])
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model PaymentReconciliationJob {
+  id                   String    @id @default(dbgenerated("(gen_random_uuid())::text"))
+  jobType              String
+  status               String?   @default("pending")
+  startedAt            DateTime? @db.Timestamp(6)
+  completedAt          DateTime? @db.Timestamp(6)
+  error                String?
+  dateRange            Json
+  results              Json?
+  discrepancies        Json?
+  paymentsChecked      Int?      @default(0)
+  discrepanciesFound   Int?      @default(0)
+  autoResolved         Int?      @default(0)
+  manualReviewRequired Int?      @default(0)
+  createdAt            DateTime? @default(now()) @db.Timestamp(6)
+  updatedAt            DateTime? @default(now()) @db.Timestamp(6)
+
+  @@index([createdAt], map: "payment_reconciliation_jobs_created_at_idx")
+  @@index([jobType], map: "payment_reconciliation_jobs_job_type_idx")
+  @@index([status])
+  @@map("payment_reconciliation_jobs")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model PaymentSecretRotation {
+  id                   String    @id @default(dbgenerated("(gen_random_uuid())::text"))
+  secretType           String
+  secretValueEncrypted String
+  isActive             Boolean?  @default(true)
+  validFrom            DateTime? @default(now()) @db.Timestamp(6)
+  validUntil           DateTime? @db.Timestamp(6)
+  rotationReason       String?
+  createdBy            String?   @default("system")
+  createdAt            DateTime? @default(now()) @db.Timestamp(6)
+
+  @@index([isActive], map: "payment_secret_rotations_is_active_idx")
+  @@index([secretType], map: "payment_secret_rotations_secret_type_idx")
+  @@index([validFrom], map: "payment_secret_rotations_valid_from_idx")
+  @@index([validUntil], map: "payment_secret_rotations_valid_until_idx")
+  @@map("payment_secret_rotations")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model payment_state_transitions {
+  id            String    @id @default(dbgenerated("(gen_random_uuid())::text"))
+  paymentId     String
+  fromStatus    String
+  toStatus      String
+  reason        String
+  source        String
+  eventSequence Int?
+  metadata      Json?
+  createdAt     DateTime? @default(now()) @db.Timestamp(6)
+  payments      Payment   @relation(fields: [paymentId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "payment_state_transitions_payment_id_fkey")
+
+  @@index([createdAt], map: "payment_state_transitions_created_at_idx")
+  @@index([paymentId], map: "payment_state_transitions_payment_id_idx")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model payment_webhook_events {
+  id               String    @id @default(dbgenerated("(gen_random_uuid())::text"))
+  paymentId        String?
+  eventId          String    @unique(map: "payment_webhook_events_event_id_key")
+  eventType        String
+  payload          Json
+  signature        String
+  processed        Boolean?  @default(false)
+  processedAt      DateTime? @db.Timestamp(6)
+  processingError  String?
+  retryCount       Int?      @default(0)
+  processingLocked Boolean?  @default(false)
+  lockExpiry       DateTime? @db.Timestamp(6)
+  eventSequence    Int?
+  outOfOrder       Boolean?  @default(false)
+  createdAt        DateTime? @default(now()) @db.Timestamp(6)
+  updatedAt        DateTime? @default(now()) @db.Timestamp(6)
+  payments         Payment?  @relation(fields: [paymentId], references: [id], onUpdate: NoAction, map: "payment_webhook_events_payment_id_fkey")
+
+  @@index([createdAt], map: "payment_webhook_events_created_at_idx")
+  @@index([eventId], map: "payment_webhook_events_event_id_idx")
+  @@index([eventType], map: "payment_webhook_events_event_type_idx")
+  @@index([paymentId], map: "payment_webhook_events_payment_id_idx")
+  @@index([processed])
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model UserPaymentAttempt {
+  id                String    @id @default(dbgenerated("(gen_random_uuid())::text"))
+  userId            String    @map("user_id")
+  attemptType       String    @map("attempt_type")
+  success           Boolean
+  failureReason     String?   @map("failure_reason")
+  metadata          Json?
+  suspiciousPattern Boolean?  @default(false) @map("suspicious_pattern")
+  patternType       String?   @map("pattern_type")
+  hourlyAttempts    Int?      @default(1) @map("hourly_attempts")
+  dailyAttempts     Int?      @default(1) @map("daily_attempts")
+  createdAt         DateTime? @default(now()) @map("created_at") @db.Timestamp(6)
+
+  @@index([success])
+  @@index([createdAt])
+  @@index([suspiciousPattern])
+  @@index([userId])
+  @@map("user_payment_attempts")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model UserPaymentCooldown {
+  id            String    @id @default(dbgenerated("(gen_random_uuid())::text"))
+  userId        String    @unique @map("user_id")
+  cooldownUntil DateTime  @map("cooldown_until") @db.Timestamp(6)
+  reason        String
+  attemptCount  Int       @map("attempt_count")
+  cooldownLevel Int       @map("cooldown_level")
+  createdAt     DateTime? @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt     DateTime? @default(now()) @map("updated_at") @db.Timestamp(6)
+
+  @@index([cooldownUntil])
+  @@index([userId])
+  @@map("user_payment_cooldowns")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model ZombiePaymentRecord {
+  id                   String    @id @default(dbgenerated("(gen_random_uuid())::text"))
+  paymentId            String    @unique @map("payment_id")
+  ageHours             Float     @map("age_hours")
+  localStatus          String    @map("local_status")
+  razorpayStatus       String?   @map("razorpay_status")
+  lastWebhookAt        DateTime? @map("last_webhook_at") @db.Timestamp(6)
+  recoveryPossible     Boolean?  @default(false) @map("recovery_possible")
+  recoveryAttempted    Boolean?  @default(false) @map("recovery_attempted")
+  recoverySuccessful   Boolean?  @default(false) @map("recovery_successful")
+  manualReviewRequired Boolean?  @default(false) @map("manual_review_required")
+  resolvedAt           DateTime? @map("resolved_at") @db.Timestamp(6)
+  createdAt            DateTime? @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt            DateTime? @default(now()) @map("updated_at") @db.Timestamp(6)
+
+  @@index([manualReviewRequired])
+  @@index([paymentId])
+  @@index([recoveryAttempted])
+  @@map("zombie_payment_records")
+}
+
+model InterviewRecording {
+  id            String           @id @default(dbgenerated("(gen_random_uuid())::text"))
+  sessionId     String           @unique @map("session_id")
+  userId        String           @map("user_id")
+  r2Key         String           @map("r2_key")
+  r2UploadId    String?          @map("r2_upload_id")
+  mimeType      String           @default("video/webm") @map("mime_type")
+  durationSec   Int?             @map("duration_sec")
+  fileSizeBytes BigInt?          @map("file_size_bytes")
+  status        RecordingStatus  @default(RECORDING)
+  expiresAt     DateTime?        @map("expires_at")
+  completedAt   DateTime?        @map("completed_at")
+  createdAt     DateTime         @default(now()) @map("created_at")
+  updatedAt     DateTime         @default(now()) @updatedAt @map("updated_at")
+  session       InterviewSession @relation(fields: [sessionId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  user          User             @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([userId])
+  @@index([status, expiresAt])
+  @@map("interview_recordings")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model blog_comments {
+  id         String     @id @default(dbgenerated("(gen_random_uuid())::text"))
+  post_id    String
+  user_id    String
+  content    String
+  created_at DateTime   @default(now())
+  updated_at DateTime   @default(now())
+  blog_posts blog_posts @relation(fields: [post_id], references: [id], onDelete: Cascade)
+  users      User       @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([post_id, created_at])
+  @@index([user_id])
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model blog_reactions {
+  id         String     @id @default(dbgenerated("(gen_random_uuid())::text"))
+  post_id    String
+  user_id    String
+  reaction   String     // 'like', 'love', 'insightful', 'celebrate'
+  created_at DateTime   @default(now())
+  blog_posts blog_posts @relation(fields: [post_id], references: [id], onDelete: Cascade)
+  users      User       @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@unique([post_id, user_id]) // One reaction per user per post
+  @@index([post_id])
+  @@index([user_id])
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model blog_posts {
+  id                String           @id @default(dbgenerated("(gen_random_uuid())::text"))
+  slug              String           @unique
+  title             String
+  subtitle          String?
+  content           String
+  cover_image       String?
+  author_id         String
+  status            String           @default("draft")
+  published_at      DateTime?
+  read_time_minutes Int              @default(5)
+  views             Int              @default(0)
+  tags              Json             @default("[]")
+  featured          Boolean          @default(false)
+  show_author_name  Boolean          @default(true)
+  parent_post_id    String?
+  created_at        DateTime         @default(now())
+  updated_at        DateTime         @default(now())
+  blog_comments     blog_comments[]
+  blog_reactions    blog_reactions[]
+  users             User             @relation("blog_author", fields: [author_id], references: [id], onDelete: Cascade)
+  parent_post       blog_posts?      @relation("blog_versions", fields: [parent_post_id], references: [id], onDelete: Cascade)
+  draft_versions    blog_posts[]     @relation("blog_versions")
+
+  @@index([author_id])
+  @@index([featured, status])
+  @@index([slug])
+  @@index([status, published_at])
+  @@index([parent_post_id])
+}
+
+model UserTutorProfile {
+  userId            String    @id @map("user_id")
+  targetCompany     String?   @map("target_company")
+  targetRole        String?   @map("target_role")
+  targetLevel       String?   @map("target_level")
+  targetDate        DateTime? @map("target_date")
+  hoursPerWeek      Int?      @map("hours_per_week")
+  preferredLanguage String?   @map("preferred_language")
+  preferredTopics   String[]  @default([]) @map("preferred_topics")
+  notes             String?
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_tutor_profiles")
+}
+
+model UserWeakArea {
+  id          String            @id @default(cuid())
+  userId      String            @map("user_id")
+  reportId    String?           @map("report_id")
+  category    String
+  subcategory String?
+  topic       String
+  severity    WeakAreaSeverity
+  evidence    String
+  status      WeakAreaStatus    @default(OPEN)
+  occurrences Int               @default(1)
+  firstSeenAt DateTime          @default(now()) @map("first_seen_at")
+  lastSeenAt  DateTime          @default(now()) @map("last_seen_at")
+  resolvedAt  DateTime?         @map("resolved_at")
+  report      EvaluationReport? @relation(fields: [reportId], references: [id])
+  user        User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, topic])
+  @@index([userId, status])
+  @@index([userId, category])
+  @@index([userId, lastSeenAt])
+  @@map("user_weak_areas")
+}
+
+model UserMistake {
+  id              String            @id @default(cuid())
+  userId          String            @map("user_id")
+  reportId        String?           @map("report_id")
+  questionRef     String?           @map("question_ref")
+  questionTitle   String?           @map("question_title")
+  mistakeType     MistakeType       @map("mistake_type")
+  description     String
+  userSnippet     String?           @map("user_snippet")
+  correctApproach String?           @map("correct_approach")
+  topicTags       String[]          @default([]) @map("topic_tags")
+  createdAt       DateTime          @default(now()) @map("created_at")
+  report          EvaluationReport? @relation(fields: [reportId], references: [id])
+  user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, mistakeType])
+  @@index([userId, createdAt])
+  @@index([reportId])
+  @@map("user_mistakes")
+}
+
+model TutorMemory {
+  id        String          @id @default(cuid())
+  userId    String          @map("user_id")
+  kind      TutorMemoryKind
+  key       String
+  value     String
+  source    String?
+  createdAt DateTime        @default(now()) @map("created_at")
+  updatedAt DateTime        @updatedAt @map("updated_at")
+  expiresAt DateTime?       @map("expires_at")
+  user      User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, kind, key])
+  @@index([userId, kind])
+  @@map("tutor_memories")
+}
+
+model TutorArtifact {
+  id             String               @id @default(cuid())
+  userId         String               @map("user_id")
+  conversationId String?              @map("conversation_id")
+  parentId       String?              @map("parent_id")
+  artifactType   TutorArtifactType    @map("artifact_type")
+  title          String
+  content        Json
+  meta           Json?
+  status         TutorArtifactStatus  @default(ACTIVE)
+  createdAt      DateTime             @default(now()) @map("created_at")
+  updatedAt      DateTime             @updatedAt @map("updated_at")
+  acceptedPlans  AcceptedActionPlan[]
+  conversation   TutorConversation?   @relation(fields: [conversationId], references: [id])
+  parent         TutorArtifact?       @relation("TutorArtifactRevisions", fields: [parentId], references: [id])
+  revisions      TutorArtifact[]      @relation("TutorArtifactRevisions")
+  user           User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, artifactType, status])
+  @@index([userId, createdAt])
+  @@index([conversationId])
+  @@map("tutor_artifacts")
+}
+
+model TutorToolCallLog {
+  id             String         @id @default(cuid())
+  userId         String         @map("user_id")
+  conversationId String?        @map("conversation_id")
+  toolName       String         @map("tool_name")
+  status         ToolCallStatus
+  latencyMs      Int            @map("latency_ms")
+  errorCode      String?        @map("error_code")
+  createdAt      DateTime       @default(now()) @map("created_at")
+  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@index([toolName, createdAt])
+  @@map("tutor_tool_call_logs")
+}
+
+model LoginHistory {
+  id         String   @id @default(uuid())
+  userId     String   @map("user_id")
+  ipAddress  String?  @map("ip_address")
+  userAgent  String?  @map("user_agent")
+  deviceType String?  @map("device_type")
+  browser    String?
+  os         String?
+  location   String?
+  country    String?
+  city       String?
+  loginAt    DateTime @default(now()) @map("login_at")
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([loginAt])
+  @@map("login_history")
+}
+
+model PasswordResetToken {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  token     String   @unique
+  expiresAt DateTime @map("expires_at")
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now()) @map("created_at")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([token])
+  @@index([userId])
+  @@map("password_reset_tokens")
+}
+
+enum Plan {
+  FREE
+  PLUS
+  PRO
+  MAX
+}
+
+enum BillingCycle {
+  MONTHLY
+  QUARTERLY
+}
+
+enum SubscriptionSource {
+  PURCHASE
+  COUPON
+  ADMIN_GRANT
+}
+
+enum CouponType {
+  PLAN_GRANT
+  DISCOUNT
+}
+
+enum PaymentKind {
+  SUBSCRIPTION
+  CREDITS
+}
+
+enum RecordingStatus {
+  RECORDING
+  UPLOADING
+  READY
+  FAILED
+  EXPIRED
+}
+
+enum WeakAreaSeverity {
+  CRITICAL
+  MODERATE
+  MINOR
+}
+
+enum WeakAreaStatus {
+  OPEN
+  IMPROVING
+  RESOLVED
+}
+
+enum MistakeType {
+  WRONG_APPROACH
+  EDGE_CASE_MISSED
+  COMPLEXITY_ERROR
+  SYNTAX_ERROR
+  CONCEPTUAL_GAP
+  COMMUNICATION
+  OTHER
+}
+
+enum TutorMemoryKind {
+  PREFERENCE
+  GOAL
+  FACT
+  FEEDBACK
+}
+
+enum TutorArtifactType {
+  QUESTION_SHEET
+  ACTION_PLAN
+  QUIZ
+  STUDY_NOTE
+}
+
+enum TutorArtifactStatus {
+  ACTIVE
+  ARCHIVED
+  SUPERSEDED
+}
+
+enum ToolCallStatus {
+  OK
+  ERROR
+}
+
+// ============================================================================
+// CONTEST PLATFORM MODELS
+// ============================================================================
+// Added: 2026-05-07
+// Purpose: Scalable contest platform for coding competitions
+// Reference: .kiro/specs/scalable-contest-platform/SCHEMA_REFERENCE.md
+// ============================================================================
+
+enum ContestStatus {
+  UPCOMING  // Contest not started yet
+  ACTIVE    // Contest is currently running
+  ENDED     // Contest has finished
+  CANCELLED // Contest was cancelled
+}
+
+enum Difficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
+enum SubmissionStatus {
+  QUEUED                    // Submission is in queue
+  PROCESSING                // Submission is being executed
+  JUDGING_DEFERRED          // Judge0 infrastructure failed; retry is pending
+  ACCEPTED                  // All test cases passed
+  WRONG_ANSWER              // Some test cases failed
+  TIME_LIMIT_EXCEEDED       // Execution took too long
+  MEMORY_LIMIT_EXCEEDED     // Used too much memory
+  RUNTIME_ERROR             // Code crashed during execution
+  COMPILATION_ERROR         // Code failed to compile
+}
+
+model Contest {
+  id            String              @id @default(cuid())
+  title         String
+  description   String?
+  instructions  String              @default("Stay in fullscreen until you submit or the timer ends.\nKeep this contest tab focused. Switching windows, changing tabs, or leaving the page records an integrity warning.\nWrite and run code only inside the contest editor.\nCopying question text is blocked. Pasting from outside the contest editor is blocked.\nUse only the information provided in the problem statements and sample tests.\nSubmit before the timer reaches zero. After submission, you cannot attempt more questions.") @db.Text
+  showDifficultyTags Boolean        @default(true) @map("show_difficulty_tags")
+  showParticipants Boolean          @default(false) @map("show_participants")
+  isArchived    Boolean             @default(false) @map("is_archived")
+  isUnderTesting Boolean            @default(false) @map("is_under_testing")
+  createdById   String?             @map("created_by_id")
+  startTime     DateTime            @map("start_time")
+  endTime       DateTime            @map("end_time")
+  status        ContestStatus       @default(UPCOMING)
+  createdAt     DateTime            @default(now()) @map("created_at")
+  updatedAt     DateTime            @updatedAt @map("updated_at")
+  
+  createdBy     User?               @relation("ContestCreator", fields: [createdById], references: [id], onDelete: SetNull)
+  questions     ContestQuestion[]
+  participants  ContestParticipant[]
+  submissions   ContestSubmission[]
+  feedback      ContestFeedback[]
+
+  @@index([createdById])
+  @@index([isArchived, isUnderTesting])
+  @@map("contests")
+}
+
+model ContestTestingTester {
+  id           String   @id @default(cuid())
+  ownerId      String   @map("owner_id")
+  testerUserId String   @map("tester_user_id")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  owner        User     @relation("ContestTestingOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  tester       User     @relation("ContestTestingUser", fields: [testerUserId], references: [id], onDelete: Cascade)
+
+  @@unique([ownerId, testerUserId])
+  @@index([ownerId])
+  @@index([testerUserId])
+  @@map("contest_testing_testers")
+}
+
+model ContestQuestion {
+  id          String              @id @default(cuid())
+  contestId   String              @map("contest_id")
+  questionId  String              @map("question_id")  // Reference to MongoDB question
+  difficulty  Difficulty
+  points      Int                 // 150, 300, or 500
+  negativePoints Int              @default(0) @map("negative_points")
+  negativeCap Int                 @default(0) @map("negative_cap")
+  order       Int                 // Display order in contest
+  
+  contest     Contest             @relation(fields: [contestId], references: [id], onDelete: Cascade)
+  submissions ContestSubmission[]
+  
+  @@unique([contestId, questionId])
+  @@index([contestId])
+  @@map("contest_questions")
+}
+
+model ContestParticipant {
+  id             String    @id @default(cuid())
+  contestId      String    @map("contest_id")
+  userId         String    @map("user_id")
+  registeredAt   DateTime  @default(now()) @map("registered_at")
+  totalScore     Int       @default(0) @map("total_score")
+  submittedAt    DateTime? @map("submitted_at")
+  isSubmitted    Boolean   @default(false) @map("is_submitted")
+  submissionType String    @default("manual") @map("submission_type") // manual, auto_time, auto_tab_switch, auto_window_blur, auto_fullscreen_exit, auto_cheating
+  
+  contest        Contest   @relation(fields: [contestId], references: [id], onDelete: Cascade)
+  
+  @@unique([contestId, userId])
+  @@index([contestId, totalScore, registeredAt])
+  @@index([contestId, isSubmitted])
+  @@index([userId])
+  @@map("contest_participants")
+}
+
+model ContestSubmission {
+  id               String           @id @default(cuid())
+  contestId        String           @map("contest_id")
+  questionId       String           @map("question_id")
+  userId           String           @map("user_id")
+  code             String           @db.Text
+  language         String
+  status           SubmissionStatus
+  attemptNumber    Int              @map("attempt_number")  // 1-5
+  pointsAwarded    Int              @map("points_awarded")  // +150/+300/+500 or -50
+  executionTime    Int?             @map("execution_time")  // milliseconds
+  memoryUsed       Int?             @map("memory_used")     // KB
+  testCasesPassed  Int              @default(0) @map("test_cases_passed")
+  testCasesTotal   Int              @map("test_cases_total")
+  idempotencyKey   String           @unique @map("idempotency_key")
+  submittedAt      DateTime         @default(now()) @map("submitted_at")
+  
+  contest          Contest          @relation(fields: [contestId], references: [id], onDelete: Cascade)
+  question         ContestQuestion  @relation(fields: [contestId, questionId], references: [contestId, questionId], onDelete: Cascade)
+  
+  @@index([contestId, userId, questionId])
+  @@index([contestId, questionId, attemptNumber])
+  @@index([userId, contestId])
+  @@index([idempotencyKey])
+  @@map("contest_submissions")
+}
+
+model ContestFeedback {
+  id        String   @id @default(cuid())
+  contestId String   @map("contest_id")
+  userId    String   @map("user_id")
+  rating    Int
+  comment   String?  @db.Text
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  contest   Contest  @relation(fields: [contestId], references: [id], onDelete: Cascade)
+
+  @@unique([contestId, userId])
+  @@index([contestId, rating])
+  @@index([userId])
+  @@map("contest_feedback")
+}
+
+/// Expert interview platform — expert-specific profile (1:1 to User where isExpert=true).
+/// Lazy-created on first read so admin grant is just an isExpert flip.
+model expert_profiles {
+  id                 String   @id
+  user_id            String   @unique
+  bio                String?
+  expertise_tags     String[] @default([])
+  years_experience   Int?
+  accepting_bookings Boolean  @default(true)
+  rating_avg         Decimal? @db.Decimal(3, 2)
+  sessions_completed Int      @default(0)
+  created_at         DateTime @default(now())
+  updated_at         DateTime @updatedAt
+  users              User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([accepting_bookings])
+}
+
+/// Candidate-side request: "I want an expert interview, here are my preferences."
+/// Carries the per-request status; the individual time windows live on expert_booking_slots.
+model expert_booking_requests {
+  id                  String                 @id
+  candidate_user_id   String
+  interview_type      String                 @default("coding")
+  preferred_language  String                 @default("python")
+  level               String                 @default("beginner")
+  topics_focus        String[]               @default([])
+  notes               String?
+  status              String                 @default("open")
+  expires_at          DateTime
+  created_at          DateTime               @default(now())
+  updated_at          DateTime               @updatedAt
+  users               User                   @relation(fields: [candidate_user_id], references: [id], onDelete: Cascade)
+  slots               expert_booking_slots[]
+
+  @@index([status, created_at])
+  @@index([status, expires_at])
+  @@index([candidate_user_id, status])
+}
+
+/// Candidate-offered free windows on a booking request. The expert atomically claims
+/// one of these (UPDATE ... WHERE claimed_by_expert_id IS NULL); first write wins, the
+/// other windows on the same request are then expired by the booking-request close path.
+model expert_booking_slots {
+  id                    String                  @id
+  request_id            String
+  start_at              DateTime
+  end_at                DateTime
+  candidate_timezone    String?
+  claimed_by_expert_id  String?
+  claimed_at            DateTime?
+  resulting_session_id  String?                 @unique
+  created_at            DateTime                @default(now())
+  request               expert_booking_requests @relation(fields: [request_id], references: [id], onDelete: Cascade)
+  claimedBy             User?                   @relation("ExpertBookingSlotClaimedBy", fields: [claimed_by_expert_id], references: [id])
+
+  @@index([request_id])
+  @@index([claimed_by_expert_id])
+  @@index([start_at, claimed_by_expert_id])
+}
+
+/// Materialised expert session — created when the expert claims a slot. Mirrors the
+/// peer_sessions lifecycle (SCHEDULED → CONNECTING → ACTIVE → COMPLETED / CANCELLED /
+/// ABANDONED) so the existing socket / WebRTC plumbing in apps/p2p can be reused
+/// without forking a new state machine.
+model expert_sessions {
+  id                 String                     @id
+  room_id            String                     @unique
+  request_id         String?
+  slot_id            String?                    @unique
+  candidate_user_id  String
+  expert_user_id     String
+  interview_type     String                     @default("coding")
+  preferred_language String                     @default("python")
+  status             String                     @default("SCHEDULED")
+  scheduled_for      DateTime
+  ends_at            DateTime?
+  started_at         DateTime?
+  candidate_admitted_at DateTime?
+  ended_at           DateTime?
+  created_at         DateTime                   @default(now())
+  updated_at         DateTime                   @updatedAt
+  candidate          User                       @relation("ExpertSessionCandidate", fields: [candidate_user_id], references: [id], onDelete: Cascade)
+  expert             User                       @relation("ExpertSessionExpert", fields: [expert_user_id], references: [id], onDelete: Cascade)
+  questions          expert_session_questions[]
+  feedback           expert_feedback[]
+
+  @@index([status, scheduled_for])
+  @@index([candidate_user_id, scheduled_for])
+  @@index([expert_user_id, scheduled_for])
+}
+
+/// Questions the expert lined up for a session, ordered. question_id is a FK into the
+/// DSAQuestion mongo collection for platform questions; null + custom_prompt = expert
+/// pasted a one-off question we don't persist to the bank.
+model expert_session_questions {
+  id                  String          @id
+  session_id          String
+  question_id         String?
+  question_title      String
+  question_difficulty String
+  question_topic      String
+  is_custom           Boolean         @default(false)
+  custom_prompt       String?
+  order_index         Int
+  added_by_user_id    String
+  created_at          DateTime        @default(now())
+  session             expert_sessions @relation(fields: [session_id], references: [id], onDelete: Cascade)
+  addedBy             User            @relation(fields: [added_by_user_id], references: [id])
+
+  @@unique([session_id, order_index])
+  @@index([session_id])
+}
+
+/// Structured expert feedback for a session. shared_with_candidate gates visibility of
+/// the public fields; private_notes is expert-only forever.
+model expert_feedback {
+  id                    String          @id
+  session_id            String          @unique
+  expert_user_id        String
+  candidate_user_id     String
+  problem_solving       Int
+  communication         Int
+  code_quality          Int
+  technical_depth       Int
+  overall_rating        Int
+  hire_decision         String
+  strengths             String?
+  improvement_areas     String?
+  private_notes         String?
+  shared_with_candidate Boolean         @default(false)
+  created_at            DateTime        @default(now())
+  session               expert_sessions @relation(fields: [session_id], references: [id], onDelete: Cascade)
+  expert                User            @relation("ExpertFeedbackExpert", fields: [expert_user_id], references: [id], onDelete: Cascade)
+  candidate             User            @relation("ExpertFeedbackCandidate", fields: [candidate_user_id], references: [id], onDelete: Cascade)
+
+  @@index([candidate_user_id, created_at])
+  @@index([expert_user_id, created_at])
+}

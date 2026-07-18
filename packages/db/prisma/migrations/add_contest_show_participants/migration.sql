@@ -1,0 +1,2 @@
+ALTER TABLE "contests"
+ADD COLUMN IF NOT EXISTS "show_participants" BOOLEAN NOT NULL DEFAULT false;

@@ -1,0 +1,158 @@
+model PaymentAuditLog {
+  id            String   @id @default(uuid())
+  sequence      Int      @default(autoincrement()) // might need to be unique
+  paymentId     String   @map("payment_id")
+  userId        String   @map("user_id")
+  eventType     String   @map("event_type")
+  timestamp     DateTime @default(now())
+  data          Json
+  previousHash  String?  @map("previous_hash")
+  hash          String
+  sanitizedData Json     @map("sanitized_data")
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  @@map("payment_audit_logs")
+}
+
+model PaymentWebhookEvent {
+  id          String   @id @default(uuid())
+  eventId     String   @unique @map("event_id")
+  provider    String
+  eventType   String   @map("event_type")
+  payload     Json
+  status      String   @default("pending")
+  paymentId   String?  @map("payment_id")
+  error       String?
+  processedAt DateTime? @map("processed_at")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("payment_webhook_events")
+}
+
+model ZombiePaymentRecord {
+  id                   String   @id @default(uuid())
+  paymentId            String   @unique @map("payment_id")
+  userId               String   @map("user_id")
+  ageHours             Int      @map("age_hours")
+  localStatus          String   @map("local_status")
+  razorpayStatus       String?  @map("razorpay_status")
+  lastWebhookAt        DateTime? @map("last_webhook_at")
+  isZombie             Boolean  @map("is_zombie")
+  recoveryPossible     Boolean  @map("recovery_possible")
+  manualReviewRequired Boolean  @map("manual_review_required")
+  createdAt            DateTime @default(now()) @map("created_at")
+  updatedAt            DateTime @updatedAt @map("updated_at")
+
+  @@map("zombie_payment_records")
+}
+
+model UserPaymentAttempt {
+  id            String   @id @default(uuid())
+  userId        String   @map("user_id")
+  attemptType   String   @map("attempt_type")
+  success       Boolean
+  failureReason String?  @map("failure_reason")
+  metadata      Json?
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  @@map("user_payment_attempts")
+}
+
+model UserPaymentCooldown {
+  id            String   @id @default(uuid())
+  userId        String   @unique @map("user_id")
+  cooldownLevel Int      @default(0) @map("cooldown_level")
+  cooldownUntil DateTime @map("cooldown_until")
+  reason        String?
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  @@map("user_payment_cooldowns")
+}
+
+model PaymentReconciliationJob {
+  id                 String   @id @default(uuid())
+  jobType            String   @map("job_type")
+  status             String
+  startedAt          DateTime @default(now()) @map("started_at")
+  completedAt        DateTime? @map("completed_at")
+  dateRange          Json     @map("date_range")
+  paymentsChecked    Int      @default(0) @map("payments_checked")
+  discrepanciesFound Int      @default(0) @map("discrepancies_found")
+  results            Json?
+  createdAt          DateTime @default(now()) @map("created_at")
+  updatedAt          DateTime @updatedAt @map("updated_at")
+
+  @@map("payment_reconciliation_jobs")
+}
+
+model PaymentSecretRotation {
+  id          String   @id @default(uuid())
+  secretType  String   @map("secret_type")
+  version     Int
+  isActive    Boolean  @default(true) @map("is_active")
+  expiresAt   DateTime @map("expires_at")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("payment_secret_rotations")
+}
+
+model PaymentStateTransition {
+  id            String   @id @default(uuid())
+  paymentId     String   @map("payment_id")
+  fromState     String   @map("from_state")
+  toState       String   @map("to_state")
+  reason        String?
+  actor         String   @default("system")
+  metadata      Json?
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  @@map("payment_state_transitions")
+}
+
+model FinancialAccount {
+  id            String   @id @default(uuid())
+  accountCode   String   @unique @map("account_code")
+  accountName   String   @map("account_name")
+  accountType   String   @map("account_type")
+  balance       Float    @default(0)
+  currency      String   @default("INR")
+  isActive      Boolean  @default(true) @map("is_active")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  ledgerEntries LedgerEntry[]
+
+  @@map("financial_accounts")
+}
+
+model LedgerTransaction {
+  id          String   @id @default(uuid())
+  paymentId   String?  @map("payment_id")
+  referenceId String?  @map("reference_id")
+  status      String   @default("posted")
+  description String?
+  postedAt    DateTime @default(now()) @map("posted_at")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  entries     LedgerEntry[]
+
+  @@map("ledger_transactions")
+}
+
+model LedgerEntry {
+  id            String   @id @default(uuid())
+  transactionId String   @map("transaction_id")
+  accountId     String   @map("account_id")
+  type          String   // 'debit' or 'credit'
+  amount        Float
+  currency      String   @default("INR")
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  transaction   LedgerTransaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+  account       FinancialAccount  @relation(fields: [accountId], references: [id], onDelete: Restrict)
+
+  @@map("ledger_entries")
+}

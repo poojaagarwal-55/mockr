@@ -1,0 +1,160 @@
+// ============================================
+// Question Data — Part 3 of 3  (Q11–Q15)
+// ============================================
+
+export const questionsP3 = [
+  // ── Q11: List Reordering ──
+  {
+    slug: 'reorder-list',
+    title: 'List Reordering',
+    category: 'DSA', subcategory: 'LinkedList', difficulty: 'Medium',
+    problemMd: `## List Reordering\n\nGiven the head of a singly linked list, rearrange its nodes to follow a "folded" pattern:\n\nL0 → Ln → L1 → Ln-1 → L2 → Ln-2 → …\n\nConstraint: You must modify the node pointers directly. Do not change the data values inside the nodes.`,
+    constraints: `The number of nodes is in the range [1, 5 * 10^4].\n1 <= Node.val <= 1000`,
+    examples: [
+      { input: 'head = [1,2,3,4]', output: '[1,4,2,3]' },
+      { input: 'head = [1,2,3,4,5]', output: '[1,5,2,4,3]' },
+    ],
+    hints: ['Find the middle, reverse the second half, then merge.', 'Use slow/fast pointer to find the middle.'],
+    followUpQuestions: ['What is the time and space complexity?', 'Why is in-place modification required?'],
+    tags: ['linked-list', 'two-pointers'], companies: ['Amazon', 'Meta', 'Microsoft'],
+    targetRoles: ['backend', 'fullstack'], targetLevels: ['SDE1', 'SDE2'],
+    starters: [
+      { language: 'cpp', starter: `/**\n * Definition for singly-linked list.\n * struct ListNode {\n *     int val;\n *     ListNode *next;\n *     ListNode() : val(0), next(nullptr) {}\n *     ListNode(int x) : val(x), next(nullptr) {}\n *     ListNode(int x, ListNode *next) : val(x), next(next) {}\n * };\n */\nclass Solution {\npublic:\n\tvoid reorderList(ListNode* head) {\n\n\t}\n};`,
+        wrapperCode: `#include <bits/stdc++.h>\nusing namespace std;\nstruct ListNode{int val;ListNode*next;ListNode():val(0),next(nullptr){}ListNode(int x):val(x),next(nullptr){}ListNode(int x,ListNode*n):val(x),next(n){}};\nint main(){\n\tstring line;getline(cin,line);auto j=nlohmann::json::parse(line);\n\tListNode dummy(0);ListNode*tail=&dummy;\n\tfor(auto&v:j["head"]){tail->next=new ListNode(v.get<int>());tail=tail->next;}\n\tSolution().reorderList(dummy.next);\n\tListNode*c=dummy.next;cout<<"[";bool f=true;while(c){if(!f)cout<<",";cout<<c->val;c=c->next;f=false;}cout<<"]"<<endl;\n}` },
+      { language: 'java', starter: `/**\n * Definition for singly-linked list.\n * public class ListNode {\n *     int val;\n *     ListNode next;\n *     ListNode() {}\n *     ListNode(int val) { this.val = val; }\n *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }\n * }\n */\nclass Solution {\n\tpublic void reorderList(ListNode head) {\n\n\t}\n}`,
+        wrapperCode: `import java.util.*;import org.json.*;\nclass ListNode{int val;ListNode next;ListNode(){}ListNode(int v){val=v;}ListNode(int v,ListNode n){val=v;next=n;}}\npublic class Main{public static void main(String[] a){\n\tScanner sc=new Scanner(System.in);StringBuilder sb=new StringBuilder();while(sc.hasNextLine())sb.append(sc.nextLine());\n\tJSONObject obj=new JSONObject(sb.toString());JSONArray arr=obj.getJSONArray("head");\n\tListNode dummy=new ListNode(0),tail=dummy;\n\tfor(int i=0;i<arr.length();i++){tail.next=new ListNode(arr.getInt(i));tail=tail.next;}\n\tnew Solution().reorderList(dummy.next);\n\tListNode c=dummy.next;StringBuilder out=new StringBuilder("[");boolean f=true;while(c!=null){if(!f)out.append(",");out.append(c.val);c=c.next;f=false;}out.append("]");\n\tSystem.out.println(out);\n}}` },
+      { language: 'python', starter: `# Definition for singly-linked list.\n# class ListNode(object):\n#     def __init__(self, val=0, next=None):\n#         self.val = val\n#         self.next = next\nclass Solution(object):\n\tdef reorderList(self, head):\n\t\t\"\"\"\n\t\t:type head: Optional[ListNode]\n\t\t:rtype: None Do not return anything, modify head in-place instead.\n\t\t\"\"\"`,
+        wrapperCode: `import sys,json\nclass ListNode(object):\n\tdef __init__(self,val=0,next=None):self.val=val;self.next=next\ndef build(arr):\n\tdummy=ListNode(0);t=dummy\n\tfor v in arr:t.next=ListNode(v);t=t.next\n\treturn dummy.next\ndef tolist(h):\n\tr=[]\n\twhile h:r.append(h.val);h=h.next\n\treturn r\ndef main():\n\td=json.loads(sys.stdin.read());h=build(d["head"])\n\tSolution().reorderList(h);print(json.dumps(tolist(h)))\nmain()` },
+      { language: 'javascript', starter: `/**\n * Definition for singly-linked list.\n * function ListNode(val, next) {\n *     this.val = (val===undefined ? 0 : val)\n *     this.next = (next===undefined ? null : next)\n * }\n */\n/**\n * @param {ListNode} head\n * @return {void} Do not return anything, modify head in-place instead.\n */\nvar reorderList = function(head) {\n\n};`,
+        wrapperCode: `function ListNode(v,n){this.val=(v===undefined?0:v);this.next=(n===undefined?null:n);}\nconst rl=require('readline').createInterface({input:process.stdin});let inp='';rl.on('line',l=>inp+=l);rl.on('close',()=>{\n\tconst d=JSON.parse(inp);let dummy=new ListNode(0),t=dummy;\n\tfor(const v of d.head){t.next=new ListNode(v);t=t.next;}\n\treorderList(dummy.next);\n\tlet c=dummy.next,arr=[];while(c){arr.push(c.val);c=c.next;}\n\tconsole.log(JSON.stringify(arr));\n});` },
+    ],
+    testCases: [
+      { input: '{"head":[1,2,3,4]}\n', expected: '[1,4,2,3]', type: 'sample', orderIdx: 0 },
+      { input: '{"head":[1,2,3,4,5]}\n', expected: '[1,5,2,4,3]', type: 'sample', orderIdx: 1 },
+    ],
+  },
+  // ── Q12: Wiggle Subsequence ──
+  {
+    slug: 'wiggle-subsequence',
+    title: 'Wiggle Subsequence',
+    category: 'DSA', subcategory: 'DynamicProgramming', difficulty: 'Medium',
+    problemMd: `## Wiggle Subsequence\n\nA wiggle sequence is an array where the differences between consecutive elements strictly alternate between positive and negative. A single element or two unequal elements are always considered wiggle sequences.\n\nFrom a given array nums, find the length of the longest subsequence that qualifies as a wiggle sequence.`,
+    constraints: `1 <= nums.length <= 1000\n0 <= nums[i] <= 1000`,
+    examples: [
+      { input: 'nums = [1,7,4,9,2,5]', output: '6', explanation: 'The entire sequence is a wiggle sequence.' },
+      { input: 'nums = [1,17,5,10,13,15,10,5,16,8]', output: '7' },
+      { input: 'nums = [1,2,3,4,5,6,7,8,9]', output: '2' },
+    ],
+    hints: ['Track the last direction (up or down).', 'Greedy: count direction changes.'],
+    followUpQuestions: ['What is the time complexity?', 'Can you solve it with O(1) space?'],
+    tags: ['greedy', 'dp'], companies: ['Google'],
+    targetRoles: ['backend', 'fullstack'], targetLevels: ['SDE1', 'SDE2'],
+    starters: [
+      { language: 'cpp', starter: `class Solution {\npublic:\n\tint wiggleMaxLength(vector<int>& nums) {\n\n\t}\n};`,
+        wrapperCode: `#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n\tstring line;getline(cin,line);auto j=nlohmann::json::parse(line);\n\tvector<int> nums=j["nums"].get<vector<int>>();\n\tcout<<Solution().wiggleMaxLength(nums)<<endl;\n}` },
+      { language: 'java', starter: `class Solution {\n\tpublic int wiggleMaxLength(int[] nums) {\n\n\t}\n}`,
+        wrapperCode: `import java.util.*;import org.json.*;\npublic class Main{public static void main(String[] a){\n\tScanner sc=new Scanner(System.in);StringBuilder sb=new StringBuilder();while(sc.hasNextLine())sb.append(sc.nextLine());\n\tJSONObject obj=new JSONObject(sb.toString());JSONArray arr=obj.getJSONArray("nums");\n\tint[]nums=new int[arr.length()];for(int i=0;i<arr.length();i++)nums[i]=arr.getInt(i);\n\tSystem.out.println(new Solution().wiggleMaxLength(nums));\n}}` },
+      { language: 'python', starter: `class Solution(object):\n\tdef wiggleMaxLength(self, nums):\n\t\t\"\"\"\n\t\t:type nums: List[int]\n\t\t:rtype: int\n\t\t\"\"\"`,
+        wrapperCode: `import sys,json\ndef main():\n\td=json.loads(sys.stdin.read());print(Solution().wiggleMaxLength(d["nums"]))\nmain()` },
+      { language: 'javascript', starter: `/**\n * @param {number[]} nums\n * @return {number}\n */\nvar wiggleMaxLength = function(nums) {\n\n};`,
+        wrapperCode: `const rl=require('readline').createInterface({input:process.stdin});let inp='';rl.on('line',l=>inp+=l);rl.on('close',()=>{const d=JSON.parse(inp);console.log(wiggleMaxLength(d.nums));});` },
+    ],
+    testCases: [
+      { input: '{"nums":[1,7,4,9,2,5]}\n', expected: '6', type: 'sample', orderIdx: 0 },
+      { input: '{"nums":[1,17,5,10,13,15,10,5,16,8]}\n', expected: '7', type: 'sample', orderIdx: 1 },
+      { input: '{"nums":[1,2,3,4,5,6,7,8,9]}\n', expected: '2', type: 'sample', orderIdx: 2 },
+    ],
+  },
+  // ── Q13: Minimum Time to Visit Disappearing Nodes ──
+  {
+    slug: 'minimum-time-visit-disappearing-nodes',
+    title: 'Minimum Time to Visit Disappearing Nodes',
+    category: 'DSA', subcategory: 'Graph', difficulty: 'Medium',
+    problemMd: `## Minimum Time to Visit Disappearing Nodes\n\nFind the shortest time to travel from node 0 to every other node in an undirected, weighted graph, given that nodes "disappear" over time.\n\nn nodes with weighted edges representing travel time. Each node i has a deadline disappear[i]. After that the node disappears.\n\nReturn an array where answer[i] is the minimum time to reach node i. If a node is unreachable or disappears before you can get there, return -1.`,
+    constraints: `1 <= n <= 5 * 10^4\n0 <= edges.length <= 10^5\nedges[i] == [ui, vi, lengthi]\n0 <= ui, vi <= n - 1\n1 <= lengthi <= 10^5\ndisappear.length == n\n1 <= disappear[i] <= 10^5`,
+    examples: [
+      { input: 'n = 3, edges = [[0,1,2],[1,2,1],[0,2,4]], disappear = [1,1,5]', output: '[0,-1,4]' },
+      { input: 'n = 3, edges = [[0,1,2],[1,2,1],[0,2,4]], disappear = [1,3,5]', output: '[0,2,3]' },
+    ],
+    hints: ['Modified Dijkstra with disappear constraints.', 'Skip nodes that have already disappeared.'],
+    followUpQuestions: ['How does this differ from standard Dijkstra?', 'What is the time complexity?'],
+    tags: ['graph', 'dijkstra', 'heap'], companies: ['Google', 'Amazon'],
+    targetRoles: ['backend', 'fullstack'], targetLevels: ['SDE2', 'SDE3'],
+    starters: [
+      { language: 'cpp', starter: `class Solution {\npublic:\n\tvector<int> minimumTime(int n, vector<vector<int>>& edges, vector<int>& disappear) {\n\n\t}\n};`,
+        wrapperCode: `#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n\tstring line;getline(cin,line);auto j=nlohmann::json::parse(line);\n\tint n=j["n"];auto ea=j["edges"];auto da=j["disappear"];\n\tvector<vector<int>> edges;for(auto&e:ea)edges.push_back(e.get<vector<int>>());\n\tvector<int> dis=da.get<vector<int>>();\n\tauto res=Solution().minimumTime(n,edges,dis);\n\tcout<<"[";for(int i=0;i<res.size();i++){if(i)cout<<",";cout<<res[i];}cout<<"]"<<endl;\n}` },
+      { language: 'java', starter: `class Solution {\n\tpublic int[] minimumTime(int n, int[][] edges, int[] disappear) {\n\n\t}\n}`,
+        wrapperCode: `import java.util.*;import org.json.*;\npublic class Main{public static void main(String[] a){\n\tScanner sc=new Scanner(System.in);StringBuilder sb=new StringBuilder();while(sc.hasNextLine())sb.append(sc.nextLine());\n\tJSONObject obj=new JSONObject(sb.toString());int n=obj.getInt("n");\n\tJSONArray ea=obj.getJSONArray("edges"),da=obj.getJSONArray("disappear");\n\tint[][]edges=new int[ea.length()][3];for(int i=0;i<ea.length();i++){JSONArray e=ea.getJSONArray(i);for(int jj=0;jj<3;jj++)edges[i][jj]=e.getInt(jj);}\n\tint[]dis=new int[da.length()];for(int i=0;i<da.length();i++)dis[i]=da.getInt(i);\n\tint[]res=new Solution().minimumTime(n,edges,dis);\n\tSystem.out.println(Arrays.toString(res));\n}}` },
+      { language: 'python', starter: `class Solution(object):\n\tdef minimumTime(self, n, edges, disappear):\n\t\t\"\"\"\n\t\t:type n: int\n\t\t:type edges: List[List[int]]\n\t\t:type disappear: List[int]\n\t\t:rtype: List[int]\n\t\t\"\"\"`,
+        wrapperCode: `import sys,json\ndef main():\n\td=json.loads(sys.stdin.read());print(json.dumps(Solution().minimumTime(d["n"],d["edges"],d["disappear"])))\nmain()` },
+      { language: 'javascript', starter: `/**\n * @param {number} n\n * @param {number[][]} edges\n * @param {number[]} disappear\n * @return {number[]}\n */\nvar minimumTime = function(n, edges, disappear) {\n\n};`,
+        wrapperCode: `const rl=require('readline').createInterface({input:process.stdin});let inp='';rl.on('line',l=>inp+=l);rl.on('close',()=>{const d=JSON.parse(inp);console.log(JSON.stringify(minimumTime(d.n,d.edges,d.disappear)));});` },
+    ],
+    testCases: [
+      { input: '{"n":3,"edges":[[0,1,2],[1,2,1],[0,2,4]],"disappear":[1,1,5]}\n', expected: '[0,-1,4]', type: 'sample', orderIdx: 0 },
+      { input: '{"n":3,"edges":[[0,1,2],[1,2,1],[0,2,4]],"disappear":[1,3,5]}\n', expected: '[0,2,3]', type: 'sample', orderIdx: 1 },
+    ],
+  },
+  // ── Q14: Find Edges in Shortest Path ──
+  {
+    slug: 'find-edges-in-shortest-path',
+    title: 'Find Edges in Shortest Path',
+    category: 'DSA', subcategory: 'Graph', difficulty: 'Hard',
+    problemMd: `## Find Edges in Shortest Path\n\nYou are given an undirected weighted graph of n nodes numbered from 0 to n - 1. The graph consists of m edges.\n\nConsider all the shortest paths from node 0 to node n - 1. You need to find a boolean array answer where answer[i] is true if the edge edges[i] is part of at least one shortest path. Otherwise, answer[i] is false.\n\nNote that the graph may not be connected.`,
+    constraints: `2 ≤ n ≤ 5 * 10^4\n0 ≤ edges.length ≤ 5 * 10^4\nAll edge weights are positive`,
+    examples: [
+      { input: 'n = 6, edges = [[0,1,4],[0,2,1],[1,3,2],[1,4,3],[1,5,1],[2,3,1],[3,5,3],[4,5,2]]', output: '[true,true,true,false,true,true,true,false]' },
+      { input: 'n = 4, edges = [[2,0,1],[0,1,1],[0,3,4],[3,2,2]]', output: '[true,false,false,true]' },
+    ],
+    hints: ['Run Dijkstra from both node 0 and node n-1.', 'An edge is on a shortest path if dist0[u]+w+distn[v]==shortest.'],
+    followUpQuestions: ['Why run Dijkstra from both ends?', 'What is the time complexity?'],
+    tags: ['graph', 'dijkstra', 'shortest-path'], companies: ['Google', 'Meta'],
+    targetRoles: ['backend', 'fullstack'], targetLevels: ['SDE2', 'SDE3'],
+    starters: [
+      { language: 'cpp', starter: `class Solution {\npublic:\n\tvector<bool> findAnswer(int n, vector<vector<int>>& edges) {\n\n\t}\n};`,
+        wrapperCode: `#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n\tstring line;getline(cin,line);auto j=nlohmann::json::parse(line);\n\tint n=j["n"];vector<vector<int>> edges;\n\tfor(auto&e:j["edges"])edges.push_back(e.get<vector<int>>());\n\tauto res=Solution().findAnswer(n,edges);\n\tcout<<"[";for(int i=0;i<res.size();i++){if(i)cout<<",";cout<<(res[i]?"true":"false");}cout<<"]"<<endl;\n}` },
+      { language: 'java', starter: `class Solution {\n\tpublic boolean[] findAnswer(int n, int[][] edges) {\n\n\t}\n}`,
+        wrapperCode: `import java.util.*;import org.json.*;\npublic class Main{public static void main(String[] a){\n\tScanner sc=new Scanner(System.in);StringBuilder sb=new StringBuilder();while(sc.hasNextLine())sb.append(sc.nextLine());\n\tJSONObject obj=new JSONObject(sb.toString());int n=obj.getInt("n");\n\tJSONArray ea=obj.getJSONArray("edges");\n\tint[][]edges=new int[ea.length()][3];for(int i=0;i<ea.length();i++){JSONArray e=ea.getJSONArray(i);for(int jj=0;jj<3;jj++)edges[i][jj]=e.getInt(jj);}\n\tboolean[]res=new Solution().findAnswer(n,edges);\n\tStringBuilder out=new StringBuilder("[");for(int i=0;i<res.length;i++){if(i>0)out.append(",");out.append(res[i]);}out.append("]");\n\tSystem.out.println(out);\n}}` },
+      { language: 'python', starter: `class Solution(object):\n\tdef findAnswer(self, n, edges):\n\t\t\"\"\"\n\t\t:type n: int\n\t\t:type edges: List[List[int]]\n\t\t:rtype: List[bool]\n\t\t\"\"\"`,
+        wrapperCode: `import sys,json\ndef main():\n\td=json.loads(sys.stdin.read());r=Solution().findAnswer(d["n"],d["edges"])\n\tprint(json.dumps(r))\nmain()` },
+      { language: 'javascript', starter: `/**\n * @param {number} n\n * @param {number[][]} edges\n * @return {boolean[]}\n */\nvar findAnswer = function(n, edges) {\n\n};`,
+        wrapperCode: `const rl=require('readline').createInterface({input:process.stdin});let inp='';rl.on('line',l=>inp+=l);rl.on('close',()=>{const d=JSON.parse(inp);console.log(JSON.stringify(findAnswer(d.n,d.edges)));});` },
+    ],
+    testCases: [
+      { input: '{"n":6,"edges":[[0,1,4],[0,2,1],[1,3,2],[1,4,3],[1,5,1],[2,3,1],[3,5,3],[4,5,2]]}\n', expected: '[true,true,true,false,true,true,true,false]', type: 'sample', orderIdx: 0 },
+      { input: '{"n":4,"edges":[[2,0,1],[0,1,1],[0,3,4],[3,2,2]]}\n', expected: '[true,false,false,true]', type: 'sample', orderIdx: 1 },
+    ],
+  },
+  // ── Q15: String Game (Zuma) ──
+  {
+    slug: 'string-game-zuma',
+    title: 'String Game',
+    category: 'DSA', subcategory: 'Backtracking', difficulty: 'Hard',
+    problemMd: `## String Game\n\nClear a row of colored balls (board) by inserting balls from your hand. Place one ball from your hand into any position in the row. If 3 or more balls of the same color form a consecutive group, they are automatically removed. Cascading removals apply.\n\nReturn the minimum number of balls used to empty the board completely. If it is impossible, return -1.\n\nColors: 'R' (red), 'Y' (yellow), 'B' (blue), 'G' (green), 'W' (white).`,
+    constraints: `1 <= board.length <= 16\n1 <= hand.length <= 5\nboard and hand consist of 'R', 'Y', 'B', 'G', 'W'\nNo initial groups of 3+ consecutive same-color balls on board`,
+    examples: [
+      { input: 'board = "WRRBBW", hand = "RB"', output: '-1' },
+      { input: 'board = "WWRRBBWW", hand = "WRBRW"', output: '2' },
+      { input: 'board = "G", hand = "GGGGG"', output: '2' },
+    ],
+    hints: ['Use DFS/BFS with memoization.', 'Try inserting each hand ball at each position.'],
+    followUpQuestions: ['How do you handle cascading removals?', 'What is the state space?'],
+    tags: ['backtracking', 'bfs', 'strings'], companies: ['Google'],
+    targetRoles: ['backend', 'fullstack'], targetLevels: ['SDE3'],
+    starters: [
+      { language: 'cpp', starter: `class Solution {\npublic:\n\tint findMinStep(string board, string hand) {\n\n\t}\n};`,
+        wrapperCode: `#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n\tstring line;getline(cin,line);auto j=nlohmann::json::parse(line);\n\tcout<<Solution().findMinStep(j["board"],j["hand"])<<endl;\n}` },
+      { language: 'java', starter: `class Solution {\n\tpublic int findMinStep(String board, String hand) {\n\n\t}\n}`,
+        wrapperCode: `import java.util.*;import org.json.*;\npublic class Main{public static void main(String[] a){\n\tScanner sc=new Scanner(System.in);StringBuilder sb=new StringBuilder();while(sc.hasNextLine())sb.append(sc.nextLine());\n\tJSONObject obj=new JSONObject(sb.toString());\n\tSystem.out.println(new Solution().findMinStep(obj.getString("board"),obj.getString("hand")));\n}}` },
+      { language: 'python', starter: `class Solution(object):\n\tdef findMinStep(self, board, hand):\n\t\t\"\"\"\n\t\t:type board: str\n\t\t:type hand: str\n\t\t:rtype: int\n\t\t\"\"\"`,
+        wrapperCode: `import sys,json\ndef main():\n\td=json.loads(sys.stdin.read());print(Solution().findMinStep(d["board"],d["hand"]))\nmain()` },
+      { language: 'javascript', starter: `/**\n * @param {string} board\n * @param {string} hand\n * @return {number}\n */\nvar findMinStep = function(board, hand) {\n\n};`,
+        wrapperCode: `const rl=require('readline').createInterface({input:process.stdin});let inp='';rl.on('line',l=>inp+=l);rl.on('close',()=>{const d=JSON.parse(inp);console.log(findMinStep(d.board,d.hand));});` },
+    ],
+    testCases: [
+      { input: '{"board":"WRRBBW","hand":"RB"}\n', expected: '-1', type: 'sample', orderIdx: 0 },
+      { input: '{"board":"WWRRBBWW","hand":"WRBRW"}\n', expected: '2', type: 'sample', orderIdx: 1 },
+      { input: '{"board":"G","hand":"GGGGG"}\n', expected: '2', type: 'sample', orderIdx: 2 },
+    ],
+  },
+];

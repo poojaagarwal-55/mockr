@@ -1,0 +1,2 @@
+ALTER TABLE "contest_questions"
+ADD COLUMN IF NOT EXISTS "negative_points" INTEGER NOT NULL DEFAULT 0;

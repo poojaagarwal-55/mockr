@@ -1,0 +1,598 @@
+// Razorpay Payment Integration System Database Schema
+// Production-grade schema with all 13 edge cases and financial ledger system
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================================
+// CORE PAYMENT TABLES
+// ============================================================================
+
+model Payment {
+  id                    String   @id @default(cuid())
+  userId                String
+  
+  // Razorpay Integration
+  razorpayOrderId       String   @unique
+  razorpayPaymentId     String?  @unique
+  razorpaySignature     String?
+  
+  // Payment Details
+  amount                Int      // Amount in smallest currency unit (paise)
+  currency              String   @default("INR")
+  status                PaymentStatus @default(CREATED)
+  kind                  PaymentKind
+  
+  // Order Details
+  receiptId             String   @unique
+  orderExpiry           DateTime
+  orderNotes            Json?
+  
+  // Amount Tracking
+  totalAmountDue        Int?     // For partial payments
+  amountPaid            Int      @default(0)
+  remainingAmount       Int      @default(0)
+  
+  // Partial Payment Support
+  parentPaymentId       String?
+  partialPaymentSequence Int?
+  isPartialPayment      Boolean  @default(false)
+  
+  // Currency Precision Validation
+  frontendAmount        Decimal? // Original frontend amount
+  backendAmount         Int?     // Converted backend amount
+  conversionValidated   Boolean  @default(false)
+  amountPrecision       Int      @default(2)
+  
+  // State Management
+  previousStatus        PaymentStatus?
+  statusUpdatedAt       DateTime @default(now())
+  paymentCompletedUtc   DateTime?
+  
+  // Bank Reversal Tracking
+  bankReversalDetected  Boolean  @default(false)
+  bankReversalDate      DateTime?
+  bankReversalReason    String?
+  originalSuccessDate   DateTime?
+  
+  // Settlement Tracking
+  settlementStatus      SettlementStatus @default(PENDING)
+  settlementAmount      Int?
+  settlementDate        DateTime?
+  settlementUtr         String?
+  settlementBatchId     String?
+  settlementFees        Int?
+  
+  // Metadata
+  paymentMethod         String?
+  userAgent             String?
+  clientIp              String?
+  sessionId             String?
+  
+  // Timestamps
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+  
+  // Relations
+  parentPayment         Payment? @relation("PartialPayments", fields: [parentPaymentId], references: [id])
+  childPayments         Payment[] @relation("PartialPayments")
+  stateTransitions      PaymentStateTransition[]
+  webhookEvents         WebhookEvent[]
+  auditLogs             PaymentAuditLog[]
+  ledgerEntries         LedgerEntry[]
+  
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt])
+  @@index([razorpayOrderId])
+  @@index([razorpayPaymentId])
+  @@index([receiptId])
+  @@index([settlementStatus])
+  @@index([bankReversalDetected])
+  @@map("payments")
+}
+
+model PaymentStateTransition {
+  id              String   @id @default(cuid())
+  paymentId       String
+  
+  fromStatus      PaymentStatus?
+  toStatus        PaymentStatus
+  reason          String
+  source          TransitionSource
+  metadata        Json?
+  
+  // Event Ordering
+  eventSequence   Int?
+  outOfOrder      Boolean  @default(false)
+  
+  createdAt       DateTime @default(now())
+  
+  payment         Payment  @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+  
+  @@index([paymentId])
+  @@index([createdAt])
+  @@map("payment_state_transitions")
+}
+
+// ============================================================================
+// WEBHOOK SYSTEM
+// ============================================================================
+
+model WebhookEvent {
+  id              String   @id @default(cuid())
+  paymentId       String?
+  
+  // Razorpay Webhook Data
+  eventId         String   @unique // Razorpay event ID for idempotency
+  eventType       String
+  payload         Json
+  signature       String
+  
+  // Processing Status
+  processed       Boolean  @default(false)
+  processedAt     DateTime?
+  processingError String?
+  retryCount      Int      @default(0)
+  
+  // Rate Limiting
+  processingLocked Boolean  @default(false)
+  lockExpiry      DateTime?
+  
+  // Event Ordering
+  eventSequence   Int?
+  outOfOrder      Boolean  @default(false)
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  payment         Payment? @relation(fields: [paymentId], references: [id])
+  
+  @@index([eventId])
+  @@index([eventType])
+  @@index([processed])
+  @@index([createdAt])
+  @@index([paymentId])
+  @@map("webhook_events")
+}
+
+// ============================================================================
+// USER ABUSE PROTECTION
+// ============================================================================
+
+model UserPaymentAttempt {
+  id              String   @id @default(cuid())
+  userId          String
+  
+  // Attempt Details
+  attemptType     AttemptType
+  success         Boolean
+  failureReason   String?
+  metadata        Json?
+  
+  // Abuse Detection
+  suspiciousPattern Boolean @default(false)
+  patternType     String?
+  
+  // Rate Limiting
+  hourlyAttempts  Int      @default(1)
+  dailyAttempts   Int      @default(1)
+  
+  createdAt       DateTime @default(now())
+  
+  @@index([userId])
+  @@index([createdAt])
+  @@index([success])
+  @@index([suspiciousPattern])
+  @@map("user_payment_attempts")
+}
+
+model UserCooldown {
+  id              String   @id @default(cuid())
+  userId          String   @unique
+  
+  cooldownUntil   DateTime
+  reason          String
+  attemptCount    Int
+  cooldownLevel   Int      // Progressive cooldown level
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@index([userId])
+  @@index([cooldownUntil])
+  @@map("user_cooldowns")
+}
+
+// ============================================================================
+// RECONCILIATION SYSTEM
+// ============================================================================
+
+model ReconciliationJob {
+  id              String   @id @default(cuid())
+  jobType         ReconciliationType
+  
+  // Job Status
+  status          JobStatus @default(PENDING)
+  startedAt       DateTime?
+  completedAt     DateTime?
+  error           String?
+  
+  // Job Data
+  dateRange       Json     // { from: Date, to: Date }
+  results         Json?    // Reconciliation results
+  discrepancies   Json?    // Found discrepancies
+  
+  // Metrics
+  paymentsChecked Int      @default(0)
+  discrepanciesFound Int   @default(0)
+  autoResolved    Int      @default(0)
+  manualReviewRequired Int @default(0)
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@index([jobType])
+  @@index([status])
+  @@index([createdAt])
+  @@map("reconciliation_jobs")
+}
+
+model ZombiePayment {
+  id              String   @id @default(cuid())
+  paymentId       String   @unique
+  
+  // Detection Details
+  ageHours        Float
+  localStatus     PaymentStatus
+  razorpayStatus  String?
+  lastWebhookAt   DateTime?
+  
+  // Recovery Status
+  recoveryPossible Boolean @default(false)
+  recoveryAttempted Boolean @default(false)
+  recoverySuccessful Boolean @default(false)
+  manualReviewRequired Boolean @default(false)
+  
+  resolvedAt      DateTime?
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@index([paymentId])
+  @@index([recoveryAttempted])
+  @@index([manualReviewRequired])
+  @@map("zombie_payments")
+}
+
+// ============================================================================
+// SECRET MANAGEMENT
+// ============================================================================
+
+model SecretRotation {
+  id              String   @id @default(cuid())
+  secretType      SecretType
+  
+  // Secret Data (encrypted)
+  secretValueEncrypted String
+  
+  // Validity
+  isActive        Boolean  @default(true)
+  validFrom       DateTime @default(now())
+  validUntil      DateTime?
+  
+  // Rotation Details
+  rotationReason  String?
+  createdBy       String   @default("system")
+  
+  createdAt       DateTime @default(now())
+  
+  @@index([secretType])
+  @@index([isActive])
+  @@index([validFrom])
+  @@index([validUntil])
+  @@map("secret_rotations")
+}
+
+// ============================================================================
+// FINANCIAL LEDGER SYSTEM (CRITICAL ADDITION)
+// ============================================================================
+
+model ChartOfAccounts {
+  id              String   @id @default(cuid())
+  accountCode     String   @unique
+  accountName     String
+  accountType     AccountType
+  parentAccountCode String?
+  
+  // Account Properties
+  isActive        Boolean  @default(true)
+  normalBalance   BalanceType // DEBIT or CREDIT
+  description     String?
+  
+  // Hierarchy
+  level           Int      @default(1)
+  path            String   // For hierarchical queries
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  // Relations
+  parentAccount   ChartOfAccounts? @relation("AccountHierarchy", fields: [parentAccountCode], references: [accountCode])
+  childAccounts   ChartOfAccounts[] @relation("AccountHierarchy")
+  ledgerEntries   LedgerEntry[]
+  
+  @@index([accountCode])
+  @@index([accountType])
+  @@index([isActive])
+  @@index([parentAccountCode])
+  @@map("chart_of_accounts")
+}
+
+model LedgerEntry {
+  id              String   @id @default(cuid())
+  transactionId   String   // Groups related entries
+  
+  // Account Reference
+  accountCode     String
+  
+  // Double-Entry Amounts
+  debitAmount     Int      @default(0)
+  creditAmount    Int      @default(0)
+  currency        String   @default("INR")
+  
+  // Transaction Details
+  description     String
+  referenceType   String   // payment, settlement, refund, etc.
+  referenceId     String   // ID of the referenced entity
+  
+  // Metadata
+  createdBy       String   @default("system")
+  
+  // Immutable Timestamp
+  createdAt       DateTime @default(now())
+  
+  // Relations
+  account         ChartOfAccounts @relation(fields: [accountCode], references: [accountCode])
+  payment         Payment? @relation(fields: [referenceId], references: [id])
+  
+  @@index([transactionId])
+  @@index([accountCode])
+  @@index([referenceType])
+  @@index([referenceId])
+  @@index([createdAt])
+  @@map("ledger_entries")
+}
+
+model LedgerBalance {
+  id              String   @id @default(cuid())
+  accountCode     String
+  
+  // Balance Amounts
+  debitBalance    Int      @default(0)
+  creditBalance   Int      @default(0)
+  netBalance      Int      @default(0) // debitBalance - creditBalance
+  
+  // Balance Date
+  balanceDate     DateTime @default(now())
+  
+  // Last Update
+  lastEntryId     String?
+  updatedAt       DateTime @updatedAt
+  
+  account         ChartOfAccounts @relation(fields: [accountCode], references: [accountCode])
+  
+  @@unique([accountCode, balanceDate])
+  @@index([accountCode])
+  @@index([balanceDate])
+  @@map("ledger_balances")
+}
+
+model FinancialReconciliation {
+  id              String   @id @default(cuid())
+  reconciliationDate DateTime
+  
+  // Ledger Totals
+  totalDebits     Int
+  totalCredits    Int
+  balanceDifference Int    // Should always be 0
+  
+  // Account Balances
+  cashBalance     Int
+  accountsReceivableBalance Int
+  revenueBalance  Int
+  expenseBalance  Int
+  
+  // Bank Reconciliation
+  bankStatementBalance Int?
+  bankReconciled  Boolean  @default(false)
+  bankDiscrepancy Int?
+  
+  // Status
+  status          ReconciliationStatus @default(PENDING)
+  discrepancies   Json?
+  resolvedAt      DateTime?
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@unique([reconciliationDate])
+  @@index([reconciliationDate])
+  @@index([status])
+  @@map("financial_reconciliations")
+}
+
+// ============================================================================
+// AUDIT AND COMPLIANCE
+// ============================================================================
+
+model PaymentAuditLog {
+  id              String   @id @default(cuid())
+  paymentId       String
+  
+  // Audit Details
+  eventType       AuditEventType
+  eventData       Json
+  
+  // Hash Chain for Tamper-Proofing
+  sequence        Int      @unique
+  previousHash    String?
+  hash            String   @unique
+  
+  // Sanitized Data (PII removed)
+  sanitizedData   Json
+  
+  // Metadata
+  userId          String?  // Masked for privacy
+  sessionId       String?
+  clientIp        String?  // Masked
+  userAgent       String?  // Hashed
+  
+  // Immutable Timestamp
+  createdAt       DateTime @default(now())
+  
+  payment         Payment  @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+  
+  @@index([paymentId])
+  @@index([eventType])
+  @@index([sequence])
+  @@index([createdAt])
+  @@map("payment_audit_logs")
+}
+
+model SystemAuditLog {
+  id              String   @id @default(cuid())
+  
+  // System Event
+  eventType       String
+  component       String
+  action          String
+  
+  // Event Data
+  eventData       Json
+  
+  // Hash Chain
+  sequence        Int      @unique
+  previousHash    String?
+  hash            String   @unique
+  
+  // Context
+  userId          String?
+  sessionId       String?
+  
+  createdAt       DateTime @default(now())
+  
+  @@index([eventType])
+  @@index([component])
+  @@index([sequence])
+  @@index([createdAt])
+  @@map("system_audit_logs")
+}
+
+// ============================================================================
+// ENUMS
+// ============================================================================
+
+enum PaymentStatus {
+  CREATED
+  PENDING
+  AUTHORIZED
+  CAPTURED
+  FAILED
+  CANCELLED
+  REFUNDED
+  BANK_REVERSED
+}
+
+enum PaymentKind {
+  SUBSCRIPTION
+  CREDITS
+  ONE_TIME
+}
+
+enum SettlementStatus {
+  PENDING
+  SETTLED
+  FAILED
+  PARTIAL
+}
+
+enum TransitionSource {
+  WEBHOOK
+  API
+  RECONCILIATION
+  ZOMBIE_DETECTOR
+  MANUAL
+  SYSTEM
+}
+
+enum AttemptType {
+  PAYMENT_CREATION
+  PAYMENT_VERIFICATION
+  WEBHOOK_PROCESSING
+}
+
+enum ReconciliationType {
+  TECHNICAL
+  BUSINESS
+  FINANCIAL
+  ZOMBIE_DETECTION
+  SETTLEMENT
+}
+
+enum JobStatus {
+  PENDING
+  RUNNING
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+enum SecretType {
+  RAZORPAY_KEY
+  WEBHOOK_SECRET
+  ENCRYPTION_KEY
+}
+
+enum AccountType {
+  ASSET
+  LIABILITY
+  EQUITY
+  REVENUE
+  EXPENSE
+}
+
+enum BalanceType {
+  DEBIT
+  CREDIT
+}
+
+enum ReconciliationStatus {
+  PENDING
+  RECONCILED
+  DISCREPANCIES_FOUND
+  MANUAL_REVIEW_REQUIRED
+}
+
+enum AuditEventType {
+  PAYMENT_CREATED
+  PAYMENT_STATUS_CHANGED
+  WEBHOOK_RECEIVED
+  SIGNATURE_VERIFIED
+  SIGNATURE_FAILED
+  RECONCILIATION_PERFORMED
+  ZOMBIE_DETECTED
+  BANK_REVERSAL_DETECTED
+  SETTLEMENT_RECEIVED
+  LEDGER_ENTRY_CREATED
+  FRAUD_DETECTED
+  ABUSE_DETECTED
+  SECRET_ROTATED
+  SYSTEM_ERROR
+}

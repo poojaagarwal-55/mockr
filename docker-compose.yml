@@ -1,0 +1,45 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: interviewforge-db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: interviewforge
+      POSTGRES_PASSWORD: localdev
+      POSTGRES_DB: interviewforge
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U interviewforge"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: interviewforge-redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  latex-compiler:
+    build:
+      context: ./services/latex-compiler
+      dockerfile: Dockerfile
+    container_name: interviewforge-latex
+    ports:
+      - "3002:3002"
+    environment:
+      - MAX_COMPILE_TIME=30
+    mem_limit: 512m
+    cpus: 1.0
+
+volumes:
+  pgdata:

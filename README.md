@@ -48,15 +48,21 @@ flowchart LR
 
 ## 🤔 "Can't I just ask ChatGPT to interview me?"
 
-It'll ask you questions. But a real interview isn't just talk — you **code in a real editor**, **query a live database**, and **draw the system on a board**, all while explaining yourself out loud and on camera. Mockr gives you the whole room, not a chat box. *(Scroll down — see it for yourself. 👇)*
+Sure — and it'll lob you softballs and call every answer "great." That isn't an interview.
+
+A real one has an **editor that runs your code against hidden test cases**, a **live SQL console**, a **whiteboard you actually draw on**, a clock, a camera — and an interviewer who **interrupts, digs, and won't let you hand-wave**. ChatGPT can't watch you code, can't pressure-test your silence, and can't tell you whether you're *actually* getting better week over week.
+
+Mockr can — because it isn't a chat box, it's the whole room. *(Scroll down and see. 👇)*
 
 ---
 
 ## 🚀 What you get
 
-| 🎤 AI Mock Interviews | 🧑‍🏫 AI Tutor | 📚 Question Bank |
-|:---|:---|:---|
-| A real, talking interview with follow-ups and honest feedback on *what* you said **and** *how* you said it. | Stuck on a concept? It explains in plain language until it actually clicks. | Real questions across **SQL · System Design · DBMS · CS Fundamentals · DSA**. |
+**🎤 AI Mock Interviews** — a real, talking interview with follow-ups and honest feedback on *what* you said **and** *how* you said it.
+
+**🧑‍🏫 AI Tutor** — stuck on a concept? It explains in plain language until it actually clicks.
+
+**📚 Question Bank** — real questions across **SQL · System Design · DBMS · CS Fundamentals · DSA**.
 
 ---
 

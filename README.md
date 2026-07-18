@@ -72,6 +72,37 @@ It'll ask you questions. But a real interview isn't just talk — you **code in 
 
 ---
 
+## 🎬 What one session actually feels like
+
+> Not a quiz you click through. A conversation that pushes back.
+
+```mermaid
+flowchart LR
+    S1["🎧 Join the call<br/>the AI greets you"] --> S2["🗣️ Explain your<br/>approach out loud"] --> S3["💻 Code it live<br/>in the editor"] --> S4["🔍 AI probes your<br/>edge cases"] --> S5["📊 Full report:<br/>exactly what to fix"]
+    style S5 fill:#dcfce7,stroke:#22c55e,color:#000
+```
+
+It listens to your words, reacts to your code, and digs in exactly where a real interviewer would:
+
+```mermaid
+sequenceDiagram
+    participant You
+    participant AI as 🎤 Mockr
+    AI->>You: "Let's start — walk me through your approach."
+    You->>AI: you think out loud
+    AI->>You: "Why a hashmap here? What's the complexity?"
+    Note over You,AI: 💻 you write real code in the live editor
+    AI->>You: "Test case 3 fails — which edge case did you miss?"
+    You->>AI: you debug and talk it through
+    AI-->>You: 📊 instant report — logic, clarity, communication
+```
+
+It interrupts. It follows up. It notices when you go quiet — the same pressure as the real room, without the cost of failing. **Ninety seconds in, you forget it's an AI.**
+
+<p align="center"><b>👉 Do one interview tonight. That's all it takes to feel the difference.</b></p>
+
+---
+
 <details>
 <summary><b>🛠️ How it's built · run it locally</b></summary>
 

@@ -154,6 +154,26 @@ function LoginContent() {
         await signInWithGoogle(nextPath);
     };
 
+    const handleGuestLogin = async () => {
+        clearError();
+        setFormError(null);
+        const demoEmail = process.env.NEXT_PUBLIC_DEMO_EMAIL;
+        const demoPassword = process.env.NEXT_PUBLIC_DEMO_PASSWORD;
+        if (!demoEmail || !demoPassword) {
+            setFormError("Guest login is not configured yet.");
+            return;
+        }
+        setIsSubmitting(true);
+        try {
+            await signIn(demoEmail, demoPassword);
+            router.push(nextPath || "/dashboard");
+        } catch (err: any) {
+            setFormError(err?.message || "Guest login failed. Please try again.");
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
     const handleForgotPassword = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!forgotEmail.trim()) return;
@@ -310,6 +330,16 @@ function LoginContent() {
                                         <span className="text-sm font-semibold">
                                             Continue with LinkedIn
                                         </span>
+                                    </button>
+
+                                    <button
+                                        onClick={handleGuestLogin}
+                                        disabled={isSubmitting}
+                                        suppressHydrationWarning
+                                        className="flex w-full items-center justify-center gap-2 rounded-full bg-[#025cd7] py-3 px-4 text-white font-semibold text-sm transition hover:opacity-90 cursor-pointer disabled:opacity-60"
+                                    >
+                                        <svg className="h-5 w-5 fill-current" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                                        Continue as Guest — try it instantly
                                     </button>
                                 </div>
 

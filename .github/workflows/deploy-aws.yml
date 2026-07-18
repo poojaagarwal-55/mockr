@@ -1,0 +1,100 @@
+name: Deploy to AWS (ECS)
+
+# Replaces GCP Cloud Build (cloudbuild.yaml / cloudbuild.p2p.yaml).
+# Builds each service image, pushes to ECR, and triggers an ECS rolling deploy.
+# Uses GitHub OIDC → AWS IAM role (no long-lived AWS keys stored in GitHub).
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "apps/api/**"
+      - "apps/contest-service/**"
+      - "apps/p2p/**"
+      - "services/latex-compiler/**"
+      - "packages/**"
+      - ".github/workflows/deploy-aws.yml"
+  workflow_dispatch:
+    inputs:
+      services:
+        description: "Comma-separated services to deploy (default: all)"
+        default: "practers-api,contest-service,p2p-service,latex-compiler"
+
+concurrency:
+  group: deploy-aws
+  cancel-in-progress: false
+
+env:
+  AWS_REGION: ap-south-1
+  ECS_CLUSTER: practers-prod
+
+permissions:
+  id-token: write # OIDC
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - service: practers-api
+            dockerfile: apps/api/Dockerfile
+            context: .
+          - service: contest-service
+            dockerfile: apps/contest-service/Dockerfile
+            context: .
+          - service: p2p-service
+            dockerfile: apps/p2p/Dockerfile
+            context: .
+          - service: latex-compiler
+            dockerfile: services/latex-compiler/Dockerfile
+            context: services/latex-compiler
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build & push image
+        env:
+          REGISTRY: ${{ steps.ecr.outputs.registry }}
+          REPO: practers/${{ matrix.service }}
+          TAG: ${{ github.sha }}
+        run: |
+          docker build --platform linux/amd64 \
+            -t "$REGISTRY/$REPO:$TAG" \
+            -t "$REGISTRY/$REPO:latest" \
+            -f "${{ matrix.dockerfile }}" "${{ matrix.context }}"
+          docker push "$REGISTRY/$REPO:$TAG"
+          docker push "$REGISTRY/$REPO:latest"
+
+      - name: Register new task definition revision & deploy
+        env:
+          SERVICE: ${{ matrix.service }}
+          REGISTRY: ${{ steps.ecr.outputs.registry }}
+          TAG: ${{ github.sha }}
+        run: |
+          # Pull the live task def, swap the image, register a new revision,
+          # then point the service at it (rolling, zero-downtime).
+          TD=$(aws ecs describe-task-definition --task-definition "$SERVICE" \
+                --query 'taskDefinition' --output json)
+          NEW=$(echo "$TD" | jq --arg IMG "$REGISTRY/practers/$SERVICE:$TAG" '
+            .containerDefinitions[0].image = $IMG
+            | {family, taskRoleArn, executionRoleArn, networkMode, containerDefinitions,
+               requiresCompatibilities, cpu, memory, runtimePlatform}
+            | with_entries(select(.value != null))')
+          REV=$(aws ecs register-task-definition --cli-input-json "$NEW" \
+                --query 'taskDefinition.taskDefinitionArn' --output text)
+          aws ecs update-service --cluster "$ECS_CLUSTER" --service "$SERVICE" \
+            --task-definition "$REV" >/dev/null
+          aws ecs wait services-stable --cluster "$ECS_CLUSTER" --services "$SERVICE"
+          echo "Deployed $SERVICE -> $REV"

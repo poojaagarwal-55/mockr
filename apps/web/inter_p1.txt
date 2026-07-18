@@ -1,0 +1,291 @@
+"use client";
+
+import { useState, useRef, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { PageHeader } from "@/components/page-header";
+import { createSupabaseBrowserClient } from "@/lib/supabase";
+import { api } from "@/lib/api";
+
+const INTERVIEW_TYPES = [
+    {
+        id: "full_interview",
+        label: "Full Interview",
+        duration: "60 minutes",
+        icon: "assignment",
+        description: "A comprehensive end-to-end mock interview that mirrors a real tech interview experience.",
+        details: [
+            "Starts with introductions and resume-based questions (5-8 min)",
+            "Moves to a live coding problem with an integrated IDE",
+            "Covers CS fundamentals and system design concepts",
+            "Ends with a closing round where you can ask questions",
+            "Receive a detailed performance report with scores across all areas",
+        ],
+        bestFor: "Candidates preparing for on-site or final-round interviews at top tech companies.",
+    },
+    {
+        id: "coding",
+        label: "Coding",
+        duration: "40 minutes",
+        icon: "code",
+        description: "A focused Data Structures & Algorithms coding round with a live collaborative IDE.",
+        details: [
+            "Receive an algorithmic problem tailored to your level",
+            "Code your solution in a full-featured IDE with 40+ languages",
+            "The AI interviewer guides you through hints and follow-ups",
+            "Discuss time & space complexity after solving",
+            "Get feedback on code quality, efficiency, and problem-solving approach",
+        ],
+        bestFor: "Sharpening your DSA skills and practicing under timed pressure.",
+    },
+    {
+        id: "cs_fundamentals",
+        label: "CS Fundamentals",
+        duration: "25 minutes",
+        icon: "school",
+        description: "A rapid-fire round covering core Computer Science concepts and theory.",
+        details: [
+            "Topics include OS, DBMS, Networking, and OOP",
+            "Questions adapt based on your role and experience level",
+            "Mix of conceptual and scenario-based questions",
+            "Tests depth of understanding, not just memorization",
+            "Great for brushing up on fundamentals before interviews",
+        ],
+        bestFor: "Candidates who want to solidify their CS theory knowledge.",
+    },
+    {
+        id: "system_design",
+        label: "System Design",
+        duration: "30 minutes",
+        icon: "hub",
+        description: "Design scalable systems from scratch with an AI interviewer guiding the discussion.",
+        details: [
+            "Receive a real-world system design problem (e.g., design Twitter, URL shortener)",
+            "Walk through requirements gathering and scope definition",
+            "Discuss high-level architecture, database choices, and trade-offs",
+            "Dive into scaling strategies, caching, and load balancing",
+            "Get evaluated on communication, structure, and technical depth",
+        ],
+        bestFor: "Senior engineers and anyone targeting SDE2+ roles at top companies.",
+    },
+    {
+        id: "behavioural",
+        label: "Behavioural",
+        duration: "20 minutes",
+        icon: "psychology",
+        description: "Practice answering behavioural and leadership questions using the STAR method.",
+        details: [
+            "Questions based on Amazon LP-style and Google behavioural patterns",
+            "Practice structuring answers with Situation, Task, Action, Result",
+            "Covers teamwork, conflict resolution, ownership, and leadership",
+            "AI provides feedback on clarity, structure, and impact of your stories",
+            "Tailored to your experience level and target role",
+        ],
+        bestFor: "Anyone who struggles with the \"Tell me about a time...\" questions.",
+    },
+];
+
+
+export default function SetupPage() {
+    useEffect(() => { document.title = "Interview Setup | Practers"; }, []);
+    const router = useRouter();
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
+    // Form state
+    const [selectedType, setSelectedType] = useState("");
+
+    // Resume state
+    const [resumeFile, setResumeFile] = useState<File | null>(null);
+    const [uploading, setUploading] = useState(false);
+    const [resumeAnalysis, setResumeAnalysis] = useState<any>(null);
+    const [resumeId, setResumeId] = useState<string | null>(null);
+    const [uploadError, setUploadError] = useState<string | null>(null);
+    const [isAnalyzingResume, setIsAnalyzingResume] = useState(false);
+
+    // Existing resumes
+    const [existingResumes, setExistingResumes] = useState<any[]>([]);
+    const [loadingResumes, setLoadingResumes] = useState(true);
+
+    // Session creation state
+    const [starting, setStarting] = useState(false);
+    const [loadingStatus, setLoadingStatus] = useState<string | null>(null);
+    const [sessionError, setSessionError] = useState<string | null>(null);
+
+    // Info modal
+    const [infoModalType, setInfoModalType] = useState<string | null>(null);
+    const infoType = INTERVIEW_TYPES.find((t) => t.id === infoModalType);
+
+    // ── Fetch existing resumes on mount ───────────────────
+    useEffect(() => {
+        (async () => {
+            try {
+                const { data } = await createSupabaseBrowserClient().auth.getSession();
+                const token = data.session?.access_token;
+                if (!token) return;
+                const res = await api.get<{ resumes: any[] }>("/resumes", token);
+                setExistingResumes(res.resumes || []);
+            } catch {
+                // silently fail — user can still upload
+            } finally {
+                setLoadingResumes(false);
+            }
+        })();
+    }, []);
+
+    // ── Select an existing resume ─────────────────────────
+    const selectExistingResume = (resume: any) => {
+        if (resumeId === resume.id) {
+            setResumeId(null);
+            setResumeAnalysis(null);
+        } else {
+            setResumeId(resume.id);
+            setResumeAnalysis(resume.analysis || null);
+        }
+        setResumeFile(null);
+        setUploadError(null);
+    };
+
+    // ── Upload Resume ────────────────────────────────────────
+    const handleFileSelect = (file: File) => {
+        if (file.type !== "application/pdf") {
+            setUploadError("Only PDF files are accepted");
+            return;
+        }
+        if (file.size > 5 * 1024 * 1024) {
+            setUploadError("Maximum file size is 5MB");
+            return;
+        }
+        setResumeFile(file);
+        setUploadError(null);
+        uploadResume(file);
+    };
+
+    const uploadResume = async (file: File) => {
+        setUploading(true);
+        setUploadError(null);
+
+        try {
+            const { data } = await createSupabaseBrowserClient().auth.getSession();
+            const token = data.session?.access_token;
+            if (!token) throw new Error("Not authenticated");
+
+            const formData = new FormData();
+            formData.append("file", file);
+
+            const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+            const res = await fetch(`${API_BASE}/resumes/upload`, {
+                method: "POST",
+                headers: { Authorization: `Bearer ${token}` },
+                body: formData,
+            });
+
+            if (!res.ok) {
+                const err = await res.json().catch(() => ({}));
+                throw new Error(err.message || "Upload failed");
+            }
+
+            const result = await res.json();
+            setResumeId(result.id);
+            setResumeAnalysis(null);
+            // Add to existing resumes list so it shows up in the picker
+            setExistingResumes((prev) => [
+                { id: result.id, fileName: file.name, analysis: null, uploadedAt: new Date().toISOString() },
+                ...prev,
+            ]);
+
+            // Automatically trigger resume analysis after upload
+            setUploading(false);
+            setIsAnalyzingResume(true);
+            try {
+                const analyzeRes = await fetch(`${API_BASE}/resumes/${result.id}/analyze`, {
+                    method: "POST",
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+                if (analyzeRes.ok) {
+                    const analyzeResult = await analyzeRes.json();
+                    setResumeAnalysis(analyzeResult.analysis);
+                    setExistingResumes((prev) =>
+                        prev.map((r) => (r.id === result.id ? { ...r, analysis: analyzeResult.analysis } : r))
+                    );
+                }
+            } catch {
+                // Analysis failed, but upload succeeded — user can still proceed
+            } finally {
+                setIsAnalyzingResume(false);
+            }
+            return;
+        } catch (err: any) {
+            setUploadError(err.message || "Failed to upload resume");
+            setUploading(false);
+        }
+    };
+
+    // ── Start Interview ──────────────────────────────────────
+    const startInterview = async () => {
+        // Block if upload or analysis is still in progress
+        if (uploading || isAnalyzingResume) {
+            setSessionError("Please wait for resume processing to complete");
+            return;
+        }
+
+        setStarting(true);
+        setSessionError(null);
+
+        try {
+            const { data } = await createSupabaseBrowserClient().auth.getSession();
+            const token = data.session?.access_token;
+            if (!token) throw new Error("Not authenticated");
+
+            // If a resume is selected but not yet analyzed, run analysis first
+            if (resumeId && !resumeAnalysis) {
+                setLoadingStatus("Analyzing your resume...");
+                const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+                const analyzeRes = await fetch(`${API_BASE}/resumes/${resumeId}/analyze`, {
+                    method: "POST",
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+
+                if (!analyzeRes.ok) {
+                    const err = await analyzeRes.json().catch(() => ({}));
+                    throw new Error(err.message || "Failed to analyze resume");
+                }
+
+                const analyzeResult = await analyzeRes.json();
+                setResumeAnalysis(analyzeResult.analysis);
+
+                // Update local list so future selections skip analysis
+                setExistingResumes((prev) =>
+                    prev.map((r) => (r.id === resumeId ? { ...r, analysis: analyzeResult.analysis } : r))
+                );
+            }
+
+            setLoadingStatus("Preparing your interview...");
+
+            const session = await api.post<{ id: string }>(
+                "/interviews",
+                {
+                    mode: "mock",
+                    resumeId: resumeId || undefined,
+                    type: selectedType,
+                    difficulty: "Medium",
+                    language: "Python",
+                },
+                token
+            );
+
+            setLoadingStatus("Launching interview room...");
+            router.push(`/room/${session.id}`);
+        } catch (err: any) {
+            setSessionError(err.message || "Failed to create session");
+            setStarting(false);
+            setLoadingStatus(null);
+        }
+    };
+
+    // ── Drop Handler ─────────────────────────────────────────
+    const handleDrop = (e: React.DragEvent) => {
+        e.preventDefault();
+        const file = e.dataTransfer.files[0];
+        if (file) handleFileSelect(file);
+    };
+
+    

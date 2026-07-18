@@ -1,0 +1,296 @@
+const fs = require('fs');
+const path = 'src/app/(authenticated)/(sidebar)/interviews/ai/page.tsx';
+let oldCode = fs.readFileSync(path, 'utf8');
+
+const mainFuncStart = oldCode.indexOf('export default function');
+let firstReturnAfterMain = oldCode.indexOf('return (', mainFuncStart);
+if (firstReturnAfterMain === -1) {
+    firstReturnAfterMain = oldCode.indexOf('return(', mainFuncStart);
+}
+if (firstReturnAfterMain === -1) {
+    console.error('Could not find return after main function!');
+    process.exit(1);
+}
+
+const p1 = oldCode.substring(0, firstReturnAfterMain);
+
+const p2 = \eturn (
+        <div className="flex-1 overflow-auto bg-[#FAFBFC] dark:bg-lc-bg min-h-full relative">
+            {/* Full-screen loading overlay */}
+            {starting && (
+                <div className="fixed inset-0 z-[300] flex flex-col items-center justify-center bg-white/80 dark:bg-lc-bg/80 backdrop-blur-md animate-in fade-in duration-300">
+                    <div className="flex flex-col items-center gap-6">
+                        <div className="relative">
+                            <div className="size-16 border-[3px] border-slate-200 dark:border-lc-border rounded-full" />
+                            <div className="absolute inset-0 size-16 border-[3px] border-primary border-t-transparent rounded-full animate-spin" />
+                        </div>
+                        <div className="text-center space-y-2">
+                            <h2 className="text-xl font-bold text-slate-900 dark:text-white font-nunito">Setting up your interview</h2>
+                            <p className="text-sm font-medium text-slate-500 animate-pulse">{loadingStatus || "Getting ready..."}</p>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            <PageHeader title="Interview Setup" showBack />
+
+            <main className="flex-1 flex flex-col items-center py-12 px-4 pb-24">
+                <div className="w-full max-w-[900px] space-y-12">
+                    <div className="text-center space-y-3">
+                        <h1 className="font-nunito text-[36px] md:text-[42px] font-black text-slate-900 dark:text-white leading-tight tracking-tight">
+                            Ready to Practice?
+                        </h1>
+                        <p className="text-slate-500 text-lg font-medium">
+                            Select your resume and configure the interview style to begin.
+                        </p>
+                    </div>
+
+                    {/* Section 1: Resumes */}
+                    <section className="space-y-5 flex flex-col w-full px-2">
+                        <h3 className="text-sm font-extrabold uppercase tracking-wider text-slate-400 ml-2 flex items-center gap-2">
+                            <span className="material-symbols-outlined text-[18px] text-slate-300 dark:text-slate-600">description</span>
+                            Resume Upload 
+                        </h3>
+
+                        {/* Hidden input for local upload */}
+                        <input
+                            ref={fileInputRef}
+                            type="file"
+                            accept=".pdf"
+                            className="hidden"
+                            onChange={(e) => {
+                                const file = e.target.files?.[0];
+                                if (file) handleFileSelect(file);
+                            }}
+                        />
+
+                        {/* Horizontal scrolling list */}
+                        <div className="flex overflow-x-auto overflow-y-visible gap-5 p-2 pb-6 pt-2 custom-scrollbar items-stretch min-h-[260px] w-full snap-x">
+                            {existingResumes.map((r) => {
+                                const isSelected = resumeId === r.id;
+
+                                return (
+                                    <button
+                                        key={r.id}
+                                        onClick={() => selectExistingResume(r)}
+                                        className={\\\snap-start group relative flex-none w-[220px] h-[240px] rounded-[24px] border-2 flex flex-col text-left transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:-translate-y-3 hover:shadow-[0_20px_40px_-12px_rgba(0,0,0,0.2)] dark:hover:shadow-[0_20px_40px_-12px_rgba(0,0,0,0.5)] \\\\\\}
+                                    >
+                                        {/* Mock preview window */}
+                                        <div className="w-full h-[110px] bg-slate-50 dark:bg-black/20 rounded-t-[22px] shrink-0 overflow-hidden relative transition-transform duration-500 ease-out group-hover:scale-[1.04] border-b border-slate-100 dark:border-white/5">
+                                            {/* decorative lines to look like text */}
+                                            <div className="p-4 space-y-2 opacity-40 group-hover:opacity-70 transition-opacity duration-300">
+                                                <div className="w-3/4 h-2 bg-slate-300 dark:bg-white/20 rounded-full" />
+                                                <div className="w-1/2 h-1.5 bg-slate-300 dark:bg-white/20 rounded-full" />
+                                                <div className="w-full h-1.5 bg-slate-300 dark:bg-white/20 rounded-full mt-4" />
+                                                <div className="w-5/6 h-1.5 bg-slate-300 dark:bg-white/20 rounded-full" />
+                                                <div className="w-4/6 h-1.5 bg-slate-300 dark:bg-white/20 rounded-full" />
+                                            </div>
+                                            {isSelected && (
+                                                 <div className="absolute top-2 right-2 size-7 rounded-full bg-primary text-white flex items-center justify-center shadow-lg transform scale-0 group-hover:scale-100 transition-transform duration-300 delay-75">
+                                                     <span className="material-symbols-outlined text-[16px] font-bold">check</span>
+                                                 </div>
+                                            )}
+                                        </div>
+                                        <div className="p-4 flex-1 flex flex-col justify-between overflow-hidden relative z-10">
+                                            <p className="text-[15px] font-bold text-slate-800 dark:text-[#eff1f6] truncate group-hover:text-primary transition-colors">
+                                                {r.fileName}
+                                            </p>
+                                            <div className="flex flex-col gap-2 mt-2">
+                                                <div className="flex flex-wrap gap-1.5 transform origin-left transition-transform duration-300 ease-out group-hover:scale-[1.05]">
+                                                    {r.analysis?.summary?.name && (
+                                                        <span className="px-2 py-0.5 bg-slate-100 dark:bg-white/10 text-slate-600 dark:text-slate-300 text-[10px] rounded-lg font-bold truncate max-w-full">
+                                                            {r.analysis.summary.name}
+                                                        </span>
+                                                    )}
+                                                    {r.analysis?.overallStrength && (
+                                                        <span className="px-2 py-0.5 bg-primary/10 text-primary text-[10px] rounded-lg font-black shrink-0 uppercase tracking-wide">
+                                                            {r.analysis.overallStrength}
+                                                        </span>
+                                                    )}
+                                                </div>
+                                                <p className="text-[11px] font-semibold text-slate-400 flex items-center gap-1.5 transform transition-transform duration-300 ease-out group-hover:translate-x-1.5">
+                                                    <span className="material-symbols-outlined text-[14px]">calendar_today</span>
+                                                    {new Date(r.uploadedAt).toLocaleDateString()}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </button>
+                                );
+                            })}
+                            
+                            {/* Uploading Status Card */}
+                            {(uploading || isAnalyzingResume) && !existingResumes.find(r => r.id === resumeId && r.fileName === resumeFile?.name) && (
+                                <div className="snap-start flex-none w-[220px] h-[240px] rounded-[24px] border-2 border-primary/20 dark:border-primary/20 bg-blue-50/50 dark:bg-primary/5 flex flex-col items-center justify-center p-4">
+                                     <div className="size-10 border-[4px] border-primary border-t-transparent rounded-full animate-spin mb-4" />
+                                     <p className="text-[13px] font-bold text-primary text-center animate-pulse">
+                                         {uploading ? "Uploading..." : "Analyzing..."}
+                                     </p>
+                                </div>
+                            )}
+
+                            {/* Add New Resume Card */}
+                            <div className="snap-start relative h-[240px] flex-none w-[220px]" ref={newResumeMenuRef}>
+                                <button
+                                    type="button"
+                                    onClick={() => setIsMenuOpen(!isMenuOpen)}
+                                    className="group w-full h-full rounded-[24px] border-[2.5px] border-dashed border-slate-300 dark:border-white/20 bg-white/50 dark:bg-white/5 flex flex-col items-center justify-center gap-4 transition-all duration-300 hover:border-primary hover:-translate-y-3 hover:shadow-[0_20px_40px_-12px_rgba(0,0,0,0.15)] dark:hover:shadow-[0_20px_40px_-12px_rgba(0,0,0,0.4)] hover:bg-primary/5 dark:hover:bg-primary/10 cursor-pointer"
+                                >
+                                    <div className="size-14 rounded-full bg-slate-100 dark:bg-white/10 flex items-center justify-center text-slate-400 dark:text-white/40 group-hover:bg-primary group-hover:text-white transition-all duration-300 group-hover:scale-110 shadow-sm">
+                                        <span className="material-symbols-outlined text-[32px] font-bold">add</span>
+                                    </div>
+                                    <p className="text-[15px] font-bold text-slate-500 dark:text-[#eff1f6] group-hover:text-primary transition-colors">
+                                        Add a new resume
+                                    </p>
+                                </button>
+                                
+                                {/* Dropdown logic */}
+                                {isMenuOpen && (
+                                    <div className="absolute top-[105%] left-0 z-[100] bg-white dark:bg-[#1a1a1a] border border-slate-200 dark:border-white/10 rounded-2xl shadow-2xl p-2 w-[240px] flex flex-col gap-1 animate-in fade-in slide-in-from-top-3 zoom-in-95 duration-200">
+                                        <button
+                                            onClick={() => {
+                                                fileInputRef.current?.click();
+                                                setIsMenuOpen(false);
+                                            }}
+                                            className="px-3 py-3 text-left text-[13px] font-bold rounded-xl text-slate-700 dark:text-[#eff1f6] hover:bg-slate-100 dark:hover:bg-white/5 transition-colors flex items-center gap-2.5"
+                                        >
+                                            <span className="material-symbols-outlined text-[18px] text-slate-400">upload_file</span>
+                                            Upload a new resume
+                                        </button>
+                                        <div className="h-px bg-slate-100 dark:bg-white/5 my-0.5" />
+                                        <button
+                                            onClick={() => {
+                                                setIsMenuOpen(false);
+                                                router.push("/resumes");
+                                            }}
+                                            className="px-3 py-3 text-left text-[13px] font-bold rounded-xl text-primary hover:bg-primary/10 transition-colors flex items-center gap-2.5 bg-primary/5"
+                                        >
+                                            <span className="material-symbols-outlined text-[18px]">edit_document</span>
+                                            Build with Latex Builder
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
+                        {uploadError && (
+                            <div className="flex items-center gap-2 p-3 bg-red-50 dark:bg-red-500/10 rounded-xl border border-red-100 dark:border-red-500/20 max-w-md ml-2">
+                                <span className="material-symbols-outlined text-red-500 text-[18px]">error</span>
+                                <span className="text-[13px] font-bold text-red-600 dark:text-red-400">{uploadError}</span>
+                            </div>
+                        )}
+                    </section>
+
+                    {/* Section 2: Interview Type */}
+                    <section className="space-y-5 px-2">
+                        <h3 className="text-sm font-extrabold uppercase tracking-wider text-slate-400 ml-2 flex items-center gap-2">
+                            <span className="material-symbols-outlined text-[18px] text-slate-300 dark:text-slate-600">psychology</span>
+                            Select Interview Type
+                        </h3>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                            {INTERVIEW_TYPES.map((type) => (
+                                <button
+                                    key={type.id}
+                                    onClick={() => setSelectedType(selectedType === type.id ? "" : type.id)}
+                                    className={\\\group relative flex flex-col p-6 rounded-[24px] border-2 text-left transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:-translate-y-2 hover:shadow-[0_20px_40px_-12px_rgba(0,0,0,0.15)] dark:hover:shadow-[0_20px_40px_-12px_rgba(0,0,0,0.5)] cursor-pointer overflow-hidden \\\\\\}
+                                >
+                                    <div className="flex items-start justify-between w-full mb-4">
+                                        <div className={\\\size-14 rounded-2xl flex items-center justify-center transition-all duration-500 group-hover:scale-110 group-hover:rotate-6 \\\\\\}>
+                                            <span className="material-symbols-outlined text-[28px]">{type.icon}</span>
+                                        </div>
+                                        <div className="flex flex-col items-end gap-1.5">
+                                            <span className="px-3 py-1.5 bg-slate-100 dark:bg-white/10 text-slate-500 dark:text-slate-400 text-[11px] font-black uppercase tracking-widest rounded-xl group-hover:bg-blue-100 group-hover:text-primary dark:group-hover:bg-primary/20 dark:group-hover:text-primary transition-colors duration-300">
+                                                {type.duration}
+                                            </span>
+                                            {selectedType === type.id && (
+                                                <span className="material-symbols-outlined text-primary text-[24px] animate-in zoom-in-50 fade-in duration-300 mt-1">
+                                                    check_circle
+                                                </span>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    <h4 className="text-[18px] font-black text-slate-800 dark:text-[#eff1f6] font-nunito tracking-normal group-hover:text-primary transition-colors duration-300">
+                                        {type.label}
+                                    </h4>
+
+                                    <div className="grid grid-rows-[0fr] group-hover:grid-rows-[1fr] transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] w-full">
+                                        <div className="min-h-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100 pl-3 border-l-[3px] border-primary/30 mt-0 group-hover:mt-3">
+                                            <p className="text-[13px] text-slate-500 font-semibold leading-relaxed">
+                                                {type.description}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </button>
+                            ))}
+                        </div>
+                    </section>
+
+                    {/* Action Buttons */}
+                    <div className="flex items-center gap-5 justify-end pt-8 mt-4 border-t border-slate-200 dark:border-white/10 px-2 flex-wrap">
+                        {sessionError && (
+                            <div className="flex items-center gap-2 px-4 py-3 bg-red-50 dark:bg-red-500/10 rounded-xl border border-red-100 dark:border-red-500/20 shadow-sm animate-in fade-in slide-in-from-right-4 duration-300 w-full md:w-auto">
+                                <span className="material-symbols-outlined text-red-500 text-[20px]">error</span>
+                                <span className="text-[14px] font-bold text-red-600 dark:text-red-400">{sessionError}</span>
+                            </div>
+                        )}
+                        <div className="flex items-center gap-3 ml-auto w-full md:w-auto">
+                            <button
+                                onClick={() => router.back()}
+                                className="group relative w-full md:w-auto flex items-center justify-center text-slate-500 bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 font-bold font-nunito px-6 py-3.5 rounded-xl transition-all duration-300 cursor-pointer overflow-hidden min-w-[130px]"
+                            >
+                                <span className="absolute z-0 inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 group-hover:scale-[1.3] transition-all duration-500 text-2xl transform -translate-y-8 group-hover:translate-y-0 text-slate-600 dark:text-slate-300 bg-slate-200 dark:bg-white/10">
+                                    ??
+                                </span>
+                                <span className="z-10 group-hover:opacity-0 transition-opacity duration-300 text-[15px]">
+                                    Cancel
+                                </span>
+                            </button>
+
+                            <button
+                                onClick={() => { setSessionError(null); startInterview(); }}
+                                disabled={starting || !selectedType || uploading || isAnalyzingResume}
+                                className="relative w-full md:w-auto overflow-hidden bg-blue-600 hover:bg-blue-500 text-white font-black font-nunito px-10 py-3.5 rounded-xl shadow-[0_8px_20px_-6px_rgba(37,99,235,0.6)] flex items-center justify-center gap-3 transition-all duration-300 hover:-translate-y-1 active:scale-[0.97] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:active:scale-100 group"
+                            >
+                                <span className="relative z-10 flex items-center gap-2 text-[16px] tracking-wide">
+                                    Begin Interview
+                                    <span className={\\\material-symbols-outlined text-[23px] transition-transform duration-300 \\\\}>
+                                        arrow_forward
+                                    </span>
+                                </span>
+                                <div className="absolute inset-0 bg-gradient-to-r from-blue-400/0 via-white/20 to-blue-400/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 ease-in-out" />
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    );
+}\;
+
+let finalCode = p1 + p2;
+
+if (!finalCode.includes('const [isMenuOpen')) {
+    finalCode = finalCode.replace(
+        'const [infoModalType, setInfoModalType] = useState<string | null>(null);',
+        \const [infoModalType, setInfoModalType] = useState<string | null>(null);
+
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const newResumeMenuRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const handleClickOutside = (e: MouseEvent) => {
+            if (newResumeMenuRef.current && !newResumeMenuRef.current.contains(e.target as Node)) {
+                setIsMenuOpen(false);
+            }
+        };
+        if (isMenuOpen) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, [isMenuOpen]);\
+    );
+}
+
+fs.writeFileSync(path, finalCode);
+console.log('Update Complete.');

@@ -27,7 +27,7 @@ flowchart LR
     style L fill:#fee2e2,stroke:#ef4444,color:#000
 ```
 
-> Everyone prepares **on paper**. Nobody practises the **interview itself** — explaining out loud, handling follow-ups, staying calm. The gap isn't knowledge. It's **reps**.
+> The gap isn't knowledge. It's **reps** — real interview reps most students never get until it already counts.
 
 ---
 
@@ -44,7 +44,23 @@ flowchart LR
     style D fill:#dcfce7,stroke:#22c55e,color:#000
 ```
 
-> By the time you sit in the real interview, you've already sat through fifty. It feels like something you've done a hundred times — because you have.
+---
+
+## 🤔 "Can't I just ask ChatGPT to interview me?"
+
+It'll ask you questions. But a real interview isn't just talk — you **code in an editor**, **query a live database**, and **draw the system on a board**. Mockr gives you the whole room.
+
+| Live Coding IDE | SQL Editor | System Design Canvas |
+|:---:|:---:|:---:|
+| ![DSA IDE](docs/screenshots/dsa-ide.png) | ![SQL editor](docs/screenshots/sql-editor.png) | ![System design canvas](docs/screenshots/system-design-canvas.png) |
+| Real editor with hidden test cases — **run & submit**, just like the real thing. | Write real queries against real tables and see the **result set**. | Actually **draw** the architecture — boxes, arrows, requirements. |
+
+<br/>
+
+| One AI · Every Interview Type | Three Ways to Practise |
+|:---:|:---:|
+| ![Interview types](docs/screenshots/interview-types.png) | ![Interview modes](docs/screenshots/interview-modes.png) |
+| SDE, Coding, **System Design**, CS Fundamentals, Behavioural, PM, Data Science… | AI interviewer, live **peer-to-peer**, or an industry expert. |
 
 ---
 
@@ -52,26 +68,16 @@ flowchart LR
 
 | 🎤 AI Mock Interviews | 🧑‍🏫 AI Tutor | 📚 Question Bank |
 |:---|:---|:---|
-| A real, talking interview. It asks, you explain out loud, it follows up like a human, then gives honest feedback on *what* you said **and** *how* you said it. | Stuck on a concept? It explains in plain language, at your pace, until it actually clicks — understood, not memorised. | Real interview questions across **SQL · System Design · DBMS · CS Fundamentals** — the topics that decide interviews, in one place. |
+| A real, talking interview with follow-ups and honest feedback on *what* you said **and** *how* you said it. | Stuck on a concept? It explains in plain language until it actually clicks. | Real questions across **SQL · System Design · DBMS · CS Fundamentals · DSA**. |
 
 ---
 
-## 🛠️ How it's built
-
-```mermaid
-flowchart TD
-    U["👩‍💻 User"] --> W["Next.js web app"]
-    W --> API["Node API"]
-    API --> G["🤖 Groq LLM"]
-    API --> DB[("Supabase<br/>Postgres")]
-    API --> M[("MongoDB<br/>question bank")]
-    API --> R[("Redis")]
-```
-
-A Turborepo monorepo — `apps/web` (frontend) · `apps/api` (backend) · `packages/db`, `packages/shared`.
-
 <details>
-<summary><b>▶️ Run it locally</b></summary>
+<summary><b>🛠️ How it's built · run it locally</b></summary>
+
+<br/>
+
+A Turborepo monorepo — `apps/web` (Next.js frontend) · `apps/api` (Node backend) · `packages/db`, `packages/shared`. Powered by Supabase (Postgres), MongoDB (question bank), Redis, and Groq (LLM).
 
 ```bash
 npm install

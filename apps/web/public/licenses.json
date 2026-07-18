@@ -1,0 +1,366 @@
+[
+  {
+    "name": "@excalidraw/excalidraw",
+    "version": "0.18.0",
+    "license": "MIT",
+    "repository": "https://github.com/excalidraw/excalidraw",
+    "publisher": null
+  },
+  {
+    "name": "@lottiefiles/dotlottie-react",
+    "version": "0.18.8",
+    "license": "MIT",
+    "repository": "https://github.com/LottieFiles/dotlottie-web",
+    "publisher": "LottieFiles"
+  },
+  {
+    "name": "@mediapipe/tasks-vision",
+    "version": "0.10.35",
+    "license": "Apache-2.0",
+    "repository": null,
+    "publisher": "mediapipe@google.com"
+  },
+  {
+    "name": "@monaco-editor/react",
+    "version": "4.7.0",
+    "license": "MIT",
+    "repository": "https://github.com/suren-atoyan/monaco-react",
+    "publisher": "Suren Atoyan"
+  },
+  {
+    "name": "@phosphor-icons/react",
+    "version": "2.1.10",
+    "license": "MIT",
+    "repository": "phosphor-icons/react",
+    "publisher": "Tobias Fried"
+  },
+  {
+    "name": "@supabase/ssr",
+    "version": "0.9.0",
+    "license": "MIT",
+    "repository": "https://github.com/supabase/ssr",
+    "publisher": "Supabase, Inc."
+  },
+  {
+    "name": "@supabase/supabase-js",
+    "version": "2.98.0",
+    "license": "MIT",
+    "repository": "https://github.com/supabase/supabase-js",
+    "publisher": "Supabase"
+  },
+  {
+    "name": "@tanstack/react-query",
+    "version": "5.100.8",
+    "license": "MIT",
+    "repository": "https://github.com/TanStack/query",
+    "publisher": "tannerlinsley"
+  },
+  {
+    "name": "@tensorflow-models/coco-ssd",
+    "version": "2.2.3",
+    "license": "Apache-2.0",
+    "repository": "https://github.com/tensorflow/tfjs-models",
+    "publisher": null
+  },
+  {
+    "name": "@tensorflow/tfjs",
+    "version": "4.22.0",
+    "license": "Apache-2.0",
+    "repository": "https://github.com/tensorflow/tfjs",
+    "publisher": null
+  },
+  {
+    "name": "@tiptap/extension-color",
+    "version": "2.27.2",
+    "license": "MIT",
+    "repository": "https://github.com/ueberdosis/tiptap",
+    "publisher": null
+  },
+  {
+    "name": "@tiptap/extension-font-family",
+    "version": "2.27.2",
+    "license": "MIT",
+    "repository": "https://github.com/ueberdosis/tiptap",
+    "publisher": null
+  },
+  {
+    "name": "@tiptap/extension-image",
+    "version": "2.27.2",
+    "license": "MIT",
+    "repository": "https://github.com/ueberdosis/tiptap",
+    "publisher": null
+  },
+  {
+    "name": "@tiptap/extension-link",
+    "version": "2.27.2",
+    "license": "MIT",
+    "repository": "https://github.com/ueberdosis/tiptap",
+    "publisher": null
+  },
+  {
+    "name": "@tiptap/extension-placeholder",
+    "version": "2.27.2",
+    "license": "MIT",
+    "repository": "https://github.com/ueberdosis/tiptap",
+    "publisher": null
+  },
+  {
+    "name": "@tiptap/extension-table",
+    "version": "2.27.2",
+    "license": "MIT",
+    "repository": "https://github.com/ueberdosis/tiptap",
+    "publisher": null
+  },
+  {
+    "name": "@tiptap/extension-table-cell",
+    "version": "2.27.2",
+    "license": "MIT",
+    "repository": "https://github.com/ueberdosis/tiptap",
+    "publisher": null
+  },
+  {
+    "name": "@tiptap/extension-table-header",
+    "version": "2.27.2",
+    "license": "MIT",
+    "repository": "https://github.com/ueberdosis/tiptap",
+    "publisher": null
+  },
+  {
+    "name": "@tiptap/extension-table-row",
+    "version": "2.27.2",
+    "license": "MIT",
+    "repository": "https://github.com/ueberdosis/tiptap",
+    "publisher": null
+  },
+  {
+    "name": "@tiptap/extension-text-style",
+    "version": "2.27.2",
+    "license": "MIT",
+    "repository": "https://github.com/ueberdosis/tiptap",
+    "publisher": null
+  },
+  {
+    "name": "@tiptap/extension-underline",
+    "version": "3.22.5",
+    "license": "MIT",
+    "repository": "https://github.com/ueberdosis/tiptap",
+    "publisher": null
+  },
+  {
+    "name": "@tiptap/pm",
+    "version": "2.27.2",
+    "license": "MIT",
+    "repository": "https://github.com/ueberdosis/tiptap",
+    "publisher": null
+  },
+  {
+    "name": "@tiptap/react",
+    "version": "2.27.2",
+    "license": "MIT",
+    "repository": "https://github.com/ueberdosis/tiptap",
+    "publisher": null
+  },
+  {
+    "name": "@tiptap/starter-kit",
+    "version": "2.27.2",
+    "license": "MIT",
+    "repository": "https://github.com/ueberdosis/tiptap",
+    "publisher": null
+  },
+  {
+    "name": "@types/react-syntax-highlighter",
+    "version": "15.5.13",
+    "license": "MIT",
+    "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+    "publisher": null
+  },
+  {
+    "name": "@vercel/analytics",
+    "version": "2.0.1",
+    "license": "MIT",
+    "repository": "github:vercel/analytics",
+    "publisher": null
+  },
+  {
+    "name": "@vercel/speed-insights",
+    "version": "2.0.0",
+    "license": "Apache-2.0",
+    "repository": "github:vercel/speed-insights",
+    "publisher": null
+  },
+  {
+    "name": "chart.js",
+    "version": "4.5.1",
+    "license": "MIT",
+    "repository": "https://github.com/chartjs/Chart.js",
+    "publisher": null
+  },
+  {
+    "name": "gsap",
+    "version": "3.14.2",
+    "license": "Standard 'no charge' license: https://gsap.com/standard-license.",
+    "repository": "https://github.com/greensock/GSAP",
+    "publisher": null
+  },
+  {
+    "name": "html-to-image",
+    "version": "1.11.13",
+    "license": "MIT",
+    "repository": "https://github.com/bubkoo/html-to-image",
+    "publisher": "bubkooo"
+  },
+  {
+    "name": "html2canvas",
+    "version": "1.4.1",
+    "license": "MIT",
+    "repository": "git@github.com:niklasvh/html2canvas",
+    "publisher": "Niklas von Hertzen"
+  },
+  {
+    "name": "html2pdf.js",
+    "version": "0.14.0",
+    "license": "MIT",
+    "repository": "git@github.com:eKoopmans/html2pdf.js",
+    "publisher": "Erik Koopmans"
+  },
+  {
+    "name": "jspdf",
+    "version": "4.2.1",
+    "license": "MIT",
+    "repository": "https://github.com/parallax/jsPDF",
+    "publisher": null
+  },
+  {
+    "name": "katex",
+    "version": "0.16.45",
+    "license": "MIT",
+    "repository": "https://github.com/KaTeX/KaTeX",
+    "publisher": null
+  },
+  {
+    "name": "latex.js",
+    "version": "0.12.6",
+    "license": "MIT",
+    "repository": "https://github.com/michael-brade/LaTeX.js",
+    "publisher": "Michael Brade"
+  },
+  {
+    "name": "lucide-react",
+    "version": "1.7.0",
+    "license": "ISC",
+    "repository": "https://github.com/lucide-icons/lucide",
+    "publisher": "Eric Fennis"
+  },
+  {
+    "name": "mongodb",
+    "version": "7.1.1",
+    "license": "Apache-2.0",
+    "repository": "git@github.com:mongodb/node-mongodb-native",
+    "publisher": "The MongoDB NodeJS Team"
+  },
+  {
+    "name": "next",
+    "version": "16.1.6",
+    "license": "MIT",
+    "repository": "vercel/next.js",
+    "publisher": null
+  },
+  {
+    "name": "next-themes",
+    "version": "0.4.6",
+    "license": "MIT",
+    "repository": "https://github.com/pacocoursey/next-themes",
+    "publisher": null
+  },
+  {
+    "name": "party-js",
+    "version": "2.2.0",
+    "license": "MIT",
+    "repository": "https://github.com/yiliansource/party-js",
+    "publisher": "Ian Hornik"
+  },
+  {
+    "name": "react",
+    "version": "18.3.1",
+    "license": "MIT",
+    "repository": "https://github.com/facebook/react",
+    "publisher": null
+  },
+  {
+    "name": "react-chartjs-2",
+    "version": "5.3.1",
+    "license": "MIT",
+    "repository": "https://github.com/reactchartjs/react-chartjs-2",
+    "publisher": "Jeremy Ayerst"
+  },
+  {
+    "name": "react-dom",
+    "version": "18.3.1",
+    "license": "MIT",
+    "repository": "https://github.com/facebook/react",
+    "publisher": null
+  },
+  {
+    "name": "react-markdown",
+    "version": "10.1.0",
+    "license": "MIT",
+    "repository": "remarkjs/react-markdown",
+    "publisher": "Espen Hovlandsdal"
+  },
+  {
+    "name": "react-resizable-panels",
+    "version": "4.9.0",
+    "license": "MIT",
+    "repository": "https://github.com/bvaughn/react-resizable-panels",
+    "publisher": "Brian Vaughn"
+  },
+  {
+    "name": "react-syntax-highlighter",
+    "version": "16.1.1",
+    "license": "MIT",
+    "repository": "https://github.com/react-syntax-highlighter/react-syntax-highlighter",
+    "publisher": "Conor Hastings"
+  },
+  {
+    "name": "rehype-katex",
+    "version": "7.0.1",
+    "license": "MIT",
+    "repository": "https://github.com/remarkjs/remark-math/tree/main/packages/rehype-katex",
+    "publisher": "Junyoung Choi"
+  },
+  {
+    "name": "rehype-raw",
+    "version": "7.0.0",
+    "license": "MIT",
+    "repository": "rehypejs/rehype-raw",
+    "publisher": "Titus Wormer"
+  },
+  {
+    "name": "rehype-sanitize",
+    "version": "6.0.0",
+    "license": "MIT",
+    "repository": "rehypejs/rehype-sanitize",
+    "publisher": "Titus Wormer"
+  },
+  {
+    "name": "remark-gfm",
+    "version": "4.0.1",
+    "license": "MIT",
+    "repository": "remarkjs/remark-gfm",
+    "publisher": "Titus Wormer"
+  },
+  {
+    "name": "remark-math",
+    "version": "6.0.0",
+    "license": "MIT",
+    "repository": "https://github.com/remarkjs/remark-math/tree/main/packages/remark-math",
+    "publisher": "Junyoung Choi"
+  },
+  {
+    "name": "socket.io-client",
+    "version": "4.8.3",
+    "license": "MIT",
+    "repository": "https://github.com/socketio/socket.io",
+    "publisher": null
+  }
+]

@@ -165,8 +165,12 @@ function LoginContent() {
         }
         setIsSubmitting(true);
         try {
-            await signIn(demoEmail, demoPassword);
-            router.push(nextPath || "/dashboard");
+            const profile = await signIn(demoEmail, demoPassword);
+            if (profile && !profile.onboardingCompleted) {
+                router.replace("/onboarding");
+            } else {
+                router.push(nextPath || "/dashboard");
+            }
         } catch (err: any) {
             setFormError(err?.message || "Guest login failed. Please try again.");
         } finally {
